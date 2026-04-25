@@ -20,6 +20,7 @@ FROM alpine
 ARG LOG_LEVEL=warn
 ARG VERSION=dev
 ARG REVISION=unknown
+ARG SOURCE_URL=https://github.com/bitofbytes-io/bitofbytes
 WORKDIR /bob
 COPY ./static ./static
 COPY --from=builder /app/bob ./bob
@@ -28,7 +29,7 @@ RUN addgroup -S bob \
     && adduser -S -G bob bob \
     && chown -R bob:bob /bob
 
-LABEL org.opencontainers.image.source="https://github.com/drywaters/bitofbytes" \
+LABEL org.opencontainers.image.source="${SOURCE_URL}" \
       org.opencontainers.image.revision="${REVISION}" \
       org.opencontainers.image.version="${VERSION}" \
       org.opencontainers.image.title="bitofbytes" \

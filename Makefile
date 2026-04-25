@@ -7,10 +7,10 @@ configure-image:
 	$(eval REVISION ?= $(shell git rev-parse HEAD 2>/dev/null))
 	$(eval IMAGE_TAG ?= $(SHORT_SHA))
 	$(eval VERSION ?= $(IMAGE_TAG))
-	$(eval SOURCE_URL ?= https://github.com/drywaters/bitofbytes)
+	$(eval SOURCE_URL ?= https://github.com/bitofbytes-io/bitofbytes)
 	$(eval IMAGE := $(IMAGE_NAME):$(IMAGE_TAG))
 	$(eval LOG_LEVEL ?= warn)
-	$(eval OCI_LABEL_ARGS := --label org.opencontainers.image.source=$(SOURCE_URL) --label org.opencontainers.image.revision=$(REVISION) --label org.opencontainers.image.version=$(VERSION) --label org.opencontainers.image.title=bitofbytes --label org.opencontainers.image.description=BitOfBytes web application)
+	$(eval OCI_LABEL_ARGS := --label "org.opencontainers.image.source=$(SOURCE_URL)" --label "org.opencontainers.image.revision=$(REVISION)" --label "org.opencontainers.image.version=$(VERSION)" --label "org.opencontainers.image.title=bitofbytes" --label "org.opencontainers.image.description=BitOfBytes web application")
 	@true
 
 ensure-image-tag: configure-image
@@ -29,6 +29,7 @@ docker-build: ensure-image-tag
 		--build-arg LOG_LEVEL=$(LOG_LEVEL) \
 		--build-arg VERSION=$(VERSION) \
 		--build-arg REVISION=$(REVISION) \
+		--build-arg SOURCE_URL=$(SOURCE_URL) \
 		$(OCI_LABEL_ARGS) \
 		-t $(IMAGE) \
 		.
@@ -55,6 +56,7 @@ docker-build-push-github:
 		--build-arg LOG_LEVEL=$(LOG_LEVEL) \
 		--build-arg VERSION=$(VERSION) \
 		--build-arg REVISION=$(REVISION) \
+		--build-arg SOURCE_URL=$(SOURCE_URL) \
 		$(OCI_LABEL_ARGS) \
 		-t $(IMAGE) \
 		--push
