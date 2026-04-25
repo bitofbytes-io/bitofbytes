@@ -42,6 +42,10 @@ jobs:
           echo "TAG=${{ steps.meta.outputs.TAG }}"
 
       - name: make build-github (push)
+        env:
+          VERSION: ${{ steps.meta.outputs.TAG }}
+          REVISION: ${{ github.sha }}
+          SOURCE_URL: ${{ github.server_url }}/${{ github.repository }}
         run: |
           make build-github \
             REGISTRY="${IMAGE_REG}" \

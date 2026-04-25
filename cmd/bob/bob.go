@@ -13,6 +13,11 @@ import (
 	"github.com/DryWaters/bitofbytes/views"
 )
 
+var (
+	version  = "dev"
+	revision = "unknown"
+)
+
 func main() {
 	// load config
 	cfg, err := models.LoadEnvConfig()
@@ -116,7 +121,7 @@ func run(cfg models.Config, logger *slog.Logger) error {
 		MaxHeaderBytes:    1 << 20,
 	}
 
-	logger.Info("Starting the server", "address", cfg.Server.Address)
+	logger.Info("Starting the server", "address", cfg.Server.Address, "version", version, "revision", revision)
 
 	return server.ListenAndServe()
 }
