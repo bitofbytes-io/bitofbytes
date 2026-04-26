@@ -1,4 +1,4 @@
-FROM node:20-alpine AS tailwind-builder
+FROM node:24-alpine AS tailwind-builder
 ARG TAILWIND_VERSION=4.1.13
 WORKDIR /app
 RUN npm init -y \
