@@ -1,4 +1,4 @@
-FROM node:24-alpine AS tailwind-builder
+FROM node:24.15.0-alpine3.23 AS tailwind-builder
 ARG TAILWIND_VERSION=4.1.13
 WORKDIR /app
 RUN npm init -y \
@@ -7,7 +7,7 @@ COPY ./templates ./templates
 COPY ./tailwind/styles.css src/styles.css
 RUN npx @tailwindcss/cli -i src/styles.css -o /styles.css --minify
 
-FROM golang:alpine AS builder
+FROM golang:1.25.9-alpine3.23 AS builder
 ARG VERSION=dev
 ARG REVISION=unknown
 WORKDIR /app
@@ -16,7 +16,7 @@ RUN go mod download
 COPY . .
 RUN go build -ldflags "-X main.version=${VERSION} -X main.revision=${REVISION}" -v -o ./bob ./cmd/bob/
 
-FROM alpine
+FROM alpine:3.23.4
 ARG LOG_LEVEL=warn
 ARG VERSION=dev
 ARG REVISION=unknown
