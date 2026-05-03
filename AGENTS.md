@@ -23,6 +23,8 @@
 
 ## Tests & tooling
 - Go unit tests cover controllers, middleware, models, and views. Run `go test ./...` before committing changes and add new tests alongside any new behavior.
+- Use `make build` for the local production build pipeline; it runs `make tail-prod`, `make docker-build`, and `make docker-push`.
+- Use `make docker-publish` when you only need the Docker build-and-push pair, and `make build-github REGISTRY=<registry> IMAGE_TAG=<tag>` for the CI-equivalent arm64 buildx push. Required registry credentials/secrets must be configured locally or in CI.
 - Docker builds use the recipes in the `Makefile` (see `make docker-build` / `make docker-push`) and the multi-stage image defined in `Docker/Dockerfile`.
 
 ## Miscellaneous tips
