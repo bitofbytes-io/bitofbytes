@@ -1085,6 +1085,12 @@ dd {
     list-style: none;
   }
 
+  .menu-glyph:focus-visible {
+    border-radius: 7px;
+    outline: 2px solid var(--bob-yellow);
+    outline-offset: 4px;
+  }
+
   .menu-glyph::-webkit-details-marker {
     display: none;
   }
@@ -1198,6 +1204,13 @@ dd {
 
   .nav-links a::after {
     display: none;
+  }
+
+  .nav-links a:focus-visible {
+    color: var(--bob-yellow);
+    background: rgb(245 212 42 / 0.08);
+    outline: 2px solid var(--bob-yellow);
+    outline-offset: -2px;
   }
 
   .nav-links a.is-active {
