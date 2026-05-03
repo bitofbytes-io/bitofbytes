@@ -10,6 +10,10 @@ document.addEventListener("keydown", function (event) {
   if (event.key === "Escape") {
     document.querySelectorAll(".nav-menu[open]").forEach(function (menu) {
       menu.removeAttribute("open");
+      const summary = menu.querySelector("summary");
+      if (summary) {
+        summary.focus();
+      }
     });
   }
 });

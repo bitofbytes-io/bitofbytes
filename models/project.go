@@ -3,18 +3,19 @@ package models
 import "slices"
 
 type Project struct {
-	Slug        string
-	Name        string
-	Tagline     string
-	Summary     string
-	RepoURL     string
-	LiveURL     string
-	LastUpdate  string
-	Notes       string
-	Tech        []string
-	Highlights  []string
-	Paragraphs  []string
-	Screenshots []ProjectScreenshot
+	Slug            string
+	Name            string
+	Tagline         string
+	Summary         string
+	RepoURL         string
+	LiveURL         string
+	LastUpdate      string
+	FirstCommitDate string
+	Notes           string
+	Tech            []string
+	Highlights      []string
+	Paragraphs      []string
+	Screenshots     []ProjectScreenshot
 }
 
 type ProjectScreenshot struct {
@@ -27,14 +28,15 @@ type ProjectScreenshot struct {
 func Projects() []Project {
 	projects := []Project{
 		{
-			Slug:       "permitpal",
-			Name:       "PermitPal",
-			Tagline:    "Your permit pal-less yelling, more tracking.",
-			Summary:    "A focused dashboard for tracking North Carolina learner permit exam readiness and study progress.",
-			RepoURL:    "https://github.com/bitofbytes-io/permitpal",
-			LiveURL:    "https://permitpal.bitofbytes.io",
-			LastUpdate: "May 2, 2026",
-			Notes:      "Most recent work tightened security controls, form constraints, development fallback warnings, and test coverage.",
+			Slug:            "permitpal",
+			Name:            "PermitPal",
+			Tagline:         "Your permit pal-less yelling, more tracking.",
+			Summary:         "A focused dashboard for tracking North Carolina learner permit exam readiness and study progress.",
+			RepoURL:         "https://github.com/bitofbytes-io/permitpal",
+			LiveURL:         "https://permitpal.bitofbytes.io",
+			LastUpdate:      "May 2, 2026",
+			FirstCommitDate: "2026-05-01",
+			Notes:           "Most recent work tightened security controls, form constraints, development fallback warnings, and test coverage.",
 			Tech: []string{
 				"Go",
 				"HTMX",
@@ -69,14 +71,15 @@ func Projects() []Project {
 			},
 		},
 		{
-			Slug:       "learnd",
-			Name:       "Learn'd",
-			Tagline:    "A personal learning journal for capturing and reviewing resources.",
-			Summary:    "A personal learning journal for saving useful training material and revisiting it over time.",
-			RepoURL:    "https://github.com/bitofbytes-io/learnd",
-			LiveURL:    "https://learnd.bitofbytes.io",
-			LastUpdate: "May 2, 2026",
-			Notes:      "Most recent work refreshed the repository workflow notes for local development and deployment context.",
+			Slug:            "learnd",
+			Name:            "Learn'd",
+			Tagline:         "A personal learning journal for capturing and reviewing resources.",
+			Summary:         "A personal learning journal for saving useful training material and revisiting it over time.",
+			RepoURL:         "https://github.com/bitofbytes-io/learnd",
+			LiveURL:         "https://learnd.bitofbytes.io",
+			LastUpdate:      "May 2, 2026",
+			FirstCommitDate: "2026-01-02",
+			Notes:           "Most recent work refreshed the repository workflow notes for local development and deployment context.",
 			Tech: []string{
 				"Go",
 				"Templ",
@@ -111,14 +114,15 @@ func Projects() []Project {
 			},
 		},
 		{
-			Slug:       "dejaview",
-			Name:       "DejaView",
-			Tagline:    "A family movie-night tracker for remembering picks, groups, and stats.",
-			Summary:    "A movie tracker for organizing watched films, family viewing lists, and collection details.",
-			RepoURL:    "https://github.com/bitofbytes-io/dejaview",
-			LiveURL:    "https://dejaview.bitofbytes.io",
-			LastUpdate: "May 2, 2026",
-			Notes:      "Most recent work refreshed the repository workflow notes for local development and deployment context.",
+			Slug:            "dejaview",
+			Name:            "DejaView",
+			Tagline:         "A family movie-night tracker for remembering picks, groups, and stats.",
+			Summary:         "A movie tracker for organizing watched films, family viewing lists, and collection details.",
+			RepoURL:         "https://github.com/bitofbytes-io/dejaview",
+			LiveURL:         "https://dejaview.bitofbytes.io",
+			LastUpdate:      "May 2, 2026",
+			FirstCommitDate: "2026-01-04",
+			Notes:           "Most recent work refreshed the repository workflow notes for local development and deployment context.",
 			Tech: []string{
 				"Go",
 				"Templ",
@@ -152,14 +156,15 @@ func Projects() []Project {
 			},
 		},
 		{
-			Slug:       "bitofbytes",
-			Name:       "BitOfBytes",
-			Tagline:    "The personal landing page and project portfolio for Daniel Waters.",
-			Summary:    "A personal site for presenting resume details, contact links, and selected project work.",
-			RepoURL:    "https://github.com/bitofbytes-io/bitofbytes",
-			LiveURL:    "https://www.bitofbytes.io",
-			LastUpdate: "April 26, 2026",
-			Notes:      "Most recent work refreshed the project test registry.",
+			Slug:            "bitofbytes",
+			Name:            "BitOfBytes",
+			Tagline:         "The personal landing page and project portfolio for Daniel Waters.",
+			Summary:         "A personal site for presenting resume details, contact links, and selected project work.",
+			RepoURL:         "https://github.com/bitofbytes-io/bitofbytes",
+			LiveURL:         "https://www.bitofbytes.io",
+			LastUpdate:      "April 26, 2026",
+			FirstCommitDate: "2024-06-29",
+			Notes:           "Most recent work refreshed the project test registry.",
 			Tech: []string{
 				"Go",
 				"HTML templates",
@@ -192,14 +197,15 @@ func Projects() []Project {
 			},
 		},
 		{
-			Slug:       "anthology",
-			Name:       "Anthology",
-			Tagline:    "A two-tier catalogue for personal books, games, movies, and music.",
-			Summary:    "A personal media catalogue for organizing books, games, movies, music, and where they live.",
-			RepoURL:    "https://github.com/bitofbytes-io/anthology",
-			LiveURL:    "https://anthology.bitofbytes.io",
-			LastUpdate: "April 26, 2026",
-			Notes:      "Most recent work refreshed the Node 24 lint workflow and Goose migration tooling.",
+			Slug:            "anthology",
+			Name:            "Anthology",
+			Tagline:         "A two-tier catalogue for personal books, games, movies, and music.",
+			Summary:         "A personal media catalogue for organizing books, games, movies, music, and where they live.",
+			RepoURL:         "https://github.com/bitofbytes-io/anthology",
+			LiveURL:         "https://anthology.bitofbytes.io",
+			LastUpdate:      "April 26, 2026",
+			FirstCommitDate: "2025-10-30",
+			Notes:           "Most recent work refreshed the Node 24 lint workflow and Goose migration tooling.",
 			Tech: []string{
 				"Go",
 				"Chi",
@@ -236,22 +242,11 @@ func Projects() []Project {
 		},
 	}
 
-	firstCommitDates := map[string]string{
-		"permitpal":  "2026-05-01",
-		"dejaview":   "2026-01-04",
-		"learnd":     "2026-01-02",
-		"anthology":  "2025-10-30",
-		"bitofbytes": "2024-06-29",
-	}
-
 	slices.SortFunc(projects, func(a, b Project) int {
-		aDate := firstCommitDates[a.Slug]
-		bDate := firstCommitDates[b.Slug]
-
 		switch {
-		case aDate > bDate:
+		case a.FirstCommitDate > b.FirstCommitDate:
 			return -1
-		case aDate < bDate:
+		case a.FirstCommitDate < b.FirstCommitDate:
 			return 1
 		default:
 			return 0
@@ -259,14 +254,4 @@ func Projects() []Project {
 	})
 
 	return slices.Clone(projects)
-}
-
-func FindProject(slug string) (Project, bool) {
-	for _, project := range Projects() {
-		if project.Slug == slug {
-			return project, true
-		}
-	}
-
-	return Project{}, false
 }

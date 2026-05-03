@@ -24,7 +24,7 @@
   --bob-grid: rgb(165 201 52 / 0.13);
   --bob-font-title: "Handjet", "Pixelify Sans", "Share Tech Mono", ui-monospace, monospace;
   --bob-font-display: "Pixelify Sans", "Share Tech Mono", ui-monospace, monospace;
-  --bob-font-body: "Share Tech Mono", ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+  --bob-font-body: "Share Tech Mono", ui-monospace, "SFMono-Regular", "Menlo", "Monaco", "Consolas", monospace;
 }
 
 * {
