@@ -36,7 +36,7 @@ func Projects() []Project {
 			LiveURL:         "https://permitpal.bitofbytes.io",
 			LastUpdate:      "May 2, 2026",
 			FirstCommitDate: "2026-05-01",
-			Notes:           "Most recent work tightened security controls, form constraints, development fallback warnings, and test coverage.",
+			Notes:           "Most recent work polished the practice focus panel and road footer while tightening decimal-hour estimates, security controls, form constraints, and tests.",
 			Tech: []string{
 				"Go",
 				"HTMX",
@@ -162,9 +162,9 @@ func Projects() []Project {
 			Summary:         "A personal site for presenting resume details, contact links, and selected project work.",
 			RepoURL:         "https://github.com/bitofbytes-io/bitofbytes",
 			LiveURL:         "https://www.bitofbytes.io",
-			LastUpdate:      "April 26, 2026",
+			LastUpdate:      "May 3, 2026",
 			FirstCommitDate: "2024-06-29",
-			Notes:           "Most recent work refreshed the project test registry.",
+			Notes:           "Most recent work rebuilt the portfolio around focused project pages, screenshots, responsive navigation, and mobile focus polish.",
 			Tech: []string{
 				"Go",
 				"HTML templates",
