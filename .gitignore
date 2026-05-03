@@ -30,3 +30,8 @@ error.log
 .env
 .idea/
 tmp/
+
+# Local verification artifacts
+output/
+.playwright-mcp/
+/bitofbytes-*.png
