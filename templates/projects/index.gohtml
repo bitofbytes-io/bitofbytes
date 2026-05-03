@@ -1,0 +1,33 @@
+{{ template "header" . }}
+
+<main class="site-shell projects-shell projects-index-shell">
+	<section class="page-heading pixel-panel" aria-labelledby="projects-title">
+		<p class="eyebrow">Project index</p>
+		<h1 id="projects-title">Selected personal projects</h1>
+		<p>
+			A compact list of recent applications and the site itself.
+		</p>
+	</section>
+
+	<section class="project-index" aria-label="Projects">
+		{{ range .Projects }}
+		<article class="project-listing">
+			<div class="project-listing-main">
+				<p class="eyebrow">Last update: {{ .LastUpdate }}</p>
+				<h2><a href="/projects/{{ .Slug }}">{{ .Name }}</a></h2>
+				<p>{{ .Summary }}</p>
+			</div>
+			<div class="project-listing-meta">
+				<ul class="tech-list" aria-label="{{ .Name }} technology">
+					{{ range .Tech }}
+					<li>{{ . }}</li>
+					{{ end }}
+				</ul>
+				<a class="pixel-button secondary" href="/projects/{{ .Slug }}">Details</a>
+			</div>
+		</article>
+		{{ end }}
+	</section>
+</main>
+
+{{ template "footer" }}

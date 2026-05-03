@@ -2,7 +2,7 @@
 
 ## Overview
 - This repository contains a Go 1.22 web application for the BitOfBytes site https://bitofbytes.io
-- The HTTP entrypoint is `cmd/bob/bob.go`; it wires up controllers, parses templates from `templates.FS`, embeds blog posts from `posts.FS`, and serves static assets from `/static`.
+- The HTTP entrypoint is `cmd/bob/bob.go`; it wires up controllers, parses templates from `templates.FS`, and serves static assets from `/static`.
 - Controllers live in `controllers/`, services and data types live in `models/`, reusable view helpers live in `views/`, and Go HTML templates are under `templates/`.
 
 ## Configuration
@@ -18,8 +18,7 @@
 - Tailwind CSS assets are generated from `tailwind/styles.css` into `static/styles.css`. Use `make tail-prod` to build a minified stylesheet for production.
 
 ## Content & rendering
-- Blog posts live in `posts/*.md` with TOML frontmatter parsed by `github.com/adrg/frontmatter`. Markdown content is rendered to HTML with `github.com/yuin/goldmark` plus the syntax-highlighting extension.
-- Utility pages for Base64 encoding/decoding are backed by `models.Base64Service` and templates in `templates/utils/`.
+- Project portfolio data lives in `models/project.go` and renders through the templates in `templates/projects/`.
 - Gorilla CSRF middleware wraps the router; if you add new POST routes make sure to include CSRF tokens in the forms (`csrf.TemplateField`).
 
 ## Tests & tooling
@@ -29,4 +28,4 @@
 ## Miscellaneous tips
 - Static assets (images, PDFs, JS) are stored under `static/` and served at `/static/` via `http.FileServer`.
 - Templates use the helper types in `views/` (e.g., `views.Page`, `views.ParseFS`); new templates should follow the existing pattern and be parsed via the views package.
-- If you add new directories, remember that `templates/fs.go` and `posts/fs.go` use `go:embed` directives, so keep file names glob-friendly.
+- If you add new template directories, remember that `templates/fs.go` uses a `go:embed` directive, so keep file names glob-friendly.

@@ -4,32 +4,43 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>BitOfBytes</title>
+    <title>BitOfBytes | Daniel Waters</title>
     <link rel="stylesheet" href="/static/styles.css">
     <link rel="icon" type="image/x-icon" href="/static/favicon.ico">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Tiny5&family=Ubuntu+Sans+Mono:ital,wght@0,400..700;1,400..700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Handjet:wght@300..700&family=Pixelify+Sans:wght@400..700&family=Share+Tech+Mono&display=swap" rel="stylesheet">
 </head>
-<body class="bg-slate-600">
-<header>
-    <nav class="fixed top-0 left-0 right-0 flex items-center justify-between bg-cyan-950 p-2 mb-4 sm:p-6">
-        <div class="flex items-center flex-shrink-0 mr-6">
-            <img class="size-10 lg:size-24 rounded-full lg:ml-10"
-                 src="/static/bitofbytes-logo-small.png" alt="BitOfBytes Logo">
-        </div>
-        <div class="menu block">
-            <ul class="text-lg font-bold flex lg:gap-5 lg:text-4xl">
-                <li><a href="/" class="{{ if eq category "home" }}text-green-700 {{ else }} text-gray-300 {{ end }} hover:bg-gray-700 px-3 py-2 rounded">Home</a></li>
-                <li><a href="/utils" class="{{ if eq category "utils" }}text-green-700 {{ else }} text-gray-300 {{ end }} hover:bg-gray-700 px-3 py-2 rounded">Utils</a></li>
-                <li><a href="/blog" class="{{ if eq category "blog" }}text-green-700 {{ else }} text-gray-300 {{ end }} hover:bg-gray-700 px-3 py-2 rounded">Blog</a></li>
+<body>
+{{ if eq category "home" }}<div class="mobile-page-title" aria-hidden="true">Home</div>{{ end }}
+<div class="site-frame{{ if eq category "home" }} home-frame{{ end }}{{ if eq category "projects" }} projects-frame{{ end }}">
+<header class="site-header">
+    <nav class="site-nav" aria-label="Primary navigation">
+        <a class="brand-lockup" href="/">
+            <span class="brand-mark" aria-hidden="true">BoB</span>
+            <span class="brand-name">BitOfBytes</span>
+        </a>
+        <details class="nav-menu">
+            <summary class="menu-glyph" aria-label="Navigation menu">
+                <span class="menu-glyph-lines" aria-hidden="true"></span>
+            </summary>
+            <ul class="nav-links nav-menu-links">
+                <li><a href="/" class="{{ if eq category "home" }}is-active{{ end }}">Home</a></li>
+                <li><a href="/projects" class="{{ if eq category "projects" }}is-active{{ end }}">Projects</a></li>
+                <li><a href="/static/daniel-resume-2024.pdf">Resume</a></li>
             </ul>
-        </div>
+        </details>
+        <ul class="nav-links desktop-nav-links">
+            <li><a href="/" class="{{ if eq category "home" }}is-active{{ end }}">Home</a></li>
+            <li><a href="/projects" class="{{ if eq category "projects" }}is-active{{ end }}">Projects</a></li>
+            <li><a href="/static/daniel-resume-2024.pdf">Resume</a></li>
+        </ul>
     </nav>
 </header>
 {{ end }}
 {{ define "footer" }}
-<script src="/static/htmx.min.js"></script>
+</div>
+<script defer src="/static/nav-menu.js"></script>
 <script
   async
   defer
