@@ -34,9 +34,9 @@ func Projects() []Project {
 			Summary:         "A focused dashboard for tracking North Carolina learner permit exam readiness and study progress.",
 			RepoURL:         "https://github.com/bitofbytes-io/permitpal",
 			LiveURL:         "https://permitpal.bitofbytes.io",
-			LastUpdate:      "May 2, 2026",
+			LastUpdate:      "May 3, 2026",
 			FirstCommitDate: "2026-05-01",
-			Notes:           "Most recent work polished the practice focus panel and footer while tightening security controls, form constraints, development fallback warnings, and test coverage.",
+			Notes:           "Most recent work polished the practice focus panel and footer, tightened security controls and form constraints, and fixed mobile checklist inputs, readiness estimates, and save feedback.",
 			Tech: []string{
 				"Go",
 				"HTMX",
