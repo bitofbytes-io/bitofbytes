@@ -1,6 +1,6 @@
 module github.com/DryWaters/bitofbytes
 
-go 1.22
+go 1.25.10
 
 require (
 	github.com/gorilla/csrf v1.7.3

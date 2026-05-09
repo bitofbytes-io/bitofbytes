@@ -1,13 +1,13 @@
 FROM node:24.15.0-alpine3.23 AS tailwind-builder
-ARG TAILWIND_VERSION=4.1.13
+ARG TAILWIND_VERSION=4.3.0
 WORKDIR /app
 RUN npm init -y \
-    && npm install tailwindcss@${TAILWIND_VERSION} @tailwindcss/typography
+    && npm install tailwindcss@${TAILWIND_VERSION} @tailwindcss/cli@${TAILWIND_VERSION} @tailwindcss/typography
 COPY ./templates ./templates
 COPY ./tailwind/styles.css src/styles.css
 RUN npx @tailwindcss/cli -i src/styles.css -o /styles.css --minify
 
-FROM golang:1.25.9-alpine3.23 AS builder
+FROM golang:1.25.10-alpine3.23 AS builder
 ARG VERSION=dev
 ARG REVISION=unknown
 WORKDIR /app
