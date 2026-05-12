@@ -2,14 +2,23 @@ package models
 
 import "testing"
 
-func TestProjectsReturnsMostRecentProjectFirst(t *testing.T) {
+func TestProjectsReturnsMostRecentProjectsFirst(t *testing.T) {
 	t.Parallel()
 
 	projects := Projects()
 	if len(projects) == 0 {
 		t.Fatal("Projects() returned no projects")
 	}
-	if projects[0].Slug != "dined" {
-		t.Fatalf("first project slug = %q, want %q", projects[0].Slug, "dined")
+
+	for i := 1; i < len(projects); i++ {
+		if projects[i-1].FirstCommitDate < projects[i].FirstCommitDate {
+			t.Fatalf(
+				"Projects() not sorted by first commit date descending: project %q date %q before project %q date %q",
+				projects[i-1].Slug,
+				projects[i-1].FirstCommitDate,
+				projects[i].Slug,
+				projects[i].FirstCommitDate,
+			)
+		}
 	}
 }
