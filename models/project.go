@@ -28,6 +28,49 @@ type ProjectScreenshot struct {
 func Projects() []Project {
 	projects := []Project{
 		{
+			Slug:            "dined",
+			Name:            "Dined",
+			Tagline:         "Proof that nobody actually agreed on dinner.",
+			Summary:         "A private family restaurant memory ledger for remembering where everyone ate, who picked it, and how the table rated it.",
+			RepoURL:         "https://github.com/bitofbytes-io/dined",
+			LiveURL:         "https://dined.bitofbytes.io",
+			LastUpdate:      "May 12, 2026",
+			FirstCommitDate: "2026-05-10",
+			Notes:           "Most recent work polished the diner UI, desktop dine layout, and local visit logging inputs.",
+			Tech: []string{
+				"Go",
+				"HTMX",
+				"Tailwind-style CSS",
+				"PostgreSQL",
+				"Goose",
+				"Google Places API",
+				"Docker Swarm",
+			},
+			Highlights: []string{
+				"Logs restaurant visits with picker, attendee ratings, price level, tags, and notes so the family can remember what happened next time.",
+				"Keeps public readonly browsing separate from authenticated write controls for adding visits and managing restaurant metadata.",
+				"Wraps the workflow in a retro diner identity with booth, ticket-pad, and trophy-case screens.",
+			},
+			Paragraphs: []string{
+				"Dined is a private family restaurant memory ledger for answering the question: have we eaten here before, who picked it, and did we like it? It tracks restaurants, dining visits, pickers, participant ratings, tags, and notes without trying to become a public review network.",
+				"The app is built around a mobile-first logging workflow with Google Places lookup, a chronological public dine history, restaurant detail pages, and playful trophy-case stats. The visual direction leans into an authentic retro diner booth and jukebox feel so the product has a distinct personality around a simple family habit.",
+			},
+			Screenshots: []ProjectScreenshot{
+				{
+					Title: "Booth home",
+					Path:  "/static/projects/dined/booth-home.png",
+					Alt:   "Dined home screen with a retro diner booth scene and recent dine cards.",
+					Note:  "Captured from the local Dined memory preview.",
+				},
+				{
+					Title: "Trophy case",
+					Path:  "/static/projects/dined/trophy-case.png",
+					Alt:   "Dined trophy case screen with jukebox-inspired family dining stats.",
+					Note:  "Captured from the local Dined memory preview.",
+				},
+			},
+		},
+		{
 			Slug:            "permitpal",
 			Name:            "PermitPal",
 			Tagline:         "Your permit pal-less yelling, more tracking.",

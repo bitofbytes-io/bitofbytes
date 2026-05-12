@@ -32,7 +32,7 @@ func TestRoutesRenderCurrentSiteSurface(t *testing.T) {
 	}{
 		{path: "/", want: "Daniel Waters"},
 		{path: "/projects", want: "Selected personal projects"},
-		{path: "/projects/permitpal", want: "PermitPal"},
+		{path: "/projects/dined", want: "Dined"},
 	}
 
 	for _, tt := range tests {
