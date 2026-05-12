@@ -2,23 +2,42 @@
 
 <main class="site-shell home-shell">
 	<section class="home-console" aria-labelledby="intro-title">
-		<div class="pixel-panel profile-card">
-			<div class="profile-avatar-wrap">
-				<img class="profile-avatar" src="/static/daniel-pixel-avatar.png" alt="Pixel-art portrait of Daniel Waters">
-			</div>
+		<section class="notebook-panel profile-card">
 			<div class="profile-copy">
+				<p class="eyebrow">Field notes</p>
 				<h1 id="intro-title" aria-label="Daniel Waters"><span>Daniel</span><span>Waters</span></h1>
-				<p class="role">Senior Software Engineer @ Cisco</p>
-				<p class="profile-location"><span aria-hidden="true">⌖</span> Raleigh, NC</p>
-				<span class="profile-rule" aria-hidden="true"></span>
+				<p class="role">Notes from software, video, and useful side projects.</p>
+				<p class="intro-text">
+					I work on a live video solution enabling real-time team communication. In my free time, I play piano and tinker with personal projects.
+				</p>
+				<ul class="profile-actions" aria-label="Primary links">
+					<li><a class="notebook-button primary" href="/projects">Read projects</a></li>
+					<li><a class="notebook-button secondary" href="mailto:daniel@bitofbytes.io">Email Daniel</a></li>
+				</ul>
 			</div>
-			<p class="intro-text">
-				I work on a live video solution enabling real-time team communication. In my free time, I play piano and tinker with personal projects.
-			</p>
-		</div>
 
-		<section class="panel-section contact-section" aria-label="Connect">
-			<h2>Connect</h2>
+			<aside class="profile-panel" aria-label="Profile notes">
+				<figure class="profile-photo">
+					<img class="profile-avatar" src="/static/daniel_train.jpg" alt="Daniel Waters smiling on a train">
+				</figure>
+				<div class="profile-notes">
+					<div>
+						<strong>Current</strong>
+						<span>Senior Software Engineer at Cisco, focused on live collaboration systems.</span>
+					</div>
+					<div>
+						<strong>Base</strong>
+						<span>Raleigh, NC</span>
+					</div>
+				</div>
+			</aside>
+		</section>
+
+		<section class="notebook-panel contact-section" aria-labelledby="connect-title">
+			<div class="section-header">
+				<p class="eyebrow">Connect</p>
+				<h2 id="connect-title">Links and resume</h2>
+			</div>
 			<div class="contact-grid">
 				<a class="contact-card" href="https://github.com/bitofbytes-io">
 					<span class="contact-icon image-icon" aria-hidden="true"><img src="/static/github-mark-white.png" alt=""></span>
@@ -37,12 +56,7 @@
 					</span>
 					<span class="contact-arrow" aria-hidden="true">&gt;</span>
 				</a>
-			</div>
-		</section>
 
-		<section class="panel-section email-section" aria-label="Email">
-			<h2>Email</h2>
-			<div class="contact-grid">
 				<a class="contact-card" href="mailto:daniel@bitofbytes.io">
 					<span class="contact-icon mail-icon" aria-hidden="true"></span>
 					<span>
@@ -51,19 +65,16 @@
 					</span>
 					<span class="contact-arrow" aria-hidden="true">&gt;</span>
 				</a>
-			</div>
-		</section>
 
-		<section class="resume-section" aria-label="Resume">
-			<h2>Resume</h2>
-			<a class="contact-card resume-card" href="/static/daniel-resume-2024.pdf">
-				<span class="contact-icon resume-icon" aria-hidden="true"></span>
-				<span>
-					<span class="contact-label">Download Resume</span>
-					<span class="contact-value">daniel-waters-resume.pdf</span>
-				</span>
-				<span class="contact-arrow" aria-hidden="true">&gt;</span>
-			</a>
+				<a class="contact-card resume-card" href="/static/daniel-resume-2024.pdf">
+					<span class="contact-icon resume-icon" aria-hidden="true"></span>
+					<span>
+						<span class="contact-label">Resume</span>
+						<span class="contact-value">daniel-waters-resume.pdf</span>
+					</span>
+					<span class="contact-arrow" aria-hidden="true">&gt;</span>
+				</a>
+			</div>
 		</section>
 
 	</section>

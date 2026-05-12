@@ -2,25 +2,25 @@
 
 <main class="site-shell projects-shell project-detail-shell">
 	<article class="project-detail">
-		<header class="project-hero pixel-panel">
+		<header class="project-hero notebook-panel">
 			<div>
 				<p class="eyebrow">Project dossier</p>
 				<h1>{{ .Project.Name }}</h1>
 				<p class="project-tagline">{{ .Project.Tagline }}</p>
 			</div>
 			<div class="project-links">
-				<a class="pixel-button primary icon-button" href="{{ .Project.RepoURL }}">
+				<a class="notebook-button primary icon-button" href="{{ .Project.RepoURL }}">
 					<img class="button-icon" src="/static/github-mark.png" alt="" aria-hidden="true">
 					<span>GitHub</span>
 				</a>
 				{{ if .Project.LiveURL }}
-				<a class="pixel-button secondary" href="{{ .Project.LiveURL }}">Live site</a>
+				<a class="notebook-button secondary" href="{{ .Project.LiveURL }}">Live site</a>
 				{{ end }}
 			</div>
 		</header>
 
 		<div class="project-layout">
-			<section class="project-copy pixel-panel" aria-labelledby="overview-title">
+			<section class="project-copy notebook-panel" aria-labelledby="overview-title">
 				<div class="section-header compact">
 					<p class="eyebrow">Overview</p>
 					<h2 id="overview-title">What it does</h2>
@@ -50,7 +50,8 @@
 				</ul>
 			</section>
 
-			<aside class="project-aside pixel-panel" aria-label="Project metadata">
+			<aside class="project-aside notebook-panel" aria-label="Project metadata">
+				<p class="eyebrow">Field notes</p>
 				<dl class="metadata-list">
 					<div>
 						<dt>Last Update</dt>

@@ -1,0 +1,2036 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>BitOfBytes Homepage Design Directions</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,500;9..144,650&family=IBM+Plex+Mono:wght@400;500;600&family=Manrope:wght@400;600;700;800&family=Newsreader:opsz,wght@6..72,500;6..72,650&family=Outfit:wght@400;600;700;800&family=Space+Grotesk:wght@400;600;700&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --board-bg: #141413;
+      --board-ink: #f7f2e8;
+      --board-muted: #b9b0a2;
+      --board-line: rgb(247 242 232 / 0.16);
+      --max: 1180px;
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    html {
+      background: var(--board-bg);
+      color: var(--board-ink);
+      scroll-behavior: smooth;
+    }
+
+    body {
+      min-width: 320px;
+      margin: 0;
+      font-family: "Manrope", sans-serif;
+      letter-spacing: 0;
+      background:
+        linear-gradient(90deg, rgb(247 242 232 / 0.04) 1px, transparent 1px) 0 0 / 32px 32px,
+        linear-gradient(rgb(247 242 232 / 0.035) 1px, transparent 1px) 0 0 / 32px 32px,
+        var(--board-bg);
+    }
+
+    a {
+      color: inherit;
+    }
+
+    .board-header {
+      width: min(var(--max), calc(100vw - 32px));
+      margin: 0 auto;
+      padding: 34px 0 28px;
+    }
+
+    .board-header h1 {
+      max-width: 880px;
+      margin: 0;
+      font-family: "Fraunces", serif;
+      font-size: clamp(2.5rem, 7vw, 5.6rem);
+      font-weight: 650;
+      line-height: 0.94;
+    }
+
+    .board-header p {
+      max-width: 760px;
+      margin: 16px 0 0;
+      color: var(--board-muted);
+      font-size: clamp(1rem, 2vw, 1.2rem);
+      line-height: 1.7;
+    }
+
+    .jump-list {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      padding: 0;
+      margin: 24px 0 0;
+      list-style: none;
+    }
+
+    .jump-list a {
+      display: inline-flex;
+      min-height: 40px;
+      align-items: center;
+      border: 1px solid var(--board-line);
+      border-radius: 8px;
+      padding: 8px 12px;
+      color: var(--board-ink);
+      font: 600 0.9rem/1 "IBM Plex Mono", monospace;
+      text-decoration: none;
+      text-transform: uppercase;
+    }
+
+    .jump-list a:hover,
+    .jump-list a:focus-visible {
+      border-color: #f6ca45;
+      outline: none;
+    }
+
+    .direction {
+      padding: 42px 0 56px;
+      border-top: 1px solid var(--board-line);
+    }
+
+    .direction-note {
+      width: min(var(--max), calc(100vw - 32px));
+      margin: 0 auto 18px;
+    }
+
+    .direction-note p {
+      max-width: 780px;
+      margin: 6px 0 0;
+      color: var(--board-muted);
+      line-height: 1.7;
+    }
+
+    .kicker {
+      display: inline-flex;
+      gap: 10px;
+      align-items: center;
+      color: #f6ca45;
+      font: 700 0.78rem/1 "IBM Plex Mono", monospace;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+    }
+
+    .kicker::before {
+      width: 24px;
+      height: 2px;
+      background: currentColor;
+      content: "";
+    }
+
+    .direction-note h2 {
+      margin: 8px 0 0;
+      color: var(--board-ink);
+      font-family: "Space Grotesk", sans-serif;
+      font-size: clamp(1.55rem, 3.2vw, 2.6rem);
+      line-height: 1;
+    }
+
+    .mock-page {
+      overflow: hidden;
+      width: min(var(--max), calc(100vw - 32px));
+      min-height: 700px;
+      margin: 0 auto;
+      border: 1px solid rgb(255 255 255 / 0.13);
+      border-radius: 8px;
+      box-shadow: 0 26px 80px rgb(0 0 0 / 0.34);
+    }
+
+    .mock-nav {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 24px;
+    }
+
+    .mock-brand {
+      display: inline-flex;
+      align-items: center;
+      gap: 12px;
+      color: inherit;
+      text-decoration: none;
+    }
+
+    .mock-mark {
+      display: grid;
+      width: 42px;
+      height: 42px;
+      place-items: center;
+      flex: 0 0 auto;
+      font-weight: 800;
+      line-height: 1;
+    }
+
+    .mock-links {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 18px;
+      padding: 0;
+      margin: 0;
+      list-style: none;
+    }
+
+    .mock-links a {
+      display: inline-flex;
+      min-height: 40px;
+      align-items: center;
+      text-decoration: none;
+    }
+
+    .contact-row {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 12px;
+      padding: 0;
+      margin: 0;
+      list-style: none;
+    }
+
+    .contact-row a {
+      text-decoration: none;
+    }
+
+    .concept-a {
+      --ink: #fbf4de;
+      --muted: #b9b4a7;
+      --panel: #111512;
+      --line: #3a4239;
+      --yellow: #f7d64d;
+      --teal: #6fe7cb;
+      --coral: #ff7364;
+      position: relative;
+      color: var(--ink);
+      background:
+        linear-gradient(90deg, rgb(247 214 77 / 0.08) 1px, transparent 1px) 0 0 / 26px 26px,
+        linear-gradient(rgb(111 231 203 / 0.055) 1px, transparent 1px) 0 0 / 26px 26px,
+        #080a09;
+      font-family: "Space Grotesk", sans-serif;
+    }
+
+    .concept-a::before {
+      position: absolute;
+      inset: 0;
+      pointer-events: none;
+      background:
+        linear-gradient(135deg, rgb(255 115 100 / 0.12), transparent 34%),
+        linear-gradient(315deg, rgb(111 231 203 / 0.11), transparent 30%);
+      content: "";
+    }
+
+    .concept-a > * {
+      position: relative;
+      z-index: 1;
+    }
+
+    .concept-a .mock-nav {
+      padding: 22px clamp(18px, 4vw, 46px);
+      border-bottom: 1px solid rgb(251 244 222 / 0.14);
+      background: rgb(8 10 9 / 0.78);
+    }
+
+    .concept-a .mock-mark {
+      border: 2px solid var(--yellow);
+      color: var(--yellow);
+      font-family: "IBM Plex Mono", monospace;
+      box-shadow: 5px 5px 0 var(--coral);
+    }
+
+    .concept-a .mock-brand span:last-child {
+      font-size: 1.2rem;
+      font-weight: 800;
+    }
+
+    .concept-a .mock-links a {
+      color: var(--muted);
+      font: 700 0.82rem/1 "IBM Plex Mono", monospace;
+      letter-spacing: 0.06em;
+      text-transform: uppercase;
+    }
+
+    .concept-a .mock-links a:hover,
+    .concept-a .mock-links a:focus-visible {
+      color: var(--yellow);
+      outline: none;
+    }
+
+    .arcade-hero {
+      display: grid;
+      grid-template-columns: minmax(0, 0.92fr) minmax(290px, 0.58fr);
+      gap: clamp(28px, 5vw, 62px);
+      align-items: center;
+      min-height: 600px;
+      padding: clamp(26px, 6vw, 68px) clamp(18px, 5vw, 62px);
+    }
+
+    .arcade-copy {
+      max-width: 660px;
+    }
+
+    .arcade-copy h3 {
+      margin: 0;
+      max-width: 10ch;
+      color: var(--ink);
+      font-size: clamp(4rem, 10vw, 8.7rem);
+      font-weight: 800;
+      line-height: 0.84;
+      text-transform: uppercase;
+    }
+
+    .arcade-copy .role {
+      display: inline-flex;
+      margin: 18px 0 0;
+      border: 1px solid rgb(111 231 203 / 0.55);
+      border-radius: 8px;
+      padding: 8px 10px;
+      color: var(--teal);
+      font: 700 0.84rem/1.2 "IBM Plex Mono", monospace;
+      letter-spacing: 0.04em;
+      text-transform: uppercase;
+    }
+
+    .arcade-copy p {
+      max-width: 60ch;
+      margin: 24px 0 0;
+      color: var(--muted);
+      font-size: clamp(1.04rem, 2vw, 1.22rem);
+      line-height: 1.75;
+    }
+
+    .arcade-actions {
+      margin-top: 30px;
+    }
+
+    .arcade-actions a {
+      display: inline-flex;
+      min-height: 46px;
+      align-items: center;
+      border: 1px solid rgb(251 244 222 / 0.16);
+      border-radius: 8px;
+      padding: 10px 14px;
+      background: rgb(251 244 222 / 0.06);
+      color: var(--ink);
+      font-weight: 700;
+    }
+
+    .arcade-actions a.primary {
+      border-color: var(--yellow);
+      background: var(--yellow);
+      color: #12110c;
+    }
+
+    .arcade-portrait {
+      position: relative;
+      align-self: stretch;
+      min-height: 440px;
+      border: 1px solid rgb(247 214 77 / 0.5);
+      border-radius: 8px;
+      background:
+        linear-gradient(135deg, rgb(247 214 77 / 0.14), transparent 44%),
+        var(--panel);
+      box-shadow: 14px 14px 0 rgb(255 115 100 / 0.75);
+    }
+
+    .arcade-portrait img {
+      display: block;
+      width: min(82%, 360px);
+      aspect-ratio: 1 / 1;
+      object-fit: cover;
+      margin: 34px auto 0;
+      border: 1px solid rgb(251 244 222 / 0.18);
+      image-rendering: pixelated;
+    }
+
+    .arcade-portrait dl {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 1px;
+      margin: 24px 0 0;
+      border-top: 1px solid rgb(251 244 222 / 0.12);
+      background: rgb(251 244 222 / 0.12);
+    }
+
+    .arcade-portrait div {
+      min-width: 0;
+      padding: 14px;
+      background: #101411;
+    }
+
+    .arcade-portrait dt {
+      color: var(--yellow);
+      font: 700 0.72rem/1 "IBM Plex Mono", monospace;
+      text-transform: uppercase;
+    }
+
+    .arcade-portrait dd {
+      margin: 6px 0 0;
+      color: var(--ink);
+      font-size: 0.95rem;
+    }
+
+    .concept-b {
+      --ink: #152225;
+      --muted: #66716f;
+      --paper: #fbf8ef;
+      --line: #d8d2c2;
+      --moss: #386f5c;
+      --blue: #2267a8;
+      --tomato: #d95d39;
+      color: var(--ink);
+      background:
+        linear-gradient(90deg, rgb(21 34 37 / 0.04) 1px, transparent 1px) 0 0 / 44px 44px,
+        var(--paper);
+      font-family: "Outfit", sans-serif;
+    }
+
+    .concept-b .mock-nav {
+      padding: 24px clamp(18px, 4vw, 48px);
+    }
+
+    .concept-b .mock-mark {
+      border-radius: 8px;
+      background: var(--ink);
+      color: #fff9df;
+      font-family: "IBM Plex Mono", monospace;
+    }
+
+    .concept-b .mock-brand span:last-child {
+      font-size: 1.08rem;
+      font-weight: 800;
+    }
+
+    .concept-b .mock-links a {
+      color: var(--muted);
+      font-weight: 700;
+    }
+
+    .concept-b .mock-links a:first-child {
+      color: var(--ink);
+    }
+
+    .studio-hero {
+      display: grid;
+      grid-template-columns: minmax(0, 1fr) minmax(270px, 420px);
+      gap: clamp(28px, 6vw, 74px);
+      align-items: center;
+      padding: clamp(26px, 6vw, 72px) clamp(18px, 5vw, 62px) clamp(34px, 6vw, 68px);
+    }
+
+    .studio-copy h3 {
+      max-width: 11ch;
+      margin: 0;
+      font-family: "Newsreader", serif;
+      font-size: clamp(3.9rem, 9vw, 8rem);
+      font-weight: 650;
+      line-height: 0.9;
+      letter-spacing: 0;
+    }
+
+    .studio-copy .role {
+      display: block;
+      max-width: 34rem;
+      margin: 22px 0 0;
+      color: var(--moss);
+      font-size: clamp(1.35rem, 3vw, 2.2rem);
+      font-weight: 700;
+      line-height: 1.12;
+    }
+
+    .studio-copy p {
+      max-width: 58ch;
+      margin: 24px 0 0;
+      color: var(--muted);
+      font-size: clamp(1rem, 2vw, 1.18rem);
+      line-height: 1.8;
+    }
+
+    .studio-contact {
+      margin-top: 32px;
+    }
+
+    .studio-contact a {
+      display: inline-flex;
+      min-height: 44px;
+      align-items: center;
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      padding: 9px 13px;
+      background: #fffdf7;
+      color: var(--ink);
+      font-weight: 700;
+    }
+
+    .studio-card {
+      position: relative;
+      min-height: 500px;
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      background: #fffdf7;
+      box-shadow: 0 28px 60px rgb(21 34 37 / 0.12);
+    }
+
+    .studio-card::before {
+      position: absolute;
+      top: 18px;
+      right: 18px;
+      bottom: 18px;
+      left: 18px;
+      border: 1px solid rgb(34 103 168 / 0.26);
+      content: "";
+      pointer-events: none;
+    }
+
+    .studio-card img {
+      position: relative;
+      z-index: 1;
+      display: block;
+      width: calc(100% - 52px);
+      aspect-ratio: 4 / 5;
+      object-fit: cover;
+      margin: 26px auto 0;
+      border-radius: 8px;
+      filter: saturate(0.95) contrast(1.02);
+    }
+
+    .studio-stats {
+      position: relative;
+      z-index: 1;
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 10px;
+      width: calc(100% - 52px);
+      margin: 14px auto 0;
+    }
+
+    .studio-stats div {
+      min-width: 0;
+      border-radius: 8px;
+      padding: 14px;
+      color: #fffdf7;
+    }
+
+    .studio-stats div:first-child {
+      background: var(--blue);
+    }
+
+    .studio-stats div:last-child {
+      background: var(--tomato);
+    }
+
+    .studio-stats strong {
+      display: block;
+      font-size: 1rem;
+      line-height: 1.1;
+    }
+
+    .studio-stats span {
+      display: block;
+      margin-top: 5px;
+      font-size: 0.86rem;
+      line-height: 1.35;
+      opacity: 0.84;
+    }
+
+    .concept-c {
+      --ink: #edf7f2;
+      --muted: #a7b8b2;
+      --panel: #111a1d;
+      --line: #26383f;
+      --cyan: #69d9ff;
+      --lime: #b8ee68;
+      --rose: #ff7f9a;
+      position: relative;
+      color: var(--ink);
+      background:
+        linear-gradient(115deg, rgb(105 217 255 / 0.12), transparent 28%),
+        linear-gradient(245deg, rgb(255 127 154 / 0.1), transparent 34%),
+        #071013;
+      font-family: "Manrope", sans-serif;
+    }
+
+    .concept-c::before {
+      position: absolute;
+      inset: 0;
+      pointer-events: none;
+      background:
+        linear-gradient(90deg, rgb(237 247 242 / 0.035) 1px, transparent 1px) 0 0 / 64px 64px,
+        linear-gradient(rgb(237 247 242 / 0.035) 1px, transparent 1px) 0 0 / 64px 64px;
+      content: "";
+    }
+
+    .concept-c > * {
+      position: relative;
+      z-index: 1;
+    }
+
+    .concept-c .mock-nav {
+      padding: 22px clamp(18px, 4vw, 48px);
+      border-bottom: 1px solid rgb(237 247 242 / 0.12);
+    }
+
+    .concept-c .mock-mark {
+      border-radius: 8px;
+      background: linear-gradient(135deg, var(--cyan), var(--lime));
+      color: #071013;
+      font-family: "IBM Plex Mono", monospace;
+    }
+
+    .concept-c .mock-brand span:last-child {
+      font-weight: 800;
+      letter-spacing: 0.01em;
+    }
+
+    .concept-c .mock-links a {
+      color: var(--muted);
+      font-weight: 800;
+    }
+
+    .concept-c .mock-links a:hover,
+    .concept-c .mock-links a:focus-visible {
+      color: var(--cyan);
+      outline: none;
+    }
+
+    .signal-hero {
+      display: grid;
+      grid-template-columns: minmax(0, 0.9fr) minmax(290px, 0.62fr);
+      gap: clamp(28px, 5vw, 62px);
+      align-items: center;
+      min-height: 600px;
+      padding: clamp(28px, 6vw, 72px) clamp(18px, 5vw, 62px);
+    }
+
+    .signal-copy h3 {
+      max-width: 10ch;
+      margin: 0;
+      font-size: clamp(4rem, 9vw, 8.4rem);
+      font-weight: 800;
+      line-height: 0.86;
+    }
+
+    .signal-copy .role {
+      margin: 22px 0 0;
+      color: var(--cyan);
+      font: 600 clamp(1.05rem, 2.4vw, 1.55rem)/1.32 "IBM Plex Mono", monospace;
+    }
+
+    .signal-copy p {
+      max-width: 58ch;
+      margin: 24px 0 0;
+      color: var(--muted);
+      font-size: clamp(1rem, 2vw, 1.16rem);
+      line-height: 1.75;
+    }
+
+    .signal-actions {
+      margin-top: 32px;
+    }
+
+    .signal-actions a {
+      display: inline-flex;
+      min-height: 46px;
+      align-items: center;
+      border: 1px solid rgb(237 247 242 / 0.14);
+      border-radius: 8px;
+      padding: 10px 14px;
+      background: rgb(237 247 242 / 0.05);
+      color: var(--ink);
+      font-weight: 800;
+    }
+
+    .signal-panel {
+      display: grid;
+      gap: 12px;
+    }
+
+    .signal-card {
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      background: rgb(17 26 29 / 0.82);
+      box-shadow: 0 20px 70px rgb(0 0 0 / 0.26);
+    }
+
+    .signal-card.profile {
+      padding: 16px;
+    }
+
+    .signal-card.profile img {
+      display: block;
+      width: 100%;
+      aspect-ratio: 16 / 11;
+      object-fit: cover;
+      border-radius: 8px;
+      filter: saturate(0.82) contrast(1.05);
+    }
+
+    .signal-card.profile div {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      margin-top: 12px;
+    }
+
+    .signal-pill {
+      display: inline-flex;
+      min-height: 30px;
+      align-items: center;
+      border: 1px solid rgb(105 217 255 / 0.24);
+      border-radius: 8px;
+      padding: 5px 9px;
+      color: var(--cyan);
+      font: 600 0.76rem/1 "IBM Plex Mono", monospace;
+      text-transform: uppercase;
+    }
+
+    .wave-card {
+      padding: 20px;
+    }
+
+    .wave-card h4 {
+      margin: 0 0 16px;
+      color: var(--lime);
+      font: 600 0.78rem/1 "IBM Plex Mono", monospace;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+    }
+
+    .wave-lines {
+      display: grid;
+      gap: 8px;
+    }
+
+    .wave-lines span {
+      display: block;
+      height: 10px;
+      border-radius: 999px;
+      background: linear-gradient(90deg, var(--cyan), var(--lime), var(--rose));
+    }
+
+    .wave-lines span:nth-child(1) {
+      width: 72%;
+    }
+
+    .wave-lines span:nth-child(2) {
+      width: 92%;
+    }
+
+    .wave-lines span:nth-child(3) {
+      width: 58%;
+    }
+
+    .wave-lines span:nth-child(4) {
+      width: 81%;
+    }
+
+    .concept-d {
+      --ink: #151111;
+      --muted: #67615a;
+      --paper: #fff8ea;
+      --line: #221c18;
+      --yellow: #ffd84d;
+      --blue: #355cff;
+      --green: #1f8f68;
+      --pink: #f25f8c;
+      color: var(--ink);
+      background:
+        repeating-linear-gradient(90deg, rgb(21 17 17 / 0.035) 0 1px, transparent 1px 16px),
+        var(--paper);
+      font-family: "Outfit", sans-serif;
+    }
+
+    .concept-d .mock-nav {
+      padding: 20px clamp(18px, 4vw, 48px);
+      border-bottom: 3px solid var(--line);
+      background: #fffdf6;
+    }
+
+    .concept-d .mock-mark {
+      border: 2px solid var(--line);
+      border-radius: 8px;
+      background: var(--yellow);
+      color: var(--line);
+      font-family: "IBM Plex Mono", monospace;
+      box-shadow: 4px 4px 0 var(--blue);
+    }
+
+    .concept-d .mock-brand span:last-child {
+      font-weight: 800;
+    }
+
+    .concept-d .mock-links a {
+      color: var(--ink);
+      font-weight: 800;
+    }
+
+    .pocket-hero {
+      display: grid;
+      grid-template-columns: minmax(0, 0.88fr) minmax(300px, 0.62fr);
+      gap: clamp(26px, 5vw, 58px);
+      align-items: center;
+      padding: clamp(28px, 6vw, 70px) clamp(18px, 5vw, 62px);
+    }
+
+    .pocket-copy h3 {
+      margin: 0;
+      max-width: 10ch;
+      font-size: clamp(4rem, 10vw, 8.8rem);
+      font-weight: 800;
+      line-height: 0.82;
+      text-transform: uppercase;
+    }
+
+    .pocket-copy .role {
+      display: inline-block;
+      margin: 20px 0 0;
+      border: 2px solid var(--line);
+      border-radius: 8px;
+      padding: 8px 10px;
+      background: var(--green);
+      color: #fffdf6;
+      font: 700 0.95rem/1.2 "IBM Plex Mono", monospace;
+      box-shadow: 4px 4px 0 var(--line);
+    }
+
+    .pocket-copy p {
+      max-width: 56ch;
+      margin: 26px 0 0;
+      color: var(--muted);
+      font-size: clamp(1rem, 2vw, 1.2rem);
+      line-height: 1.75;
+    }
+
+    .pocket-actions {
+      margin-top: 32px;
+    }
+
+    .pocket-actions a {
+      display: inline-flex;
+      min-height: 48px;
+      align-items: center;
+      border: 2px solid var(--line);
+      border-radius: 8px;
+      padding: 10px 14px;
+      background: #fffdf6;
+      color: var(--ink);
+      font-weight: 800;
+      box-shadow: 4px 4px 0 var(--line);
+    }
+
+    .pocket-actions a:first-child {
+      background: var(--yellow);
+    }
+
+    .pocket-stack {
+      display: grid;
+      gap: 14px;
+      align-content: center;
+    }
+
+    .pocket-card {
+      border: 2px solid var(--line);
+      border-radius: 8px;
+      background: #fffdf6;
+      box-shadow: 6px 6px 0 var(--line);
+    }
+
+    .pocket-photo {
+      overflow: hidden;
+      padding: 12px;
+      transform: rotate(1.5deg);
+    }
+
+    .pocket-photo img {
+      display: block;
+      width: 100%;
+      aspect-ratio: 4 / 3;
+      object-fit: cover;
+      border: 2px solid var(--line);
+      border-radius: 8px;
+      filter: saturate(0.9) contrast(1.05);
+    }
+
+    .pocket-links {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 10px;
+      padding: 12px;
+    }
+
+    .pocket-links a {
+      display: grid;
+      min-height: 88px;
+      align-content: center;
+      border: 2px solid var(--line);
+      border-radius: 8px;
+      padding: 12px;
+      color: #fffdf6;
+      font-weight: 800;
+      text-decoration: none;
+    }
+
+    .pocket-links a:nth-child(1) {
+      background: var(--blue);
+    }
+
+    .pocket-links a:nth-child(2) {
+      background: var(--pink);
+    }
+
+    .pocket-links a:nth-child(3) {
+      background: var(--green);
+    }
+
+    .pocket-links a:nth-child(4) {
+      background: var(--yellow);
+      color: var(--line);
+    }
+
+    .pocket-links span {
+      display: block;
+      margin-top: 5px;
+      font: 600 0.76rem/1.3 "IBM Plex Mono", monospace;
+      overflow-wrap: anywhere;
+      opacity: 0.86;
+    }
+
+    .concept-e {
+      --ink: #f4fbff;
+      --muted: #a9babf;
+      --panel: #111b21;
+      --line: #2a424b;
+      --amber: #ffd166;
+      --aqua: #77e5ff;
+      --red: #ff5a5f;
+      --green: #81f4b4;
+      position: relative;
+      color: var(--ink);
+      background:
+        repeating-linear-gradient(0deg, rgb(244 251 255 / 0.035) 0 1px, transparent 1px 7px),
+        linear-gradient(120deg, rgb(119 229 255 / 0.12), transparent 34%),
+        linear-gradient(250deg, rgb(255 90 95 / 0.11), transparent 32%),
+        #071015;
+      font-family: "Manrope", sans-serif;
+    }
+
+    .concept-e .mock-nav {
+      padding: 20px clamp(18px, 4vw, 48px);
+      border-bottom: 1px solid rgb(244 251 255 / 0.13);
+      background: rgb(7 16 21 / 0.84);
+    }
+
+    .concept-e .mock-mark {
+      border-radius: 8px;
+      background: var(--red);
+      color: #fff;
+      font-family: "IBM Plex Mono", monospace;
+      box-shadow: 0 0 0 5px rgb(255 90 95 / 0.16);
+    }
+
+    .concept-e .mock-brand span:last-child {
+      font-weight: 800;
+    }
+
+    .concept-e .mock-links a {
+      color: var(--muted);
+      font-weight: 800;
+    }
+
+    .concept-e .mock-links a:hover,
+    .concept-e .mock-links a:focus-visible {
+      color: var(--amber);
+      outline: none;
+    }
+
+    .broadcast-hero {
+      display: grid;
+      grid-template-columns: minmax(0, 0.86fr) minmax(310px, 0.64fr);
+      gap: clamp(28px, 5vw, 62px);
+      align-items: center;
+      min-height: 600px;
+      padding: clamp(28px, 6vw, 70px) clamp(18px, 5vw, 62px);
+    }
+
+    .broadcast-copy h3 {
+      max-width: 10ch;
+      margin: 0;
+      font-size: clamp(4rem, 9vw, 8.2rem);
+      font-weight: 800;
+      line-height: 0.86;
+    }
+
+    .broadcast-copy .role {
+      display: inline-flex;
+      gap: 9px;
+      align-items: center;
+      margin: 22px 0 0;
+      color: var(--aqua);
+      font: 700 clamp(1rem, 2vw, 1.28rem)/1.35 "IBM Plex Mono", monospace;
+    }
+
+    .broadcast-copy .role::before {
+      width: 11px;
+      height: 11px;
+      border-radius: 999px;
+      background: var(--red);
+      box-shadow: 0 0 18px rgb(255 90 95 / 0.76);
+      content: "";
+    }
+
+    .broadcast-copy p {
+      max-width: 58ch;
+      margin: 24px 0 0;
+      color: var(--muted);
+      font-size: clamp(1rem, 2vw, 1.16rem);
+      line-height: 1.75;
+    }
+
+    .broadcast-actions {
+      margin-top: 32px;
+    }
+
+    .broadcast-actions a {
+      display: inline-flex;
+      min-height: 46px;
+      align-items: center;
+      border: 1px solid rgb(244 251 255 / 0.14);
+      border-radius: 8px;
+      padding: 10px 14px;
+      background: rgb(244 251 255 / 0.06);
+      color: var(--ink);
+      font-weight: 800;
+    }
+
+    .broadcast-actions a:first-child {
+      border-color: var(--amber);
+      background: var(--amber);
+      color: #17120a;
+    }
+
+    .broadcast-panel {
+      display: grid;
+      gap: 12px;
+    }
+
+    .broadcast-monitor {
+      overflow: hidden;
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      background: var(--panel);
+      box-shadow: 0 24px 70px rgb(0 0 0 / 0.28);
+    }
+
+    .broadcast-monitor img {
+      display: block;
+      width: 100%;
+      aspect-ratio: 16 / 10;
+      object-fit: cover;
+      filter: saturate(0.84) contrast(1.05);
+    }
+
+    .broadcast-monitor footer {
+      display: flex;
+      justify-content: space-between;
+      gap: 12px;
+      padding: 12px 14px;
+      color: var(--aqua);
+      font: 700 0.78rem/1.2 "IBM Plex Mono", monospace;
+      text-transform: uppercase;
+    }
+
+    .broadcast-meters {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 12px;
+    }
+
+    .broadcast-meter {
+      min-width: 0;
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      padding: 14px;
+      background: rgb(17 27 33 / 0.88);
+    }
+
+    .broadcast-meter strong {
+      display: block;
+      color: var(--ink);
+      font-size: 0.98rem;
+    }
+
+    .broadcast-meter span {
+      display: block;
+      height: 9px;
+      margin-top: 12px;
+      border-radius: 999px;
+      background: linear-gradient(90deg, var(--green), var(--amber), var(--red));
+    }
+
+    .broadcast-meter:last-child span {
+      width: 72%;
+      background: linear-gradient(90deg, var(--aqua), var(--green));
+    }
+
+    .concept-f {
+      --ink: #102232;
+      --muted: #5d7180;
+      --paper: #f5fbff;
+      --line: #bfd2dc;
+      --blue: #1b62ff;
+      --mint: #19a974;
+      --orange: #ff8a3d;
+      color: var(--ink);
+      background:
+        linear-gradient(90deg, rgb(27 98 255 / 0.08) 1px, transparent 1px) 0 0 / 34px 34px,
+        linear-gradient(rgb(27 98 255 / 0.06) 1px, transparent 1px) 0 0 / 34px 34px,
+        var(--paper);
+      font-family: "Space Grotesk", sans-serif;
+    }
+
+    .concept-f .mock-nav {
+      padding: 22px clamp(18px, 4vw, 48px);
+      border-bottom: 1px solid var(--line);
+      background: rgb(245 251 255 / 0.86);
+    }
+
+    .concept-f .mock-mark {
+      border: 1px solid var(--blue);
+      border-radius: 8px;
+      background: #fff;
+      color: var(--blue);
+      font-family: "IBM Plex Mono", monospace;
+    }
+
+    .concept-f .mock-brand span:last-child {
+      font-weight: 800;
+    }
+
+    .concept-f .mock-links a {
+      color: var(--muted);
+      font-weight: 800;
+    }
+
+    .concept-f .mock-links a:first-child {
+      color: var(--blue);
+    }
+
+    .blueprint-hero {
+      display: grid;
+      grid-template-columns: minmax(0, 0.9fr) minmax(300px, 0.6fr);
+      gap: clamp(28px, 5vw, 62px);
+      align-items: center;
+      min-height: 600px;
+      padding: clamp(28px, 6vw, 70px) clamp(18px, 5vw, 62px);
+    }
+
+    .blueprint-copy h3 {
+      max-width: 10ch;
+      margin: 0;
+      color: var(--ink);
+      font-size: clamp(4rem, 9vw, 8.5rem);
+      font-weight: 800;
+      line-height: 0.84;
+    }
+
+    .blueprint-copy .role {
+      display: block;
+      max-width: 34rem;
+      margin: 22px 0 0;
+      color: var(--blue);
+      font: 700 clamp(1.06rem, 2.2vw, 1.5rem)/1.35 "IBM Plex Mono", monospace;
+    }
+
+    .blueprint-copy p {
+      max-width: 58ch;
+      margin: 24px 0 0;
+      color: var(--muted);
+      font-size: clamp(1rem, 2vw, 1.16rem);
+      line-height: 1.75;
+    }
+
+    .blueprint-actions {
+      margin-top: 32px;
+    }
+
+    .blueprint-actions a {
+      display: inline-flex;
+      min-height: 46px;
+      align-items: center;
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      padding: 10px 14px;
+      background: #fff;
+      color: var(--ink);
+      font-weight: 800;
+    }
+
+    .blueprint-actions a:first-child {
+      background: var(--blue);
+      color: #fff;
+    }
+
+    .blueprint-board {
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      padding: 16px;
+      background: rgb(255 255 255 / 0.82);
+      box-shadow: 0 26px 64px rgb(16 34 50 / 0.12);
+    }
+
+    .blueprint-card {
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      background: #fff;
+    }
+
+    .blueprint-card.profile {
+      overflow: hidden;
+    }
+
+    .blueprint-card.profile img {
+      display: block;
+      width: 100%;
+      aspect-ratio: 16 / 11;
+      object-fit: cover;
+      filter: saturate(0.84) contrast(1.03);
+    }
+
+    .blueprint-list {
+      display: grid;
+      gap: 10px;
+      padding: 0;
+      margin: 12px 0 0;
+      list-style: none;
+    }
+
+    .blueprint-list li {
+      display: flex;
+      justify-content: space-between;
+      gap: 14px;
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      padding: 12px;
+      background: #fff;
+      color: var(--muted);
+      font: 700 0.82rem/1.25 "IBM Plex Mono", monospace;
+      text-transform: uppercase;
+    }
+
+    .blueprint-list strong {
+      color: var(--ink);
+      font-family: "Space Grotesk", sans-serif;
+      text-transform: none;
+    }
+
+    .concept-g {
+      --ink: #f7f0e5;
+      --muted: #b9ab99;
+      --paper: #1a1714;
+      --line: #3b3129;
+      --gold: #f7bf4f;
+      --teal: #5fd0be;
+      --plum: #ad74ff;
+      position: relative;
+      color: var(--ink);
+      background:
+        linear-gradient(90deg, rgb(247 191 79 / 0.06) 1px, transparent 1px) 0 0 / 48px 48px,
+        linear-gradient(rgb(95 208 190 / 0.04) 1px, transparent 1px) 0 0 / 48px 48px,
+        var(--paper);
+      font-family: "Newsreader", serif;
+    }
+
+    .concept-g .mock-nav {
+      padding: 22px clamp(18px, 4vw, 48px);
+      border-bottom: 1px solid var(--line);
+      background: rgb(26 23 20 / 0.88);
+      font-family: "Manrope", sans-serif;
+    }
+
+    .concept-g .mock-mark {
+      border: 1px solid var(--gold);
+      border-radius: 8px;
+      color: var(--gold);
+      font-family: "IBM Plex Mono", monospace;
+    }
+
+    .concept-g .mock-brand span:last-child {
+      font-weight: 800;
+    }
+
+    .concept-g .mock-links a {
+      color: var(--muted);
+      font-weight: 800;
+    }
+
+    .notebook-hero {
+      display: grid;
+      grid-template-columns: minmax(0, 0.82fr) minmax(300px, 0.68fr);
+      gap: clamp(28px, 5vw, 62px);
+      align-items: center;
+      min-height: 600px;
+      padding: clamp(28px, 6vw, 70px) clamp(18px, 5vw, 62px);
+    }
+
+    .notebook-copy h3 {
+      max-width: 10ch;
+      margin: 0;
+      font-size: clamp(4rem, 9vw, 8.4rem);
+      font-weight: 650;
+      line-height: 0.9;
+    }
+
+    .notebook-copy .role {
+      display: block;
+      max-width: 32rem;
+      margin: 22px 0 0;
+      color: var(--teal);
+      font: 700 clamp(1rem, 2.2vw, 1.42rem)/1.35 "IBM Plex Mono", monospace;
+    }
+
+    .notebook-copy p {
+      max-width: 58ch;
+      margin: 24px 0 0;
+      color: var(--muted);
+      font: 400 clamp(1.08rem, 2vw, 1.24rem)/1.75 "Manrope", sans-serif;
+    }
+
+    .notebook-actions {
+      margin-top: 32px;
+      font-family: "Manrope", sans-serif;
+    }
+
+    .notebook-actions a {
+      display: inline-flex;
+      min-height: 46px;
+      align-items: center;
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      padding: 10px 14px;
+      background: rgb(247 240 229 / 0.06);
+      color: var(--ink);
+      font-weight: 800;
+    }
+
+    .notebook-actions a:first-child {
+      border-color: var(--gold);
+      background: var(--gold);
+      color: #20160b;
+    }
+
+    .notebook-panel {
+      display: grid;
+      gap: 14px;
+      font-family: "Manrope", sans-serif;
+    }
+
+    .notebook-photo {
+      overflow: hidden;
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      background: #241f1a;
+    }
+
+    .notebook-photo img {
+      display: block;
+      width: 100%;
+      aspect-ratio: 16 / 11;
+      object-fit: cover;
+      filter: sepia(0.08) saturate(0.9) contrast(1.03);
+    }
+
+    .notebook-notes {
+      display: grid;
+      gap: 1px;
+      overflow: hidden;
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      background: var(--line);
+    }
+
+    .notebook-notes div {
+      display: grid;
+      grid-template-columns: 96px minmax(0, 1fr);
+      gap: 14px;
+      padding: 14px;
+      background: #211c18;
+    }
+
+    .notebook-notes strong {
+      color: var(--gold);
+      font: 700 0.78rem/1.2 "IBM Plex Mono", monospace;
+      text-transform: uppercase;
+    }
+
+    .notebook-notes span {
+      color: var(--muted);
+      line-height: 1.45;
+    }
+
+    .concept-h {
+      --ink: #101217;
+      --muted: #5f6470;
+      --paper: #f8f9ff;
+      --line: #d6dbea;
+      --cyan: #00a7e1;
+      --pink: #f15bb5;
+      --yellow: #fee440;
+      --violet: #6c63ff;
+      color: var(--ink);
+      background:
+        linear-gradient(120deg, rgb(0 167 225 / 0.14), transparent 30%),
+        linear-gradient(240deg, rgb(241 91 181 / 0.14), transparent 34%),
+        var(--paper);
+      font-family: "Outfit", sans-serif;
+    }
+
+    .concept-h .mock-nav {
+      padding: 20px clamp(18px, 4vw, 48px);
+      border-bottom: 1px solid var(--line);
+      background: rgb(248 249 255 / 0.86);
+    }
+
+    .concept-h .mock-mark {
+      border-radius: 8px;
+      background: linear-gradient(135deg, var(--cyan), var(--pink), var(--yellow));
+      color: #101217;
+      font-family: "IBM Plex Mono", monospace;
+    }
+
+    .concept-h .mock-brand span:last-child {
+      font-weight: 800;
+    }
+
+    .concept-h .mock-links a {
+      color: var(--muted);
+      font-weight: 800;
+    }
+
+    .concept-h .mock-links a:first-child {
+      color: var(--violet);
+    }
+
+    .spectrum-hero {
+      display: grid;
+      grid-template-columns: minmax(0, 0.9fr) minmax(300px, 0.6fr);
+      gap: clamp(28px, 5vw, 62px);
+      align-items: center;
+      min-height: 600px;
+      padding: clamp(28px, 6vw, 70px) clamp(18px, 5vw, 62px);
+    }
+
+    .spectrum-copy h3 {
+      max-width: 10ch;
+      margin: 0;
+      color: var(--ink);
+      font-size: clamp(4rem, 9vw, 8.3rem);
+      font-weight: 800;
+      line-height: 0.84;
+    }
+
+    .spectrum-copy .role {
+      display: block;
+      max-width: 35rem;
+      margin: 22px 0 0;
+      color: var(--violet);
+      font-size: clamp(1.2rem, 2.8vw, 1.9rem);
+      font-weight: 800;
+      line-height: 1.15;
+    }
+
+    .spectrum-copy p {
+      max-width: 58ch;
+      margin: 24px 0 0;
+      color: var(--muted);
+      font-size: clamp(1rem, 2vw, 1.16rem);
+      line-height: 1.75;
+    }
+
+    .spectrum-actions {
+      margin-top: 32px;
+    }
+
+    .spectrum-actions a {
+      display: inline-flex;
+      min-height: 46px;
+      align-items: center;
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      padding: 10px 14px;
+      background: #fff;
+      color: var(--ink);
+      font-weight: 800;
+    }
+
+    .spectrum-actions a:first-child {
+      border-color: transparent;
+      background: var(--ink);
+      color: #fff;
+    }
+
+    .spectrum-panel {
+      display: grid;
+      gap: 12px;
+    }
+
+    .spectrum-photo {
+      overflow: hidden;
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      background: #fff;
+      box-shadow: 0 26px 64px rgb(16 18 23 / 0.12);
+    }
+
+    .spectrum-photo img {
+      display: block;
+      width: 100%;
+      aspect-ratio: 16 / 11;
+      object-fit: cover;
+      filter: saturate(0.92) contrast(1.03);
+    }
+
+    .spectrum-controls {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 10px;
+    }
+
+    .spectrum-control {
+      min-width: 0;
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      padding: 14px;
+      background: #fff;
+    }
+
+    .spectrum-control strong {
+      display: block;
+      color: var(--ink);
+      font-size: 0.98rem;
+    }
+
+    .spectrum-control span {
+      display: block;
+      height: 34px;
+      margin-top: 12px;
+      border-radius: 8px;
+      background: var(--cyan);
+    }
+
+    .spectrum-control:nth-child(2) span {
+      background: var(--pink);
+    }
+
+    .spectrum-control:nth-child(3) span {
+      background: var(--yellow);
+    }
+
+    @media (max-width: 820px) {
+      .mock-page {
+        min-height: auto;
+      }
+
+      .mock-nav {
+        align-items: flex-start;
+      }
+
+      .mock-links {
+        justify-content: flex-end;
+        gap: 10px 14px;
+      }
+
+      .arcade-hero,
+      .studio-hero,
+      .signal-hero,
+      .pocket-hero,
+      .broadcast-hero,
+      .blueprint-hero,
+      .notebook-hero,
+      .spectrum-hero {
+        grid-template-columns: 1fr;
+      }
+
+      .arcade-portrait,
+      .studio-card,
+      .signal-panel,
+      .pocket-stack,
+      .broadcast-panel,
+      .blueprint-board,
+      .notebook-panel,
+      .spectrum-panel {
+        max-width: 540px;
+      }
+
+      .arcade-portrait {
+        min-height: auto;
+      }
+    }
+
+    @media (max-width: 560px) {
+      .board-header,
+      .direction-note,
+      .mock-page {
+        width: min(100vw - 18px, var(--max));
+      }
+
+      .board-header {
+        padding-top: 24px;
+      }
+
+      .direction {
+        padding-top: 30px;
+      }
+
+      .mock-nav {
+        display: grid;
+        gap: 14px;
+      }
+
+      .mock-links {
+        justify-content: flex-start;
+      }
+
+      .mock-links a {
+        min-height: 34px;
+      }
+
+      .arcade-copy h3,
+      .studio-copy h3,
+      .signal-copy h3,
+      .pocket-copy h3,
+      .broadcast-copy h3,
+      .blueprint-copy h3,
+      .notebook-copy h3,
+      .spectrum-copy h3 {
+        font-size: clamp(3.2rem, 18vw, 4.8rem);
+      }
+
+      .contact-row a,
+      .arcade-actions a,
+      .studio-contact a,
+      .signal-actions a,
+      .pocket-actions a,
+      .broadcast-actions a,
+      .blueprint-actions a,
+      .notebook-actions a,
+      .spectrum-actions a {
+        width: 100%;
+        justify-content: center;
+      }
+
+      .arcade-portrait dl,
+      .studio-stats,
+      .pocket-links,
+      .broadcast-meters,
+      .spectrum-controls {
+        grid-template-columns: 1fr;
+      }
+
+      .notebook-notes div {
+        grid-template-columns: 1fr;
+      }
+
+      .studio-card {
+        min-height: auto;
+      }
+    }
+  </style>
+</head>
+<body>
+  <header class="board-header">
+    <h1>Homepage directions for a more readable BitOfBytes.</h1>
+    <p>Each direction keeps some personality, but moves the pixel signal into accents, illustration, or layout instead of relying on hard-to-read pixel fonts for core content.</p>
+    <ul class="jump-list" aria-label="Design directions">
+      <li><a href="#arcade">1 Arcade Workshop</a></li>
+      <li><a href="#studio">2 Engineer Studio</a></li>
+      <li><a href="#signal">3 Signal Lab</a></li>
+      <li><a href="#pocket">4 Pocket Console</a></li>
+      <li><a href="#broadcast">5 Broadcast Deck</a></li>
+      <li><a href="#blueprint">6 Blueprint Terminal</a></li>
+      <li><a href="#notebook">7 Field Notebook</a></li>
+      <li><a href="#spectrum">8 Spectrum Console</a></li>
+    </ul>
+  </header>
+
+  <section class="direction" id="arcade">
+    <div class="direction-note">
+      <span class="kicker">Direction 1</span>
+      <h2>Arcade Workshop</h2>
+      <p>Closest to the current site: keeps the pixel avatar and grid energy, but uses readable geometric type, fewer neon borders, and playful color hits.</p>
+    </div>
+    <article class="mock-page concept-a">
+      <nav class="mock-nav" aria-label="Arcade Workshop navigation">
+        <a class="mock-brand" href="#">
+          <span class="mock-mark">BoB</span>
+          <span>BitOfBytes</span>
+        </a>
+        <ul class="mock-links">
+          <li><a href="#">Home</a></li>
+          <li><a href="#">Projects</a></li>
+          <li><a href="#">Resume</a></li>
+        </ul>
+      </nav>
+      <div class="arcade-hero">
+        <div class="arcade-copy">
+          <h3>Daniel Waters</h3>
+          <span class="role">Senior Software Engineer @ Cisco</span>
+          <p>I work on a live video solution enabling real-time team communication. In my free time, I play piano and tinker with personal projects.</p>
+          <ul class="contact-row arcade-actions">
+            <li><a class="primary" href="#">View projects</a></li>
+            <li><a href="#">daniel@bitofbytes.io</a></li>
+          </ul>
+        </div>
+        <aside class="arcade-portrait" aria-label="Profile details">
+          <img src="../../static/daniel-pixel-avatar.png" alt="Pixel-art portrait of Daniel Waters">
+          <dl>
+            <div>
+              <dt>Base</dt>
+              <dd>Raleigh, NC</dd>
+            </div>
+            <div>
+              <dt>Links</dt>
+              <dd>GitHub, LinkedIn</dd>
+            </div>
+          </dl>
+        </aside>
+      </div>
+    </article>
+  </section>
+
+  <section class="direction" id="studio">
+    <div class="direction-note">
+      <span class="kicker">Direction 2</span>
+      <h2>Engineer Studio</h2>
+      <p>Most professional: editorial typography, warm paper, a real photo, and small colorful blocks. This feels more like a personal engineering portfolio than a game UI.</p>
+    </div>
+    <article class="mock-page concept-b">
+      <nav class="mock-nav" aria-label="Engineer Studio navigation">
+        <a class="mock-brand" href="#">
+          <span class="mock-mark">BoB</span>
+          <span>BitOfBytes</span>
+        </a>
+        <ul class="mock-links">
+          <li><a href="#">Home</a></li>
+          <li><a href="#">Projects</a></li>
+          <li><a href="#">Resume</a></li>
+        </ul>
+      </nav>
+      <div class="studio-hero">
+        <div class="studio-copy">
+          <h3>Daniel Waters</h3>
+          <span class="role">Building dependable software for live collaboration.</span>
+          <p>Senior Software Engineer at Cisco, based in Raleigh. I work on live video systems for real-time team communication, then spend off-hours on piano, experiments, and personal tools.</p>
+          <ul class="contact-row studio-contact">
+            <li><a href="#">Projects</a></li>
+            <li><a href="#">Resume</a></li>
+            <li><a href="#">Email</a></li>
+          </ul>
+        </div>
+        <aside class="studio-card" aria-label="Profile snapshot">
+          <img src="../../static/daniel_train.jpg" alt="Daniel Waters smiling on a train">
+          <div class="studio-stats">
+            <div>
+              <strong>Raleigh, NC</strong>
+              <span>Local base</span>
+            </div>
+            <div>
+              <strong>Video systems</strong>
+              <span>Current focus</span>
+            </div>
+          </div>
+        </aside>
+      </div>
+    </article>
+  </section>
+
+  <section class="direction" id="signal">
+    <div class="direction-note">
+      <span class="kicker">Direction 3</span>
+      <h2>Signal Lab</h2>
+      <p>Modern dark mode with a technical edge: live-video signal language, readable sans typography, and small monospace details only where they help.</p>
+    </div>
+    <article class="mock-page concept-c">
+      <nav class="mock-nav" aria-label="Signal Lab navigation">
+        <a class="mock-brand" href="#">
+          <span class="mock-mark">BoB</span>
+          <span>BitOfBytes</span>
+        </a>
+        <ul class="mock-links">
+          <li><a href="#">Home</a></li>
+          <li><a href="#">Projects</a></li>
+          <li><a href="#">Resume</a></li>
+        </ul>
+      </nav>
+      <div class="signal-hero">
+        <div class="signal-copy">
+          <h3>Daniel Waters</h3>
+          <p class="role">Senior Software Engineer @ Cisco</p>
+          <p>I work on a live video solution enabling real-time team communication. I also build personal projects, tinker with small tools, and play piano.</p>
+          <ul class="contact-row signal-actions">
+            <li><a href="#">See projects</a></li>
+            <li><a href="#">Get in touch</a></li>
+          </ul>
+        </div>
+        <aside class="signal-panel" aria-label="Profile signal panel">
+          <div class="signal-card profile">
+            <img src="../../static/daniel_train.jpg" alt="Daniel Waters smiling on a train">
+            <div>
+              <span class="signal-pill">Raleigh, NC</span>
+              <span class="signal-pill">Live video</span>
+              <span class="signal-pill">Personal tools</span>
+            </div>
+          </div>
+          <div class="signal-card wave-card">
+            <h4>Communication signal</h4>
+            <div class="wave-lines" aria-hidden="true">
+              <span></span>
+              <span></span>
+              <span></span>
+              <span></span>
+            </div>
+          </div>
+        </aside>
+      </div>
+    </article>
+  </section>
+
+  <section class="direction" id="pocket">
+    <div class="direction-note">
+      <span class="kicker">Direction 4</span>
+      <h2>Pocket Console</h2>
+      <p>Fun but clean: chunky block shapes, high readability, tactile buttons, and a compact action panel. The pixel feeling comes from the mark and hard-edged geometry.</p>
+    </div>
+    <article class="mock-page concept-d">
+      <nav class="mock-nav" aria-label="Pocket Console navigation">
+        <a class="mock-brand" href="#">
+          <span class="mock-mark">BoB</span>
+          <span>BitOfBytes</span>
+        </a>
+        <ul class="mock-links">
+          <li><a href="#">Home</a></li>
+          <li><a href="#">Projects</a></li>
+          <li><a href="#">Resume</a></li>
+        </ul>
+      </nav>
+      <div class="pocket-hero">
+        <div class="pocket-copy">
+          <h3>Daniel Waters</h3>
+          <span class="role">Senior Software Engineer @ Cisco</span>
+          <p>I work on a live video solution enabling real-time team communication. In my free time, I play piano and tinker with personal projects.</p>
+          <ul class="contact-row pocket-actions">
+            <li><a href="#">Projects</a></li>
+            <li><a href="#">Resume</a></li>
+          </ul>
+        </div>
+        <aside class="pocket-stack" aria-label="Contact and profile cards">
+          <div class="pocket-card pocket-photo">
+            <img src="../../static/daniel_train.jpg" alt="Daniel Waters smiling on a train">
+          </div>
+          <div class="pocket-card pocket-links">
+            <a href="#">GitHub <span>bitofbytes-io</span></a>
+            <a href="#">LinkedIn <span>daniel-waters</span></a>
+            <a href="#">Email <span>daniel@bitofbytes.io</span></a>
+            <a href="#">Location <span>Raleigh, NC</span></a>
+          </div>
+        </aside>
+      </div>
+    </article>
+  </section>
+
+  <section class="direction" id="broadcast">
+    <div class="direction-note">
+      <span class="kicker">Direction 5</span>
+      <h2>Broadcast Deck</h2>
+      <p>A live-video control room direction: dark, polished, and technical, with red recording energy and readable product-grade typography.</p>
+    </div>
+    <article class="mock-page concept-e">
+      <nav class="mock-nav" aria-label="Broadcast Deck navigation">
+        <a class="mock-brand" href="#">
+          <span class="mock-mark">BoB</span>
+          <span>BitOfBytes</span>
+        </a>
+        <ul class="mock-links">
+          <li><a href="#">Home</a></li>
+          <li><a href="#">Projects</a></li>
+          <li><a href="#">Resume</a></li>
+        </ul>
+      </nav>
+      <div class="broadcast-hero">
+        <div class="broadcast-copy">
+          <h3>Daniel Waters</h3>
+          <span class="role">Live collaboration systems</span>
+          <p>Senior Software Engineer at Cisco, working on real-time video communication. Outside work, I build personal tools, explore small experiments, and play piano.</p>
+          <ul class="contact-row broadcast-actions">
+            <li><a href="#">Open projects</a></li>
+            <li><a href="#">Contact</a></li>
+          </ul>
+        </div>
+        <aside class="broadcast-panel" aria-label="Broadcast profile panel">
+          <figure class="broadcast-monitor">
+            <img src="../../static/daniel_train.jpg" alt="Daniel Waters smiling on a train">
+            <footer>
+              <span>Raleigh, NC</span>
+              <span>Signal stable</span>
+            </footer>
+          </figure>
+          <div class="broadcast-meters" aria-label="Profile meters">
+            <div class="broadcast-meter">
+              <strong>Video systems</strong>
+              <span aria-hidden="true"></span>
+            </div>
+            <div class="broadcast-meter">
+              <strong>Personal tools</strong>
+              <span aria-hidden="true"></span>
+            </div>
+          </div>
+        </aside>
+      </div>
+    </article>
+  </section>
+
+  <section class="direction" id="blueprint">
+    <div class="direction-note">
+      <span class="kicker">Direction 6</span>
+      <h2>Blueprint Terminal</h2>
+      <p>A bright technical take on Signal Lab: still precise and engineered, but more open, lighter, and easier to extend across project pages.</p>
+    </div>
+    <article class="mock-page concept-f">
+      <nav class="mock-nav" aria-label="Blueprint Terminal navigation">
+        <a class="mock-brand" href="#">
+          <span class="mock-mark">BoB</span>
+          <span>BitOfBytes</span>
+        </a>
+        <ul class="mock-links">
+          <li><a href="#">Home</a></li>
+          <li><a href="#">Projects</a></li>
+          <li><a href="#">Resume</a></li>
+        </ul>
+      </nav>
+      <div class="blueprint-hero">
+        <div class="blueprint-copy">
+          <h3>Daniel Waters</h3>
+          <span class="role">Senior Software Engineer @ Cisco</span>
+          <p>I work on a live video solution enabling real-time team communication. I also tinker with personal projects and build small, practical tools.</p>
+          <ul class="contact-row blueprint-actions">
+            <li><a href="#">Projects</a></li>
+            <li><a href="#">Resume</a></li>
+          </ul>
+        </div>
+        <aside class="blueprint-board" aria-label="Blueprint profile board">
+          <div class="blueprint-card profile">
+            <img src="../../static/daniel_train.jpg" alt="Daniel Waters smiling on a train">
+          </div>
+          <ul class="blueprint-list">
+            <li><span>Base</span><strong>Raleigh, NC</strong></li>
+            <li><span>Focus</span><strong>Live video</strong></li>
+            <li><span>Links</span><strong>GitHub and LinkedIn</strong></li>
+          </ul>
+        </aside>
+      </div>
+    </article>
+  </section>
+
+  <section class="direction" id="notebook">
+    <div class="direction-note">
+      <span class="kicker">Direction 7</span>
+      <h2>Field Notebook</h2>
+      <p>A warmer, more human version of Signal Lab: technical notes, editorial type, and a darker studio feel without the arcade language.</p>
+    </div>
+    <article class="mock-page concept-g">
+      <nav class="mock-nav" aria-label="Field Notebook navigation">
+        <a class="mock-brand" href="#">
+          <span class="mock-mark">BoB</span>
+          <span>BitOfBytes</span>
+        </a>
+        <ul class="mock-links">
+          <li><a href="#">Home</a></li>
+          <li><a href="#">Projects</a></li>
+          <li><a href="#">Resume</a></li>
+        </ul>
+      </nav>
+      <div class="notebook-hero">
+        <div class="notebook-copy">
+          <h3>Daniel Waters</h3>
+          <span class="role">Notes from software, video, and useful side projects.</span>
+          <p>I work on real-time team communication at Cisco and keep building personal projects on the side. This direction makes the site feel like a crafted engineering notebook.</p>
+          <ul class="contact-row notebook-actions">
+            <li><a href="#">Read projects</a></li>
+            <li><a href="#">Email</a></li>
+          </ul>
+        </div>
+        <aside class="notebook-panel" aria-label="Notebook profile panel">
+          <figure class="notebook-photo">
+            <img src="../../static/daniel_train.jpg" alt="Daniel Waters smiling on a train">
+          </figure>
+          <div class="notebook-notes">
+            <div>
+              <strong>Current</strong>
+              <span>Live video systems for team communication.</span>
+            </div>
+            <div>
+              <strong>After hours</strong>
+              <span>Piano, practical tools, and personal experiments.</span>
+            </div>
+          </div>
+        </aside>
+      </div>
+    </article>
+  </section>
+
+  <section class="direction" id="spectrum">
+    <div class="direction-note">
+      <span class="kicker">Direction 8</span>
+      <h2>Spectrum Console</h2>
+      <p>The friendliest Signal Lab branch: light, colorful, and crisp, with a console-inspired layout that still reads professionally.</p>
+    </div>
+    <article class="mock-page concept-h">
+      <nav class="mock-nav" aria-label="Spectrum Console navigation">
+        <a class="mock-brand" href="#">
+          <span class="mock-mark">BoB</span>
+          <span>BitOfBytes</span>
+        </a>
+        <ul class="mock-links">
+          <li><a href="#">Home</a></li>
+          <li><a href="#">Projects</a></li>
+          <li><a href="#">Resume</a></li>
+        </ul>
+      </nav>
+      <div class="spectrum-hero">
+        <div class="spectrum-copy">
+          <h3>Daniel Waters</h3>
+          <span class="role">Readable engineering portfolio with a little color in the signal.</span>
+          <p>I work on a live video solution enabling real-time team communication. In my free time, I play piano and tinker with personal projects.</p>
+          <ul class="contact-row spectrum-actions">
+            <li><a href="#">View work</a></li>
+            <li><a href="#">Get in touch</a></li>
+          </ul>
+        </div>
+        <aside class="spectrum-panel" aria-label="Spectrum profile panel">
+          <figure class="spectrum-photo">
+            <img src="../../static/daniel_train.jpg" alt="Daniel Waters smiling on a train">
+          </figure>
+          <div class="spectrum-controls" aria-label="Profile controls">
+            <div class="spectrum-control">
+              <strong>Video</strong>
+              <span aria-hidden="true"></span>
+            </div>
+            <div class="spectrum-control">
+              <strong>Projects</strong>
+              <span aria-hidden="true"></span>
+            </div>
+            <div class="spectrum-control">
+              <strong>Piano</strong>
+              <span aria-hidden="true"></span>
+            </div>
+          </div>
+        </aside>
+      </div>
+    </article>
+  </section>
+</body>
+</html>

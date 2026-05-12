@@ -1,7 +1,7 @@
 {{ template "header" . }}
 
 <main class="site-shell projects-shell projects-index-shell">
-	<section class="page-heading pixel-panel" aria-labelledby="projects-title">
+	<section class="page-heading notebook-panel" aria-labelledby="projects-title">
 		<p class="eyebrow">Project index</p>
 		<h1 id="projects-title">Selected personal projects</h1>
 		<p>
@@ -13,7 +13,7 @@
 		{{ range .Projects }}
 		<article class="project-listing">
 			<div class="project-listing-main">
-				<p class="eyebrow">Last update: {{ .LastUpdate }}</p>
+				<p class="eyebrow">Updated: {{ .LastUpdate }}</p>
 				<h2><a href="/projects/{{ .Slug }}">{{ .Name }}</a></h2>
 				<p>{{ .Summary }}</p>
 			</div>
@@ -23,7 +23,7 @@
 					<li>{{ . }}</li>
 					{{ end }}
 				</ul>
-				<a class="pixel-button secondary" href="/projects/{{ .Slug }}">Details</a>
+				<a class="notebook-button secondary" href="/projects/{{ .Slug }}">Details</a>
 			</div>
 		</article>
 		{{ end }}
