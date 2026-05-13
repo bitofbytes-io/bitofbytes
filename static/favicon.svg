@@ -1,5 +1,5 @@
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" role="img" aria-label="BitOfBytes">
-  <rect x="5" y="5" width="54" height="54" rx="12" fill="#211c18" stroke="#f7bf4f" stroke-width="3"/>
-  <text x="32" y="38" fill="#f7bf4f" font-family="Manrope, Avenir Next, Segoe UI, sans-serif" font-size="19" font-weight="800" text-anchor="middle">BoB</text>
-  <path d="M18 47h28" fill="none" stroke="#5fd0be" stroke-linecap="round" stroke-width="3"/>
+  <rect x="1" y="1" width="62" height="62" rx="12" fill="#211c18"/>
+  <rect x="8" y="8" width="48" height="48" rx="9" fill="#f7bf4f" fill-opacity="0.055" stroke="#f7bf4f" stroke-width="1.75"/>
+  <text x="32" y="39" fill="#f7bf4f" font-family="IBM Plex Mono, SFMono-Regular, Menlo, Consolas, monospace" font-size="20" font-weight="700" text-anchor="middle">BoB</text>
 </svg>
