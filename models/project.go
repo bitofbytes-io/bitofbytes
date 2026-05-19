@@ -228,7 +228,7 @@ func Projects() []Project {
 				{
 					Title: "Home page",
 					Path:  "/static/projects/bitofbytes/home.png",
-					Alt:   "The rebuilt BitOfBytes home page using the Pixel Workbench design system.",
+					Alt:   "The BitOfBytes home page using the Field Notebook design system.",
 					Note:  "Captured from the rebuilt local BitOfBytes home page.",
 				},
 				{
