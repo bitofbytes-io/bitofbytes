@@ -65,8 +65,8 @@ func Projects() []Project {
 				{
 					Title: "Trophy case",
 					Path:  "/static/projects/dined/trophy-case.png",
-					Alt:   "Dined trophy case screen with jukebox-inspired family dining stats.",
-					Note:  "Captured from the local Dined memory preview.",
+					Alt:   "Dined trophy case screen with record-style stats, a dining map, and top restaurant rankings.",
+					Note:  "Captured from the live Dined trophy case.",
 				},
 			},
 		},
