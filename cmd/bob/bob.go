@@ -82,7 +82,7 @@ func newHandler(cfg models.Config, logger *slog.Logger) http.Handler {
 
 	var handler http.Handler = r
 	handler = middleware.CSRF(cfg.CSRF.Key, cfg.CSRF.Secure)(handler)
-	handler = middleware.SecureHeaders(handler)
+	handler = middleware.SecureHeaders(cfg.CSRF.Secure)(handler)
 	handler = middleware.RequestLogger(logger)(handler)
 
 	return handler
