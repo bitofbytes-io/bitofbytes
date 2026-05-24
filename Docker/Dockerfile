@@ -7,7 +7,7 @@ COPY ./templates ./templates
 COPY ./tailwind/styles.css src/styles.css
 RUN npx @tailwindcss/cli -i src/styles.css -o /styles.css --minify
 
-FROM golang:1.25.10-alpine3.23 AS builder
+FROM golang:1.26.3-alpine3.23 AS builder
 ARG VERSION=dev
 ARG REVISION=unknown
 WORKDIR /app
