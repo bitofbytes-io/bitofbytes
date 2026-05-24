@@ -28,8 +28,8 @@ func TestSecureHeadersAddsBrowserHardeningHeaders(t *testing.T) {
 	if got := rr.Header().Get("Referrer-Policy"); got != "strict-origin-when-cross-origin" {
 		t.Fatalf("Referrer-Policy header = %q, want strict-origin-when-cross-origin", got)
 	}
-	if got := rr.Header().Get("Permissions-Policy"); got == "" {
-		t.Fatal("Permissions-Policy header is empty")
+	if got := rr.Header().Get("Permissions-Policy"); got != "geolocation=(), microphone=(), camera=(), payment=()" {
+		t.Fatalf("Permissions-Policy header = %q, want geolocation=(), microphone=(), camera=(), payment=()", got)
 	}
 	if got := rr.Header().Get("Strict-Transport-Security"); got != "" {
 		t.Fatalf("Strict-Transport-Security header = %q, want empty for non-HSTS middleware", got)
