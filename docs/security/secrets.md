@@ -25,7 +25,7 @@ value cannot be read. Example service definition:
 ```sh
 docker service create \
   --secret source=csrf_key,target=csrf_key \
-  registry.bitofbytes.io/bob:latest
+  registry.tail209cfc.ts.net/bob:latest
 ```
 
 ### Creating the CSRF secret
