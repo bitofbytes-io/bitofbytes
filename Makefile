@@ -1,7 +1,7 @@
 .PHONY: configure-image build-github docker-build-push-github docker-build docker-publish docker-push ensure-image-tag local run tail-watch tail-prod
 
 configure-image:
-	$(eval REGISTRY ?= registry.bitofbytes.io)
+	$(eval REGISTRY ?= registry.tail209cfc.ts.net)
 	$(eval IMAGE_NAME ?= $(REGISTRY)/bob)
 	$(eval SHORT_SHA := $(shell git rev-parse --short HEAD))
 	$(eval REVISION ?= $(shell git rev-parse HEAD 2>/dev/null))
