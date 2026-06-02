@@ -19,16 +19,27 @@ func RequestLogger(logger *slog.Logger) func(http.Handler) http.Handler {
 			next.ServeHTTP(lrw, r)
 
 			duration := time.Since(start)
-			logger.Info("request completed",
-				"method", r.Method,
-				"path", r.URL.Path,
-				"status", lrw.Status(),
-				"duration", duration,
-				"bytes", lrw.BytesWritten(),
-				"client_ip", clientIP(r),
-				"forwarded_for", forwardedFor(r),
+			logger.LogAttrs(r.Context(), requestLogLevel(lrw.Status()), "http request",
+				slog.String("method", r.Method),
+				slog.String("path", r.URL.Path),
+				slog.Int("status", lrw.Status()),
+				slog.Duration("duration", duration),
+				slog.Int64("bytes", lrw.BytesWritten()),
+				slog.String("client_ip", clientIP(r)),
+				slog.String("forwarded_for", forwardedFor(r)),
 			)
 		})
+	}
+}
+
+func requestLogLevel(status int) slog.Level {
+	switch {
+	case status >= http.StatusInternalServerError:
+		return slog.LevelError
+	case status >= http.StatusBadRequest:
+		return slog.LevelWarn
+	default:
+		return slog.LevelDebug
 	}
 }
 
