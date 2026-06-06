@@ -1,7 +1,7 @@
 # BitOfBytes Project Notes
 
 ## Overview
-- This repository contains a Go 1.22 web application for the BitOfBytes site https://bitofbytes.io
+- This repository contains a Go 1.26.3 web application for the BitOfBytes site https://bitofbytes.io
 - The HTTP entrypoint is `cmd/bob/bob.go`; it wires up controllers, parses templates from `templates.FS`, and serves static assets from `/static`.
 - Controllers live in `controllers/`, services and data types live in `models/`, reusable view helpers live in `views/`, and Go HTML templates are under `templates/`.
 
