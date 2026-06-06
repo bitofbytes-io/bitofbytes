@@ -120,9 +120,9 @@ func Projects() []Project {
 			Summary:         "A personal learning journal for saving useful training material and revisiting it over time.",
 			RepoURL:         "https://github.com/bitofbytes-io/learnd",
 			LiveURL:         "https://learnd.bitofbytes.io",
-			LastUpdate:      "May 31, 2026",
+			LastUpdate:      "June 1, 2026",
 			FirstCommitDate: "2026-01-02",
-			Notes:           "Most recent work added production analytics, hardened deployment workflows, and moved routine request logging to debug while preserving error logs.",
+			Notes:           "Most recent work standardized request logging, keeping routine requests at debug level while preserving error logs.",
 			Tech: []string{
 				"Go",
 				"Templ",
