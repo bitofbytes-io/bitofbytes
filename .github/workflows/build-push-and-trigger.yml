@@ -16,7 +16,7 @@ jobs:
       IMAGE_REPO: ${{ vars.IMAGE_REPO }}
       MANAGER_HOST: ${{ vars.MANAGER_HOST }}
     steps:
-      - uses: actions/checkout@v5
+      - uses: actions/checkout@v6
         with:
           fetch-depth: 0
       - name: Derive TAG
