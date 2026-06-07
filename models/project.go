@@ -36,7 +36,7 @@ func Projects() []Project {
 			LiveURL:         "https://dined.bitofbytes.io",
 			LastUpdate:      "June 1, 2026",
 			FirstCommitDate: "2026-05-10",
-			Notes:           "Most recent work refined the trophy map and restaurant categories, fixed mobile photo editing and desktop card clipping, and added production analytics plus safer request logging.",
+			Notes:           "Most recent work labeled trophy-map pins, added a trophy-map lightbox, expanded restaurant categorization, fixed mobile photo and trophy layout polish, and quieted routine request logging.",
 			Tech: []string{
 				"Go",
 				"HTMX",
@@ -79,7 +79,7 @@ func Projects() []Project {
 			LiveURL:         "https://permitpal.bitofbytes.io",
 			LastUpdate:      "June 1, 2026",
 			FirstCommitDate: "2026-05-01",
-			Notes:           "Most recent work added production analytics, hardened deployment workflows, and standardized request logging.",
+			Notes:           "Most recent work standardized request logging, strengthened deployment networking, kept analytics gated to the production host, and updated the container build path.",
 			Tech: []string{
 				"Go",
 				"HTMX",
@@ -122,7 +122,7 @@ func Projects() []Project {
 			LiveURL:         "https://learnd.bitofbytes.io",
 			LastUpdate:      "June 1, 2026",
 			FirstCommitDate: "2026-01-02",
-			Notes:           "Most recent work standardized request logging, keeping routine requests at debug level while preserving error logs.",
+			Notes:           "Most recent work moved routine request logs to debug, strengthened deployment networking, kept analytics gated to the production host, and updated the container build path.",
 			Tech: []string{
 				"Go",
 				"Templ",
@@ -165,7 +165,7 @@ func Projects() []Project {
 			LiveURL:         "https://dejaview.bitofbytes.io",
 			LastUpdate:      "June 1, 2026",
 			FirstCommitDate: "2026-01-04",
-			Notes:           "Most recent work added production analytics, hardened deployment workflows, and standardized request logging with coverage for implicit response statuses.",
+			Notes:           "Most recent work standardized request logging, strengthened deployment networking, kept analytics gated to the production host, and updated the container build path.",
 			Tech: []string{
 				"Go",
 				"Templ",
@@ -207,7 +207,7 @@ func Projects() []Project {
 			LiveURL:         "https://www.bitofbytes.io",
 			LastUpdate:      "June 1, 2026",
 			FirstCommitDate: "2024-06-29",
-			Notes:           "Most recent work refreshed project recency notes, added CSP-safe production analytics, hardened deployment workflows, and standardized request logging.",
+			Notes:           "Most recent work refreshed project recency notes, standardized request logging, strengthened deployment networking, and kept production analytics gated to the live site.",
 			Tech: []string{
 				"Go",
 				"HTML templates",
@@ -248,7 +248,7 @@ func Projects() []Project {
 			LiveURL:         "https://anthology.bitofbytes.io",
 			LastUpdate:      "June 1, 2026",
 			FirstCommitDate: "2025-10-30",
-			Notes:           "Most recent work added production analytics, hardened deployment workflows, and standardized request logging coverage.",
+			Notes:           "Most recent work covered request log levels, moved routine request logs to debug, strengthened deployment networking, kept analytics gated to the production host, and updated the container build path.",
 			Tech: []string{
 				"Go",
 				"Chi",
