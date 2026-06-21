@@ -4,6 +4,7 @@ import (
 	"log/slog"
 	"net/http"
 	"os"
+	"path/filepath"
 	"time"
 
 	"github.com/DryWaters/bitofbytes/controllers"
@@ -59,6 +60,10 @@ func run(cfg models.Config, logger *slog.Logger) error {
 }
 
 func newHandler(cfg models.Config, logger *slog.Logger) http.Handler {
+	return newHandlerWithStaticDir(cfg, logger, "static")
+}
+
+func newHandlerWithStaticDir(cfg models.Config, logger *slog.Logger, staticDir string) http.Handler {
 	portfolio := controllers.Portfolio{
 		Projects: models.Projects(),
 		Templates: controllers.PortfolioTemplates{
@@ -76,8 +81,13 @@ func newHandler(cfg models.Config, logger *slog.Logger) http.Handler {
 		w.WriteHeader(http.StatusOK)
 		_, _ = w.Write([]byte("ok"))
 	})
+	// Support browser default icon discovery paths in addition to the template's
+	// explicit /static/... icon links.
+	r.HandleFunc("GET /favicon.ico", serveStaticFile(staticDir, "favicon.ico"))
+	r.HandleFunc("GET /apple-touch-icon.png", serveStaticFile(staticDir, "apple-touch-icon.png"))
+	r.HandleFunc("GET /apple-touch-icon-precomposed.png", serveStaticFile(staticDir, "apple-touch-icon.png"))
 
-	staticHandler := http.FileServer(http.Dir("static"))
+	staticHandler := http.FileServer(http.Dir(staticDir))
 	r.Handle("GET /static/", http.StripPrefix("/static/", staticHandler))
 
 	var handler http.Handler = r
@@ -86,4 +96,10 @@ func newHandler(cfg models.Config, logger *slog.Logger) http.Handler {
 	handler = middleware.RequestLogger(logger)(handler)
 
 	return handler
+}
+
+func serveStaticFile(staticDir string, name string) http.HandlerFunc {
+	return func(w http.ResponseWriter, r *http.Request) {
+		http.ServeFile(w, r, filepath.Join(staticDir, name))
+	}
 }
