@@ -18,7 +18,7 @@ func newTestHandler() http.Handler {
 
 	logger := slog.New(slog.NewTextHandler(io.Discard, nil))
 
-	return newHandler(cfg, logger)
+	return newHandlerWithStaticDir(cfg, logger, "../../static")
 }
 
 func TestRoutesRenderCurrentSiteSurface(t *testing.T) {
@@ -70,6 +70,43 @@ func TestRemovedRoutesReturnNotFound(t *testing.T) {
 
 		if rr.Code != http.StatusNotFound {
 			t.Fatalf("%s status code = %d, want %d", path, rr.Code, http.StatusNotFound)
+		}
+	}
+}
+
+func TestIconRoutesServeStaticFiles(t *testing.T) {
+	t.Parallel()
+
+	handler := newTestHandler()
+
+	tests := []struct {
+		path            string
+		wantContentType string
+	}{
+		{path: "/favicon.ico", wantContentType: "image/x-icon"},
+		{path: "/apple-touch-icon.png", wantContentType: "image/png"},
+		{path: "/apple-touch-icon-precomposed.png", wantContentType: "image/png"},
+		{path: "/static/favicon.ico", wantContentType: "image/x-icon"},
+		{path: "/static/favicon.svg", wantContentType: "image/svg+xml"},
+		{path: "/static/favicon-32x32.png", wantContentType: "image/png"},
+		{path: "/static/favicon-16x16.png", wantContentType: "image/png"},
+		{path: "/static/apple-touch-icon.png", wantContentType: "image/png"},
+	}
+
+	for _, tt := range tests {
+		req := httptest.NewRequest(http.MethodGet, tt.path, nil)
+		rr := httptest.NewRecorder()
+
+		handler.ServeHTTP(rr, req)
+
+		if rr.Code != http.StatusOK {
+			t.Fatalf("%s status code = %d, want %d", tt.path, rr.Code, http.StatusOK)
+		}
+		if contentType := rr.Header().Get("Content-Type"); !strings.HasPrefix(contentType, tt.wantContentType) {
+			t.Fatalf("%s Content-Type = %q, want prefix %q", tt.path, contentType, tt.wantContentType)
+		}
+		if rr.Body.Len() == 0 {
+			t.Fatalf("%s served an empty body", tt.path)
 		}
 	}
 }
