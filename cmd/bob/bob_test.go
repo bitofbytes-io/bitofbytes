@@ -94,20 +94,22 @@ func TestIconRoutesServeStaticFiles(t *testing.T) {
 	}
 
 	for _, tt := range tests {
-		req := httptest.NewRequest(http.MethodGet, tt.path, nil)
-		rr := httptest.NewRecorder()
+		t.Run(tt.path, func(t *testing.T) {
+			req := httptest.NewRequest(http.MethodGet, tt.path, nil)
+			rr := httptest.NewRecorder()
 
-		handler.ServeHTTP(rr, req)
+			handler.ServeHTTP(rr, req)
 
-		if rr.Code != http.StatusOK {
-			t.Fatalf("%s status code = %d, want %d", tt.path, rr.Code, http.StatusOK)
-		}
-		if contentType := rr.Header().Get("Content-Type"); !strings.HasPrefix(contentType, tt.wantContentType) {
-			t.Fatalf("%s Content-Type = %q, want prefix %q", tt.path, contentType, tt.wantContentType)
-		}
-		if rr.Body.Len() == 0 {
-			t.Fatalf("%s served an empty body", tt.path)
-		}
+			if rr.Code != http.StatusOK {
+				t.Errorf("status code = %d, want %d", rr.Code, http.StatusOK)
+			}
+			if contentType := rr.Header().Get("Content-Type"); !strings.HasPrefix(contentType, tt.wantContentType) {
+				t.Errorf("Content-Type = %q, want prefix %q", contentType, tt.wantContentType)
+			}
+			if rr.Body.Len() == 0 {
+				t.Errorf("served an empty body")
+			}
+		})
 	}
 }
 
