@@ -205,9 +205,9 @@ func Projects() []Project {
 			Summary:         "A personal site for presenting resume details, contact links, and selected project work.",
 			RepoURL:         "https://github.com/bitofbytes-io/bitofbytes",
 			LiveURL:         "https://www.bitofbytes.io",
-			LastUpdate:      "June 7, 2026",
+			LastUpdate:      "June 21, 2026",
 			FirstCommitDate: "2024-06-29",
-			Notes:           "Most recent work refreshed project recency notes, refreshed workflow guidance, updated Go and the container build path, and expanded request logging coverage.",
+			Notes:           "Most recent work added root icon aliases and clearer icon route test failures, refreshed project recency notes and workflow guidance, and updated Go and the container build path.",
 			Tech: []string{
 				"Go",
 				"HTML templates",
@@ -246,9 +246,9 @@ func Projects() []Project {
 			Summary:         "A personal media catalogue for organizing books, games, movies, music, and where they live.",
 			RepoURL:         "https://github.com/bitofbytes-io/anthology",
 			LiveURL:         "https://anthology.bitofbytes.io",
-			LastUpdate:      "June 15, 2026",
+			LastUpdate:      "June 19, 2026",
 			FirstCommitDate: "2025-10-30",
-			Notes:           "Most recent work tightened UI route handling, preserved canonical route variants, set health responses explicitly, improved auth and catalog logging, and updated Go and container build versions.",
+			Notes:           "Most recent work clarified workflow guidance, tightened UI route handling, preserved canonical route variants, set health responses explicitly, and improved auth and catalog logging.",
 			Tech: []string{
 				"Go",
 				"Chi",
