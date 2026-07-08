@@ -205,9 +205,9 @@ func Projects() []Project {
 			Summary:         "A personal site for presenting resume details, contact links, and selected project work.",
 			RepoURL:         "https://github.com/bitofbytes-io/bitofbytes",
 			LiveURL:         "https://www.bitofbytes.io",
-			LastUpdate:      "June 21, 2026",
+			LastUpdate:      "June 26, 2026",
 			FirstCommitDate: "2024-06-29",
-			Notes:           "Most recent work added root icon aliases and clearer icon route test failures, refreshed project recency notes and workflow guidance, and updated Go and the container build path.",
+			Notes:           "Most recent work refreshed project recency notes across the portfolio and added root icon aliases so common site icons resolve cleanly.",
 			Tech: []string{
 				"Go",
 				"HTML templates",
