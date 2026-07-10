@@ -23,7 +23,7 @@ Generate a Base64-encoded 32-byte CSRF key:
 openssl rand -base64 32
 ```
 
-Create an untracked `bitofbytes.env` file and paste the generated value:
+Create the ignored `.env` file and paste the generated value:
 
 ```dotenv
 SERVER_ADDRESS=:3000
@@ -38,9 +38,9 @@ Do not commit this file.
 | Setting | Required | Purpose |
 | --- | --- | --- |
 | `SERVER_ADDRESS` | Yes | Listen address inside the container; use `:3000` |
-| `CSRF_KEY` | Yes | Base64 value that decodes to exactly 32 bytes |
+| `CSRF_KEY` | One of | Base64 value that decodes to exactly 32 bytes |
 | `CSRF_SECURE` | Yes | Set `false` for local HTTP and `true` behind production HTTPS |
-| `CSRF_KEY_FILE` | No | Read the CSRF key from a mounted file instead of `CSRF_KEY` |
+| `CSRF_KEY_FILE` | One of | Read the CSRF key from a mounted file instead of `CSRF_KEY` |
 | `LOG_LEVEL` | No | `debug`, `info`, `warn`, or `error` |
 | `LOG_FORMAT` | No | `text` or `json`; defaults to `text` |
 
@@ -50,7 +50,7 @@ The container defaults `CSRF_KEY_FILE` to `/run/secrets/csrf_key`, so a secret m
 
 ```bash
 docker run --rm --name bitofbytes \
-  --env-file bitofbytes.env \
+  --env-file .env \
   -p 3000:3000 \
   bitofbytes:local
 ```
@@ -65,6 +65,7 @@ Copy the template configuration and generate a local key:
 
 ```bash
 cp .env.template .env
+# Set SERVER_ADDRESS=:3000, CSRF_SECURE=false, and CSRF_KEY to the generated value.
 go run ./cmd/bob
 ```
 
