@@ -80,6 +80,9 @@
 						<p>{{ .Note }}</p>
 					</div>
 					{{ end }}
+					{{ if .Path }}
+					<p class="screenshot-note">{{ .Note }}</p>
+					{{ end }}
 					<figcaption>{{ .Title }}</figcaption>
 				</figure>
 				{{ end }}

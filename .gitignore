@@ -10,7 +10,6 @@
 /bob
 
 # Tailwind generated styles
-static/styles.css
 
 # Test binary, built with `go test -c`
 *.test
