@@ -753,6 +753,13 @@ dd {
   line-height: 1.25;
 }
 
+.screenshot-note {
+  margin: 6px 0 0;
+  color: var(--bob-muted);
+  font-size: 0.88rem;
+  line-height: 1.45;
+}
+
 @media (max-width: 960px) {
   .profile-card {
     grid-template-columns: 1fr;

@@ -28,6 +28,93 @@ type ProjectScreenshot struct {
 func Projects() []Project {
 	projects := []Project{
 		{
+			Slug:            "carma",
+			Name:            "Carma",
+			Tagline:         "A shared household garage for maintenance history and what needs attention next.",
+			Summary:         "A household vehicle-maintenance tracker for service records, receipts, reminders, and exports.",
+			RepoURL:         "https://github.com/bitofbytes-io/carma",
+			LiveURL:         "https://carma.bitofbytes.io",
+			LastUpdate:      "August 3, 2026",
+			FirstCommitDate: "2026-07-31",
+			Notes:           "Most recent work aligned the reminder-status headers and added UI coverage for that structure.",
+			Tech: []string{
+				"Go",
+				"HTMX",
+				"PostgreSQL",
+				"Docker",
+				"Google OIDC",
+				"Filesystem/NFS receipt storage",
+				"SMTP reminders",
+			},
+			Highlights: []string{
+				"Keeps a shared household garage in one place so every approved user can see the same vehicles and maintenance context.",
+				"Makes service and repair records searchable, with receipt attachments kept beside the history that explains them.",
+				"Surfaces mileage- and time-based maintenance reminders before they are missed, then exports records to CSV when needed.",
+			},
+			Paragraphs: []string{
+				"Carma is a private household vehicle-maintenance tracker for keeping every car's service history understandable. It brings vehicles, repairs, routine maintenance, vendors, costs, and receipts into one shared garage instead of scattering the details between glove boxes and memory.",
+				"The app is designed around the next useful action: see what needs attention, open a vehicle's maintenance history, log the work, and set a time- or mileage-based reminder for the next interval. When the history needs to travel with a vehicle, it can be exported as CSV.",
+			},
+			Screenshots: []ProjectScreenshot{
+				{
+					Title: "Local garage dashboard",
+					Path:  "/static/projects/carma/local-garage-dashboard.png",
+					Alt:   "Carma local garage dashboard with a sample Ranger and an overdue oil-change reminder.",
+					Note:  "Captured from a local Carma preview using clearly labelled sample data.",
+				},
+				{
+					Title: "Local reminder settings",
+					Path:  "/static/projects/carma/local-reminders.png",
+					Alt:   "Carma local reminder settings for a sample Ranger, showing an overdue oil-change interval.",
+					Note:  "Captured from a local Carma preview using clearly labelled sample data.",
+				},
+			},
+		},
+		{
+			Slug:            "noted",
+			Name:            "Noted",
+			Tagline:         "A private digital binder for finding and reading sheet music without breaking the flow.",
+			Summary:         "A private digital sheet-music binder with separate user libraries, PDF search, and an iPad-friendly reader.",
+			RepoURL:         "https://github.com/bitofbytes-io/noted",
+			LiveURL:         "https://noted.bitofbytes.io",
+			LastUpdate:      "July 26, 2026",
+			FirstCommitDate: "2026-07-13",
+			Notes:           "Most recent work stabilized reader auto-scroll behavior and kept controls clear of the score itself.",
+			Tech: []string{
+				"Go",
+				"Angular",
+				"TypeScript",
+				"PDF.js",
+				"PostgreSQL",
+				"Google OIDC",
+				"Docker",
+				"Persistent PDF storage",
+			},
+			Highlights: []string{
+				"Gives each approved user a separate digital binder for the scores they upload and keep organized.",
+				"Finds a score by title or composer, then opens its PDF directly from the library.",
+				"Supports page and auto-scroll reading modes, zoom, and saved per-score reader state on an iPad-friendly interface.",
+			},
+			Paragraphs: []string{
+				"Noted is a private digital sheet-music binder for approved pianists. Each person keeps a separate library of PDF scores, can upload new pieces, and can find a familiar title or composer without searching through a physical stack of music.",
+				"Its reader is made for a music stand: open a score in a full-screen, iPad-friendly view, choose page or auto-scroll mode, adjust zoom, and return to the saved reading state for that piece. The product stays focused on the binder and reader rather than practice, playback, or other music-learning features.",
+			},
+			Screenshots: []ProjectScreenshot{
+				{
+					Title: "Local binder library",
+					Path:  "/static/projects/noted/local-library.png",
+					Alt:   "Noted local library preview with a searchable score entry and a composer name.",
+					Note:  "Captured from a local Noted preview with a rights-safe sample score.",
+				},
+				{
+					Title: "Local iPad reader",
+					Path:  "/static/projects/noted/local-reader-ipad.png",
+					Alt:   "Noted local iPad-sized reader showing a score page and page-reading controls.",
+					Note:  "Captured from a local Noted preview with a rights-safe sample score.",
+				},
+			},
+		},
+		{
 			Slug:            "dined",
 			Name:            "Dined",
 			Tagline:         "Proof that nobody actually agreed on dinner.",

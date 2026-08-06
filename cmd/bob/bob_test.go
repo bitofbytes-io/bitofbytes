@@ -32,6 +32,8 @@ func TestRoutesRenderCurrentSiteSurface(t *testing.T) {
 	}{
 		{path: "/", want: "Daniel Waters"},
 		{path: "/projects", want: "Selected personal projects"},
+		{path: "/projects/carma", want: "Carma"},
+		{path: "/projects/noted", want: "Noted"},
 		{path: "/projects/permitpal", want: "PermitPal"},
 		{path: "/projects/dined", want: "Dined"},
 	}
