@@ -105,7 +105,12 @@ func TestIconRoutesServeStaticFiles(t *testing.T) {
 			if rr.Code != http.StatusOK {
 				t.Errorf("status code = %d, want %d", rr.Code, http.StatusOK)
 			}
-			if contentType := rr.Header().Get("Content-Type"); !strings.HasPrefix(contentType, tt.wantContentType) {
+			contentType := rr.Header().Get("Content-Type")
+			contentTypeMatches := strings.HasPrefix(contentType, tt.wantContentType)
+			if tt.wantContentType == "image/x-icon" {
+				contentTypeMatches = contentTypeMatches || strings.HasPrefix(contentType, "image/vnd.microsoft.icon")
+			}
+			if !contentTypeMatches {
 				t.Errorf("Content-Type = %q, want prefix %q", contentType, tt.wantContentType)
 			}
 			if rr.Body.Len() == 0 {
