@@ -8,6 +8,7 @@ import (
 	"testing/fstest"
 
 	"github.com/DryWaters/bitofbytes/models"
+	"github.com/DryWaters/bitofbytes/templates"
 	"github.com/DryWaters/bitofbytes/views"
 )
 
@@ -16,7 +17,7 @@ func newTestPortfolio(t *testing.T) Portfolio {
 
 	fsys := fstest.MapFS{
 		"home/index.tmpl": {
-			Data: []byte(`Home Daniel Waters`),
+			Data: []byte(`Home Daniel Waters{{ range .Projects }} {{ .Name }}{{ end }}`),
 		},
 		"projects/index.tmpl": {
 			Data: []byte(`Projects{{ range .Projects }} {{ .Name }}{{ end }}`),
@@ -60,7 +61,7 @@ func newTestPortfolio(t *testing.T) Portfolio {
 	}
 }
 
-func TestPortfolioHomeRendersProfileOnly(t *testing.T) {
+func TestPortfolioHomeSuppliesProfileAndHandheldProjects(t *testing.T) {
 	t.Parallel()
 
 	portfolio := newTestPortfolio(t)
@@ -76,8 +77,8 @@ func TestPortfolioHomeRendersProfileOnly(t *testing.T) {
 	if !strings.Contains(body, "Daniel Waters") {
 		t.Fatalf("Home body = %q, want profile content", body)
 	}
-	if strings.Contains(body, "PermitPal") || strings.Contains(body, "DejaView") {
-		t.Fatalf("Home body = %q, should not render project names", body)
+	if !strings.Contains(body, "PermitPal") || !strings.Contains(body, "DejaView") {
+		t.Fatalf("Home body = %q, want supplied handheld project names", body)
 	}
 }
 
@@ -132,5 +133,35 @@ func TestPortfolioProjectDetailReturnsNotFoundForUnknownSlug(t *testing.T) {
 
 	if rr.Code != http.StatusNotFound {
 		t.Fatalf("ProjectDetail status code = %d, want %d", rr.Code, http.StatusNotFound)
+	}
+}
+
+func TestHomepageEscapesHandheldProjectAttributes(t *testing.T) {
+	t.Parallel()
+	page := views.Must(views.ParseFS(templates.FS, "home/index.gohtml", "base.gohtml"))
+	portfolio := Portfolio{
+		Projects: []models.Project{{
+			Slug:    "example",
+			Name:    `A "quoted" project`,
+			Summary: `A description with <script>alert("unsafe")</script> and & characters.`,
+		}},
+		Templates: PortfolioTemplates{Home: page},
+	}
+	rr := httptest.NewRecorder()
+	portfolio.Home(rr, httptest.NewRequest(http.MethodGet, "/", nil))
+	if rr.Code != http.StatusOK {
+		t.Fatalf("Home status = %d", rr.Code)
+	}
+	body := rr.Body.String()
+	for _, want := range []string{
+		`data-name="A &#34;quoted&#34; project"`,
+		`data-summary="A description with &lt;script&gt;alert(&#34;unsafe&#34;)&lt;/script&gt; and &amp; characters."`,
+	} {
+		if !strings.Contains(body, want) {
+			t.Errorf("missing safely escaped project data %q", want)
+		}
+	}
+	if strings.Contains(body, `<script>alert(`) {
+		t.Error("project content escaped its data attribute")
 	}
 }

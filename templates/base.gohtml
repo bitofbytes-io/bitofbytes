@@ -13,38 +13,22 @@
     <link rel="apple-touch-icon" href="/static/apple-touch-icon.png?v=20260513">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;600;700&family=Manrope:wght@400;600;700;800&family=Newsreader:opsz,wght@6..72,500;6..72,650&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Chivo:wght@400;500;700&family=VT323&display=swap" rel="stylesheet">
 </head>
-<body>
-{{ if eq category "home" }}<div class="mobile-page-title" aria-hidden="true">Home</div>{{ end }}
-<div class="site-frame{{ if eq category "home" }} home-frame{{ end }}{{ if eq category "projects" }} projects-frame{{ end }}">
-<header class="site-header">
-    <nav class="site-nav" aria-label="Primary navigation">
-        <a class="brand-lockup" href="/">
-            <span class="brand-mark" aria-hidden="true">BoB</span>
-            <span class="brand-name">BitOfBytes</span>
-        </a>
-        <details class="nav-menu">
-            <summary class="menu-glyph" aria-label="Navigation menu">
-                <span class="menu-glyph-lines" aria-hidden="true"></span>
-            </summary>
-            <ul class="nav-links nav-menu-links">
-                <li><a href="/" class="{{ if eq category "home" }}is-active{{ end }}">Home</a></li>
-                <li><a href="/projects" class="{{ if eq category "projects" }}is-active{{ end }}">Projects</a></li>
-                <li><a href="/static/daniel-resume-2024.pdf">Resume</a></li>
-            </ul>
-        </details>
-        <ul class="nav-links desktop-nav-links">
-            <li><a href="/" class="{{ if eq category "home" }}is-active{{ end }}">Home</a></li>
-            <li><a href="/projects" class="{{ if eq category "projects" }}is-active{{ end }}">Projects</a></li>
-            <li><a href="/static/daniel-resume-2024.pdf">Resume</a></li>
-        </ul>
+<body id="dw-atomic" data-design="atomic" data-route="{{ category }}">
+<div class="portfolio">
+<header class="site-nav">
+    <a class="brand" href="/">bitofbytes</a>
+    <nav class="nav-links" aria-label="Main navigation">
+        <a href="/"{{ if eq category "home" }} aria-current="page"{{ end }}>Home</a>
+        <a href="/projects"{{ if eq category "projects" }} aria-current="page"{{ end }}>Projects</a>
+        <a href="/#contact">Contact</a>
     </nav>
 </header>
 {{ end }}
 {{ define "footer" }}
 </div>
-<script defer src="/static/nav-menu.js"></script>
+{{ if eq category "home" }}<script type="module" src="/static/atomic-handheld.js"></script>{{ end }}
 <script defer src="/static/umami-loader.js"></script>
 </body>
 </html>
