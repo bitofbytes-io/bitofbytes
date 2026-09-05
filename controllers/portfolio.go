@@ -18,7 +18,9 @@ type PortfolioTemplates struct {
 	ProjectDetail views.Page
 }
 
-type HomeData struct{}
+type HomeData struct {
+	Projects []models.Project
+}
 
 type ProjectsIndexData struct {
 	Projects []models.Project
@@ -29,7 +31,7 @@ type ProjectDetailData struct {
 }
 
 func (p Portfolio) Home(w http.ResponseWriter, r *http.Request) {
-	p.Templates.Home.Execute(w, r, HomeData{})
+	p.Templates.Home.Execute(w, r, HomeData{Projects: p.Projects})
 }
 
 func (p Portfolio) ProjectsIndex(w http.ResponseWriter, r *http.Request) {

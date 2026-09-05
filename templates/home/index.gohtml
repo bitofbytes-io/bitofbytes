@@ -1,83 +1,11 @@
 {{ template "header" . }}
-
-<main class="site-shell home-shell">
-	<section class="home-console" aria-labelledby="intro-title">
-		<section class="notebook-panel profile-card">
-			<div class="profile-copy">
-				<p class="eyebrow">Field notes</p>
-				<h1 id="intro-title" aria-label="Daniel Waters"><span>Daniel</span><span>Waters</span></h1>
-				<p class="role">Notes from software, video, and useful side projects.</p>
-				<p class="intro-text">
-					I work on a live video solution enabling real-time team communication. In my free time, I play piano and tinker with personal projects.
-				</p>
-				<ul class="profile-actions" aria-label="Primary links">
-					<li><a class="notebook-button primary" href="/projects">Read projects</a></li>
-					<li><a class="notebook-button secondary" href="mailto:daniel@bitofbytes.io">Email Daniel</a></li>
-				</ul>
-			</div>
-
-			<aside class="profile-panel" aria-label="Profile notes">
-				<figure class="profile-photo">
-					<img class="profile-avatar" src="/static/daniel_train.jpg" alt="Daniel Waters smiling on a train">
-				</figure>
-				<div class="profile-notes">
-					<div>
-						<strong>Current</strong>
-						<span>Senior Software Engineer at Cisco, focused on live collaboration systems.</span>
-					</div>
-					<div>
-						<strong>Base</strong>
-						<span>Raleigh, NC</span>
-					</div>
-				</div>
-			</aside>
-		</section>
-
-		<section class="notebook-panel contact-section" aria-labelledby="connect-title">
-			<div class="section-header">
-				<p class="eyebrow">Connect</p>
-				<h2 id="connect-title">Links and resume</h2>
-			</div>
-			<div class="contact-grid">
-				<a class="contact-card" href="https://github.com/bitofbytes-io">
-					<span class="contact-icon image-icon" aria-hidden="true"><img src="/static/github-mark-white.png" alt=""></span>
-					<span>
-						<span class="contact-label">GitHub</span>
-						<span class="contact-value">github.com/bitofbytes-io</span>
-					</span>
-					<span class="contact-arrow" aria-hidden="true">&gt;</span>
-				</a>
-
-				<a class="contact-card" href="https://www.linkedin.com/in/daniel-waters/">
-					<span class="contact-icon image-icon" aria-hidden="true"><img src="/static/linked-in.png" alt=""></span>
-					<span>
-						<span class="contact-label">LinkedIn</span>
-						<span class="contact-value">linkedin.com/in/daniel-waters</span>
-					</span>
-					<span class="contact-arrow" aria-hidden="true">&gt;</span>
-				</a>
-
-				<a class="contact-card" href="mailto:daniel@bitofbytes.io">
-					<span class="contact-icon mail-icon" aria-hidden="true"></span>
-					<span>
-						<span class="contact-label">Email</span>
-						<span class="contact-value">daniel@bitofbytes.io</span>
-					</span>
-					<span class="contact-arrow" aria-hidden="true">&gt;</span>
-				</a>
-
-				<a class="contact-card" href="/static/daniel-resume-2024.pdf">
-					<span class="contact-icon resume-icon" aria-hidden="true"></span>
-					<span>
-						<span class="contact-label">Resume</span>
-						<span class="contact-value">daniel-waters-resume.pdf</span>
-					</span>
-					<span class="contact-arrow" aria-hidden="true">&gt;</span>
-				</a>
-			</div>
-		</section>
-
-	</section>
+<main>
+  <section class="home-page" aria-label="About Daniel">
+   <div class="hardware-hero">
+    <div class="hardware-bio"><h1 aria-label="Daniel Waters">Daniel<br>Waters.</h1><p class="reading">I'm a Senior Software Engineer at Cisco, working on live video and real-time collaboration.</p><p class="reading">Outside work, I play piano and build small apps for everyday life. And yes, I still love a good handheld.</p><div class="hardware-actions"><a class="primary" href="/projects">View my projects</a><a href="/static/daniel-resume-2024.pdf" target="_blank" rel="noreferrer">My resume</a></div><address id="contact" class="contact-block" style="font-style:normal"><a class="contact-email" href="mailto:daniel@bitofbytes.io">daniel@bitofbytes.io</a><div class="contact-socials"><a href="https://www.linkedin.com/in/daniel-waters/">LinkedIn</a><a href="https://github.com/bitofbytes-io">GitHub</a></div></address><p class="hardware-location">Raleigh, North Carolina</p></div>
+    <div class="model-column"><div class="scene-slot" data-scene="atomic" aria-label="Interactive clear handheld"><div class="fallback-device" aria-hidden="true"><div class="fallback-display">Daniel<br>Waters<small>Software engineer</small></div><div class="fallback-controls"><span>✚</span><span>B &nbsp; A</span></div></div></div><div class="device-control-row" role="group" aria-label="Browse and open the handheld screen"><button class="screen-prev" disabled aria-label="Previous screen">‹</button><a class="device-status" href="/projects" aria-label="View all projects" aria-live="polite">About Daniel</a><button class="screen-next" disabled aria-label="Next screen">›</button></div><p class="engine-message" hidden></p></div>
+   </div>
+  </section>
+<div hidden id="handheld-projects">{{ range .Projects }}<span data-slug="{{ .Slug }}" data-name="{{ .Name }}" data-summary="{{ .Summary }}"></span>{{ end }}</div>
 </main>
-
 {{ template "footer" }}

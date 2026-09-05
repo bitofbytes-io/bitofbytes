@@ -1,33 +1,23 @@
 {{ template "header" . }}
-
-<main class="site-shell projects-shell projects-index-shell">
-	<section class="page-heading notebook-panel" aria-labelledby="projects-title">
-		<p class="eyebrow">Project index</p>
-		<h1 id="projects-title">Selected personal projects</h1>
-		<p>
-			A compact list of recent applications and the site itself.
-		</p>
-	</section>
-
-	<section class="project-index" aria-label="Projects">
-		{{ range .Projects }}
-		<article class="project-listing">
-			<div class="project-listing-main">
-				<p class="eyebrow">Updated: {{ .LastUpdate }}</p>
-				<h2><a href="/projects/{{ .Slug }}">{{ .Name }}</a></h2>
-				<p>{{ .Summary }}</p>
-			</div>
-			<div class="project-listing-meta">
-				<ul class="tech-list" aria-label="{{ .Name }} technology">
-					{{ range .Tech }}
-					<li>{{ . }}</li>
-					{{ end }}
-				</ul>
-				<a class="notebook-button secondary" href="/projects/{{ .Slug }}">Details</a>
-			</div>
-		</article>
-		{{ end }}
-	</section>
+<main class="projects-page">
+    <h1 class="page-title">Selected personal projects</h1>
+    <p class="page-intro">A compact list of recent applications and the site itself.</p>
+    <section class="project-list" aria-label="Projects">
+        {{ range .Projects }}
+        <article class="project-entry">
+            <div>
+                <h2><a href="/projects/{{ .Slug }}">{{ .Name }}</a></h2>
+                <p class="updated">Updated: {{ .LastUpdate }}</p>
+            </div>
+            <div>
+                <p>{{ .Summary }}</p>
+                <ul class="tech-list" aria-label="{{ .Name }} technology">
+                    {{ range .Tech }}<li>{{ . }}</li>{{ end }}
+                </ul>
+                <a class="project-link" href="/projects/{{ .Slug }}" aria-label="{{ .Name }} details">Details</a>
+            </div>
+        </article>
+        {{ end }}
+    </section>
 </main>
-
 {{ template "footer" }}

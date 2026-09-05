@@ -1,6 +1,7 @@
 package main
 
 import (
+	"html"
 	"io"
 	"log/slog"
 	"net/http"
@@ -131,5 +132,69 @@ func TestUnknownProjectReturnsNotFound(t *testing.T) {
 
 	if rr.Code != http.StatusNotFound {
 		t.Fatalf("unknown project status code = %d, want %d", rr.Code, http.StatusNotFound)
+	}
+}
+
+func TestPortfolioPreservesProjectContentAndScreenshots(t *testing.T) {
+	t.Parallel()
+	handler := newTestHandler()
+	for _, project := range models.Projects() {
+		t.Run(project.Slug, func(t *testing.T) {
+			rr := httptest.NewRecorder()
+			handler.ServeHTTP(rr, httptest.NewRequest(http.MethodGet, "/projects/"+project.Slug, nil))
+			if rr.Code != http.StatusOK {
+				t.Fatalf("status = %d", rr.Code)
+			}
+			body := html.UnescapeString(rr.Body.String())
+			want := []string{project.Name, project.Tagline, project.RepoURL, project.LiveURL, project.LastUpdate, project.Notes}
+			want = append(want, project.Paragraphs...)
+			want = append(want, project.Tech...)
+			want = append(want, project.Highlights...)
+			for _, screenshot := range project.Screenshots {
+				want = append(want, screenshot.Title, screenshot.Alt, screenshot.Note)
+				if screenshot.Path != "" {
+					want = append(want, `href="`+screenshot.Path+`"`, `src="`+screenshot.Path+`"`)
+				}
+			}
+			for _, text := range want {
+				if !strings.Contains(body, text) {
+					t.Errorf("missing content %q", text)
+				}
+			}
+			if strings.Contains(body, "atomic-handheld.js") {
+				t.Error("project detail loads homepage-only renderer")
+			}
+		})
+	}
+}
+
+func TestHomepageHandheldAndContact(t *testing.T) {
+	t.Parallel()
+	handler := newTestHandler()
+	rr := httptest.NewRecorder()
+	handler.ServeHTTP(rr, httptest.NewRequest(http.MethodGet, "/", nil))
+	body := html.UnescapeString(rr.Body.String())
+	for _, want := range []string{`src="/static/atomic-handheld.js"`, `type="module"`, `id="contact"`, `href="mailto:daniel@bitofbytes.io"`, `href="https://www.linkedin.com/in/daniel-waters/"`, `href="https://github.com/bitofbytes-io"`, `class="screen-prev" disabled`, `class="screen-next" disabled`} {
+		if !strings.Contains(body, want) {
+			t.Errorf("missing homepage element %q", want)
+		}
+	}
+	for _, project := range models.Projects() {
+		for _, want := range []string{`data-slug="` + project.Slug + `"`, `data-name="` + project.Name + `"`, `data-summary="` + project.Summary + `"`} {
+			if !strings.Contains(body, want) {
+				t.Errorf("missing handheld data %q", want)
+			}
+		}
+	}
+	if strings.Contains(body, "Say hello") || strings.Contains(body, "<footer") {
+		t.Error("homepage restored removed contact/footer content")
+	}
+	rr = httptest.NewRecorder()
+	handler.ServeHTTP(rr, httptest.NewRequest(http.MethodGet, "/projects", nil))
+	if rr.Code != http.StatusOK {
+		t.Fatalf("project index status = %d, want %d", rr.Code, http.StatusOK)
+	}
+	if strings.Contains(rr.Body.String(), "atomic-handheld.js") {
+		t.Error("project index loads homepage-only renderer")
 	}
 }
