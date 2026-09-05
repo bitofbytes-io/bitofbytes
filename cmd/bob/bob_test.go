@@ -191,6 +191,9 @@ func TestHomepageHandheldAndContact(t *testing.T) {
 	}
 	rr = httptest.NewRecorder()
 	handler.ServeHTTP(rr, httptest.NewRequest(http.MethodGet, "/projects", nil))
+	if rr.Code != http.StatusOK {
+		t.Fatalf("project index status = %d, want %d", rr.Code, http.StatusOK)
+	}
 	if strings.Contains(rr.Body.String(), "atomic-handheld.js") {
 		t.Error("project index loads homepage-only renderer")
 	}
