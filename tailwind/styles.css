@@ -1,6 +1,7 @@
-@import "tailwindcss";
+@import "tailwindcss" source(none);
 @plugin "@tailwindcss/typography";
 @source "../templates/**/*.gohtml";
+@source "../static/atomic-handheld.js";
 
 /* Approved Atomic mockup: preserve the handheld scene rules. */
 
