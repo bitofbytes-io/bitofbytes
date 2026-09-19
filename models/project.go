@@ -292,7 +292,7 @@ func Projects() []Project {
 			Summary:         "A personal site for presenting resume details, contact links, and selected project work.",
 			RepoURL:         "https://github.com/bitofbytes-io/bitofbytes",
 			LiveURL:         "https://www.bitofbytes.io",
-			LastUpdate:      "September 7, 2026",
+			LastUpdate:      "September 14, 2026",
 			FirstCommitDate: "2024-06-29",
 			Notes:           "Most recent work introduced an Atomic-inspired handheld portfolio experience while refreshing project recency copy and refining navigation, branding, layout, and production styling.",
 			Tech: []string{
