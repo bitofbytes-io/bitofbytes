@@ -1,48 +1,89 @@
 {{ template "header" . }}
-<main class="detail-page">
+<main class="nc-wrap">
     <article>
-        <nav class="breadcrumb" aria-label="Breadcrumb"><a href="/projects">Projects</a><span aria-hidden="true">/</span><span aria-current="page">{{ .Project.Name }}</span></nav>
-        <header class="detail-lead">
-            <h1 class="page-title">{{ .Project.Name }}</h1>
-            <p class="page-intro">{{ .Project.Tagline }}</p>
-            <div class="detail-actions">
-                <a class="primary" href="{{ .Project.RepoURL }}">GitHub</a>
-                {{ if .Project.LiveURL }}<a href="{{ .Project.LiveURL }}">Live site</a>{{ end }}
-            </div>
-        </header>
-        <div class="detail-body">
-            <section class="project-copy" aria-labelledby="overview-title">
-                <h2 id="overview-title">What it does</h2>
-                {{ range .Project.Paragraphs }}<p>{{ . }}</p>{{ end }}
-                <h2>Stack notes</h2>
-                <ul class="tech-list" aria-label="{{ .Project.Name }} technology">{{ range .Project.Tech }}<li>{{ . }}</li>{{ end }}</ul>
-                <h2>Highlights</h2>
-                <ul class="highlight-list">{{ range .Project.Highlights }}<li>{{ . }}</li>{{ end }}</ul>
-            </section>
-            <aside aria-label="Project metadata">
-                <dl class="metadata-list">
-                    <div><dt>Last Update</dt><dd>{{ .Project.LastUpdate }}</dd></div>
-                    <div><dt>Notes</dt><dd>{{ .Project.Notes }}</dd></div>
+        <nav class="nc-breadcrumb nc-detail-crumb" aria-label="Breadcrumb"><a href="/projects">Projects</a><span aria-hidden="true">/</span><span aria-current="page">{{ .Project.Name }}</span></nav>
+
+        <header class="nc-detail-hero{{ if not .Project.Thumbnail.Path }} nc-detail-hero--solo{{ end }}">
+            <div class="nc-detail-hero__intro">
+                {{ if eq .Project.Hobby "piano" }}
+                <p class="nc-eyebrow nc-eyebrow--accent"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="2" y="5" width="20" height="14" rx="1.5"></rect><line x1="7.5" y1="12" x2="7.5" y2="19"></line><line x1="12" y1="12" x2="12" y2="19"></line><line x1="16.5" y1="12" x2="16.5" y2="19"></line></svg>Built for the piano bench</p>
+                {{ else if eq .Project.Hobby "videogames" }}
+                <p class="nc-eyebrow nc-eyebrow--accent"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M7 6h10a5 5 0 0 1 4.9 6l-.8 4.2a2.6 2.6 0 0 1-4.5 1.2L14.5 15h-5l-2.1 2.4a2.6 2.6 0 0 1-4.5-1.2L2.1 12A5 5 0 0 1 7 6z"></path><path d="M6 11h4M8 9v4"></path></svg>Home of the game shelf</p>
+                {{ else }}
+                <p class="nc-eyebrow nc-eyebrow--accent">Side project</p>
+                {{ end }}
+                <h1 class="nc-heading nc-heading--project">{{ .Project.Name }}</h1>
+                <p class="nc-tagline">{{ .Project.Tagline }}</p>
+                <div class="nc-actions">
+                    {{ if .Project.LiveURL }}
+                    <a class="nc-btn nc-btn--primary" href="{{ .Project.LiveURL }}">Open live site
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M14 4h6v6M20 4l-9 9M18 14v5a1 1 0 0 1-1 1H5a1 1 0 0 1-1-1V7a1 1 0 0 1 1-1h5"></path></svg></a>
+                    <a class="nc-btn nc-btn--secondary" href="{{ .Project.RepoURL }}">View on GitHub</a>
+                    {{ else }}
+                    <a class="nc-btn nc-btn--primary" href="{{ .Project.RepoURL }}">View on GitHub</a>
+                    {{ end }}
+                </div>
+                <dl class="nc-meta nc-meta--row">
+                    <div><dt>Started</dt><dd>{{ .Project.StartedLong }}</dd></div>
+                    <div><dt>Last update</dt><dd>{{ .Project.UpdatedLong }}</dd></div>
+                    <div><dt>Stack</dt><dd>{{ .Project.StackSummary }}</dd></div>
                 </dl>
+            </div>
+            {{ with .Project.Thumbnail }}{{ if .Path }}
+            <img class="nc-hero-shot" src="{{ .Path }}" alt="{{ .Alt }}">
+            {{ end }}{{ end }}
+        </header>
+
+        <div class="nc-detail-body">
+            <section class="nc-detail-body__main" aria-labelledby="overview-title">
+                <h2 class="nc-heading nc-heading--sub" id="overview-title">What it does</h2>
+                {{ range .Project.Paragraphs }}<p class="nc-prose">{{ . }}</p>{{ end }}
+                <h2 class="nc-heading nc-heading--sub">Highlights</h2>
+                <ol class="nc-highlights">
+                    {{ range .Project.NumberedHighlights }}<li><span aria-hidden="true">{{ .Numeral }}</span>{{ .Text }}</li>{{ end }}
+                </ol>
+            </section>
+
+            <aside class="nc-detail-body__aside" aria-label="Project details">
+                <section class="nc-aside-block">
+                    <h2 class="nc-card__title">Stack</h2>
+                    <ul class="nc-chips nc-chips--roomy" aria-label="{{ .Project.Name }} technology">
+                        {{ range .Project.Tech }}<li class="nc-chip">{{ . }}</li>{{ end }}
+                    </ul>
+                </section>
+                <section class="nc-aside-block">
+                    <h2 class="nc-card__title">Timeline</h2>
+                    <ol class="nc-timeline">
+                        <li class="nc-timeline__item nc-timeline__item--latest">
+                            <span class="nc-timeline__date">{{ .Project.UpdatedLong }} · <b>latest</b></span>
+                            <span class="nc-timeline__text">{{ .Project.LatestNote }}</span>
+                        </li>
+                        <li class="nc-timeline__item">
+                            <span class="nc-timeline__date">{{ .Project.StartedLong }}</span>
+                            <span class="nc-timeline__text">First commit.</span>
+                        </li>
+                    </ol>
+                </section>
             </aside>
         </div>
-        <section class="screenshot-section" aria-labelledby="screenshots-title">
-            <h2 id="screenshots-title">Screenshots</h2>
-            <div class="screenshot-grid">
+
+        {{ if .Project.Screenshots }}
+        <section class="nc-shots-section" aria-labelledby="screenshots-title">
+            <h2 class="nc-heading nc-heading--sub" id="screenshots-title">Screenshots</h2>
+            <div class="nc-shots">
                 {{ range .Project.Screenshots }}
-                <figure class="screenshot-frame">
+                <figure class="nc-shot">
                     {{ if .Path }}
                     <a href="{{ .Path }}"><img src="{{ .Path }}" alt="{{ .Alt }}" loading="lazy"></a>
-                    <p class="screenshot-note">{{ .Note }}</p>
                     {{ else }}
-                    <div class="screenshot-placeholder"><span>Capture pending</span><p>{{ .Note }}</p></div>
+                    <div class="nc-shot__pending">Capture pending</div>
                     {{ end }}
-                    <figcaption>{{ .Title }}</figcaption>
+                    <figcaption><b>{{ .Title }}</b><span>{{ .Note }}</span></figcaption>
                 </figure>
                 {{ end }}
             </div>
         </section>
-        <a class="all-projects" href="/projects">All projects</a>
+        {{ end }}
     </article>
 </main>
 {{ template "footer" }}

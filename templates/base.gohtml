@@ -4,6 +4,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="theme-color" content="#0A1224">
     <title>BitOfBytes | Daniel Waters</title>
     <link rel="stylesheet" href="/static/styles.css">
     <link rel="icon" href="/static/favicon.ico?v=20260905" sizes="any">
@@ -13,21 +14,61 @@
     <link rel="apple-touch-icon" href="/static/apple-touch-icon.png?v=20260905">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Chivo:wght@400;500;700&family=VT323&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,400;0,9..144,600;1,9..144,400&family=IBM+Plex+Sans:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
 </head>
-<body id="dw-atomic" data-design="atomic" data-route="{{ category }}">
-<div class="portfolio">
-<header class="site-nav">
-    <a class="brand" href="/">bitofbytes</a>
-    <nav class="nav-links" aria-label="Main navigation">
-        <a href="/"{{ if eq category "home" }} aria-current="page"{{ end }}>Home</a>
-        <a href="/projects"{{ if eq category "projects" }} aria-current="page"{{ end }}>Projects</a>
-    </nav>
+<body class="nc-page" data-route="{{ category }}">
+<header class="nc-wrap">
+    <div class="nc-header">
+        <a class="nc-wordmark" href="/">bitofbytes</a>
+        <nav class="nc-nav" aria-label="Main navigation">
+            <a href="/"{{ if eq category "home" }} aria-current="page"{{ end }}>Home</a>
+            <a href="/projects"{{ if eq category "projects" }} aria-current="page"{{ end }}>Projects</a>
+            <a href="/static/daniel-resume-2024.pdf">Resume</a>
+            <a href="/#contact">Contact</a>
+        </nav>
+        <details class="nav-menu nc-menu">
+            <summary class="nc-menu-btn" aria-label="Menu">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><path d="M4 8h16M4 16h16"></path></svg>
+            </summary>
+            <nav class="nc-menu__panel" aria-label="Main navigation">
+                <a href="/"{{ if eq category "home" }} aria-current="page"{{ end }}>Home</a>
+                <a href="/projects"{{ if eq category "projects" }} aria-current="page"{{ end }}>Projects</a>
+                <a href="/static/daniel-resume-2024.pdf">Resume</a>
+                <a href="/#contact">Contact</a>
+            </nav>
+        </details>
+    </div>
 </header>
 {{ end }}
+
 {{ define "footer" }}
-</div>
-{{ if eq category "home" }}<script type="module" src="/static/atomic-handheld.js"></script>{{ end }}
+{{ if eq category "home" }}
+<footer class="nc-wrap" id="contact">
+    <div class="nc-footer nc-footer--home">
+        <div>
+            <p class="nc-footer__hello">Say hello.</p>
+            <a class="nc-footer__email nc-footer__email--large" href="mailto:daniel@bitofbytes.io">daniel@bitofbytes.io</a>
+        </div>
+        <div class="nc-footer__links">
+            <a href="https://github.com/bitofbytes-io">GitHub</a>
+            <a href="https://www.linkedin.com/in/daniel-waters/">LinkedIn</a>
+            <span>Raleigh, North Carolina</span>
+        </div>
+    </div>
+</footer>
+{{ else }}
+<footer class="nc-wrap">
+    <div class="nc-footer">
+        <a class="nc-footer__email" href="mailto:daniel@bitofbytes.io">daniel@bitofbytes.io</a>
+        <div class="nc-footer__links">
+            <a href="https://github.com/bitofbytes-io">GitHub</a>
+            <a href="https://www.linkedin.com/in/daniel-waters/">LinkedIn</a>
+        </div>
+    </div>
+</footer>
+{{ end }}
+<script defer src="/static/nav-menu.js"></script>
+{{ if eq category "home" }}<script defer src="/static/nocturne.js"></script>{{ end }}
 <script defer src="/static/umami-loader.js"></script>
 </body>
 </html>

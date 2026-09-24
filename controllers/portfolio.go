@@ -2,14 +2,18 @@ package controllers
 
 import (
 	"net/http"
+	"time"
 
 	"github.com/DryWaters/bitofbytes/models"
 	"github.com/DryWaters/bitofbytes/views"
 )
 
 type Portfolio struct {
-	Projects  []models.Project
-	Templates PortfolioTemplates
+	Projects   []models.Project
+	Activities models.Activities
+	Templates  PortfolioTemplates
+	// Now returns the current time; nil means time.Now. Tests pin it.
+	Now func() time.Time
 }
 
 type PortfolioTemplates struct {
@@ -18,25 +22,104 @@ type PortfolioTemplates struct {
 	ProjectDetail views.Page
 }
 
+// ProjectView is a project plus what depends on the current date.
+type ProjectView struct {
+	models.Project
+	Recent bool
+}
+
+// OctaveKey is one white key of the home page keyboard.
+type OctaveKey struct {
+	ProjectView
+	Note string
+}
+
+// BlackKey is a decorative black key sitting on white-key boundary Pos.
+type BlackKey struct {
+	Pos  int
+	Note string
+}
+
 type HomeData struct {
-	Projects []models.Project
+	Updates     []ProjectView
+	Keys        []OctaveKey
+	BlackKeys   []BlackKey
+	KeyCount    string
+	RecentCount int
+	Activities  models.Activities
 }
 
 type ProjectsIndexData struct {
-	Projects []models.Project
+	Projects []ProjectView
+	Sort     string
 }
 
 type ProjectDetailData struct {
-	Project models.Project
+	Project ProjectView
 }
 
+const (
+	homeUpdateCount = 4
+	octaveSize      = 8
+	sortUpdated     = "updated"
+	sortNewest      = "newest"
+)
+
+var (
+	whiteNotes = []string{"C4", "D4", "E4", "F4", "G4", "A4", "B4", "C5"}
+	blackKeys  = []BlackKey{{1, "C#4"}, {2, "D#4"}, {4, "F#4"}, {5, "G#4"}, {6, "A#4"}}
+	countWords = []string{"No", "One", "Two", "Three", "Four", "Five", "Six", "Seven", "Eight"}
+)
+
 func (p Portfolio) Home(w http.ResponseWriter, r *http.Request) {
-	p.Templates.Home.Execute(w, r, HomeData{Projects: p.Projects})
+	byUpdate := p.views(models.SortByLastUpdate(p.Projects))
+
+	recent := 0
+	for _, project := range byUpdate {
+		if project.Recent {
+			recent++
+		}
+	}
+
+	// The keyboard holds one octave: the most recently updated projects,
+	// laid out in the order they were started.
+	onKeys := byUpdate[:min(len(byUpdate), octaveSize)]
+	started := make([]models.Project, len(onKeys))
+	for i, project := range onKeys {
+		started[i] = project.Project
+	}
+	keys := make([]OctaveKey, 0, len(onKeys))
+	for i, project := range p.views(models.SortByFirstCommit(started)) {
+		keys = append(keys, OctaveKey{ProjectView: project, Note: whiteNotes[i]})
+	}
+	var black []BlackKey
+	for _, key := range blackKeys {
+		if key.Pos < len(keys) {
+			black = append(black, key)
+		}
+	}
+
+	p.Templates.Home.Execute(w, r, HomeData{
+		Updates:     byUpdate[:min(len(byUpdate), homeUpdateCount)],
+		Keys:        keys,
+		BlackKeys:   black,
+		KeyCount:    countWords[len(keys)],
+		RecentCount: recent,
+		Activities:  p.Activities,
+	})
 }
 
 func (p Portfolio) ProjectsIndex(w http.ResponseWriter, r *http.Request) {
+	sort := sortUpdated
+	projects := models.SortByLastUpdate(p.Projects)
+	if r.URL.Query().Get("sort") == sortNewest {
+		sort = sortNewest
+		projects = p.Projects
+	}
+
 	p.Templates.ProjectsIndex.Execute(w, r, ProjectsIndexData{
-		Projects: p.Projects,
+		Projects: p.views(projects),
+		Sort:     sort,
 	})
 }
 
@@ -48,7 +131,7 @@ func (p Portfolio) ProjectDetail(w http.ResponseWriter, r *http.Request) {
 	}
 
 	p.Templates.ProjectDetail.Execute(w, r, ProjectDetailData{
-		Project: project,
+		Project: p.view(project),
 	})
 }
 
@@ -60,4 +143,26 @@ func (p Portfolio) findProject(slug string) (models.Project, bool) {
 	}
 
 	return models.Project{}, false
+}
+
+func (p Portfolio) now() time.Time {
+	if p.Now != nil {
+		return p.Now()
+	}
+	return time.Now()
+}
+
+func (p Portfolio) view(project models.Project) ProjectView {
+	return ProjectView{
+		Project: project,
+		Recent:  project.UpdatedWithin(p.now(), models.RecentWindow),
+	}
+}
+
+func (p Portfolio) views(projects []models.Project) []ProjectView {
+	out := make([]ProjectView, len(projects))
+	for i, project := range projects {
+		out[i] = p.view(project)
+	}
+	return out
 }
