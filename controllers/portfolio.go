@@ -37,8 +37,7 @@ type OctaveKey struct {
 
 // BlackKey is a decorative black key sitting on white-key boundary Pos.
 type BlackKey struct {
-	Pos  int
-	Note string
+	Pos int
 }
 
 type HomeData struct {
@@ -68,7 +67,7 @@ const (
 
 var (
 	whiteNotes = []string{"C4", "D4", "E4", "F4", "G4", "A4", "B4", "C5"}
-	blackKeys  = []BlackKey{{1, "C#4"}, {2, "D#4"}, {4, "F#4"}, {5, "G#4"}, {6, "A#4"}}
+	blackKeys  = []BlackKey{{1}, {2}, {4}, {5}, {6}}
 	countWords = []string{"No", "One", "Two", "Three", "Four", "Five", "Six", "Seven", "Eight"}
 )
 

@@ -1,13 +1,13 @@
 /* Nocturne behaviour: the octave keyboard sound. Plain script, no framework.
    Exposes window.Nocturne = { NOTES, playNote, attachOctave, autoAttach }.
-   Markup contract: a root with [data-nc-octave], keys carrying data-note ("C4".."C5", "C#4".."A#4"),
+   Markup contract: a root with [data-nc-octave], white keys (.nc-key) carrying data-note ("C4".."C5"),
    and optionally a <button data-nc-sound aria-pressed="true"> anywhere on the page. */
 (function () {
   'use strict';
 
   var NOTES = {
-    'C4': 261.63, 'C#4': 277.18, 'D4': 293.66, 'D#4': 311.13, 'E4': 329.63, 'F4': 349.23,
-    'F#4': 369.99, 'G4': 392.0, 'G#4': 415.3, 'A4': 440.0, 'A#4': 466.16, 'B4': 493.88, 'C5': 523.25
+    'C4': 261.63, 'D4': 293.66, 'E4': 329.63, 'F4': 349.23,
+    'G4': 392.0, 'A4': 440.0, 'B4': 493.88, 'C5': 523.25
   };
   var WHITE_ORDER = ['C4', 'D4', 'E4', 'F4', 'G4', 'A4', 'B4', 'C5'];
   var STORAGE_KEY = 'nocturne-sound';
@@ -85,10 +85,10 @@
   function attachOctave(root) {
     if (!root || root.__ncOctave) return;
     root.__ncOctave = true;
-    var keys = root.querySelectorAll('.nc-key, .nc-black');
+    var keys = root.querySelectorAll('.nc-key'); // black keys are decorative and let the pointer through
     for (var i = 0; i < keys.length; i++) {
       (function (el, index) {
-        var note = el.getAttribute('data-note') || (el.classList.contains('nc-key') ? WHITE_ORDER[index] : null);
+        var note = el.getAttribute('data-note') || WHITE_ORDER[index];
         var pending = false;
         el.addEventListener('pointerenter', function () {
           el.classList.add('is-pressed');

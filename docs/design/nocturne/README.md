@@ -65,7 +65,7 @@ Nocturne is the visual system for bitofbytes.io, the personal site and project p
 
 ### Motion and interaction
 
-- Keys press in 90ms: white keys dip (`scaleY(0.985)`) and darken, black keys shorten by 4px. `prefers-reduced-motion` removes the transform and transition, keeping only the color change.
+- Keys press in 90ms: white keys dip (`scaleY(0.985)`) and darken; black keys never move. `prefers-reduced-motion` removes the transform and transition, keeping only the color change.
 - Hovering a key plays its note, and so does tabbing onto a white key (see Octave keyboard). Sound is on by default, remembered per browser, and switchable with the Sound toggle. Browsers stay silent until the visitor's first click or tap anywhere on the page; that is expected.
 - Focus: a solid 2px `accent` outline, offset 3px, on every link and button.
 - Touch targets are at least `control-height-sm` (44px).
@@ -91,7 +91,7 @@ These three page types are the whole site. Build them from the components below.
 - **Sound toggle** (`nc-sound`): an `aria-pressed` button that switches keyboard audio.
 - **Sort toggle** (`nc-sort`): a segmented pair of options, as `aria-pressed` buttons or as links to `?sort=` with `aria-current="true"` on the current one (what the site uses).
 - **Update list** (`nc-updates` in an `nc-card`): project name, short date and note per row.
-- **Octave keyboard** (`nc-octave`): the signature. Eight white keys, one per project, left to right in the order the projects were started (first commit date, oldest first). A key is lit when that project's last update is within 30 days. White keys play C4 to C5; black keys (C#, D#, F#, G#, A#) are decorative, `aria-hidden`, and play their sharps. Below 640px it turns sideways.
+- **Octave keyboard** (`nc-octave`): the signature. Eight white keys, one per project, left to right in the order the projects were started (first commit date, oldest first). A key is lit when that project's last update is within 30 days. White keys play C4 to C5; black keys (C#, D#, F#, G#, A#) are decorative, `aria-hidden` and silent, and let the pointer through to the white key beneath. Below 640px it turns sideways.
 - **Hobby card** (`nc-hobby` in an `nc-card`).
 - **Project row** (`nc-row`): thumbnail, name with an optional "Updated recently" Badge, tagline, "Latest ·" note, Tech chips, and an Updated / Started meta column with a Details link.
 - **Tech chip** (`nc-chip`) and **Badge** (`nc-badge`).

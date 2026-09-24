@@ -152,9 +152,9 @@
 .nc-key--lit .nc-key__since { color: var(--key-ink-lit); }
 /* --keys = white keys rendered (set on .nc-octave, default 8).
    --pos = the white-key boundary a black key sits on (1, 2, 4, 5, 6 for C#, D#, F#, G#, A#).
-   A black key is half a white-key slot wide, which is key-black-width (70px) at 1120px. */
-.nc-black { --slot: calc((100% + var(--space-1)) / var(--keys, 8)); position: absolute; top: 0; left: calc(var(--pos) * var(--slot) - 2px - var(--slot) / 4); width: calc(var(--slot) / 2); height: var(--key-black-height); box-sizing: border-box; background: var(--bg); border: 1px solid var(--line-image); border-top: 0; border-radius: 0 0 8px 8px; transition: background 90ms, height 90ms; }
-.nc-black.is-pressed { background: var(--key-black-pressed); height: calc(var(--key-black-height) - 4px); }
+   A black key is half a white-key slot wide, which is key-black-width (70px) at 1120px.
+   Black keys are decorative: the pointer passes through to the white key underneath. */
+.nc-black { --slot: calc((100% + var(--space-1)) / var(--keys, 8)); position: absolute; top: 0; left: calc(var(--pos) * var(--slot) - 2px - var(--slot) / 4); width: calc(var(--slot) / 2); height: var(--key-black-height); box-sizing: border-box; background: var(--bg); border: 1px solid var(--line-image); border-top: 0; border-radius: 0 0 8px 8px; pointer-events: none; }
 
 /* ---------- page layouts (Home, Projects, Project detail) ---------- */
 .nc-desktop-only { display: inline; }
@@ -229,7 +229,7 @@
 }
 
 @media (prefers-reduced-motion: reduce) {
-  .nc-key, .nc-black { transition: none; }
+  .nc-key { transition: none; }
   .nc-key.is-pressed { transform: none; }
 }
 
@@ -294,5 +294,4 @@
   .nc-key.is-pressed { transform: scaleX(0.99); }
   .nc-key__since { font-size: 11px; }
   .nc-black { --slot: auto; left: auto; right: 0; top: calc(var(--pos) * (var(--key-row-height) + 3px) - 1.5px - 18px); width: 130px; height: 36px; border: 1px solid var(--line-image); border-right: 0; border-radius: 8px 0 0 8px; }
-  .nc-black.is-pressed { height: 36px; width: 127px; }
 }
