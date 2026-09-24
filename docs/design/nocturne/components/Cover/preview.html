@@ -1,0 +1,45 @@
+<!-- @dsCard height=288 -->
+<!doctype html>
+<html lang="en">
+<head><meta charset="utf-8"><title>Nocturne cover</title>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,400;0,9..144,600;1,9..144,400&amp;family=IBM+Plex+Sans:wght@400;500;600&amp;display=swap">
+<style>
+html,body{margin:0;background:var(--bg)}
+.cv{position:relative;width:960px;height:288px;overflow:hidden;background:var(--bg)}
+.cv svg{position:absolute;inset:0}
+.key{rx:var(--radius-md);ry:var(--radius-md)}
+.k-lit{fill:var(--key-lit)}
+.k-acc{fill:var(--accent)}
+.k-idle{fill:var(--key-idle)}
+.blk{fill:var(--bg);stroke:var(--line-image);stroke-width:1;rx:var(--radius-md);ry:var(--radius-md)}
+.cv__text{position:absolute;left:48px;bottom:40px;max-width:440px;display:flex;flex-direction:column;gap:12px}
+.cv__name{margin:0;font-family:var(--font-display);font-weight:400;font-size:96px;line-height:.92;letter-spacing:-0.02em;color:var(--ink)}
+.cv__tag{margin:0;font-family:var(--font-sans);font-size:14px;line-height:1.4;color:var(--ink-subtle)}
+</style>
+</head>
+<body>
+<div class="cv">
+<svg width="960" height="288" viewBox="0 0 960 288" aria-hidden="true">
+<!--
+blocks: five white keys, 96 wide (space-11) with 4px gaps (space-1), in key-lit x3, accent x1 (the key being played), key-idle x1; ground is bg.
+arrangement: one octave fragment hung from the top edge, starting at x=496 and bleeding off the right, keys ending at y=232 with radius-md ends.
+pattern: literal motif row (piano keys), because the keyboard is the brand's project index; the pattern is three black keys cut in bg with a line-image edge.
+steps and radii: key width space-11 (96), gap space-1 (4), black key 64 x 144 (space-9 by space-12 + space-6), radius-md on every key end.
+-->
+<rect class="key k-lit" x="496" y="-16" width="96" height="248"></rect>
+<rect class="key k-lit" x="596" y="-16" width="96" height="248"></rect>
+<rect class="key k-acc" x="696" y="-16" width="96" height="242"></rect>
+<rect class="key k-lit" x="796" y="-16" width="96" height="248"></rect>
+<rect class="key k-idle" x="896" y="-16" width="96" height="248"></rect>
+<rect class="blk" x="562" y="-16" width="64" height="160"></rect>
+<rect class="blk" x="662" y="-16" width="64" height="160"></rect>
+<rect class="blk" x="862" y="-16" width="64" height="160"></rect>
+</svg>
+<div class="cv__text">
+<h1 class="cv__name">Nocturne</h1>
+<p class="cv__tag">Midnight navy, one octave, and the small apps in between.</p>
+</div>
+</div>
+<script></script>
+</body>
+</html>

@@ -1,0 +1,82 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Nocturne · Projects (phone)</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin="">
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,400;0,9..144,600;1,9..144,400&amp;family=IBM+Plex+Sans:wght@400;500;600&amp;family=IBM+Plex+Mono:wght@400;500&amp;display=swap" rel="stylesheet">
+<style>
+body{margin:0;background:#0A1224;font-family:'IBM Plex Sans',system-ui,sans-serif;color:#E8EEF9}
+a{color:#E8EEF9;text-decoration:none}a:hover{color:#FFFFFF}
+</style>
+</helmet>
+<div style="width: 390px; height: 2540px; box-sizing: border-box; background: #0A1224; color: #E8EEF9; font-family: 'IBM Plex Sans', system-ui, sans-serif; display: flex; flex-direction: column">
+
+<header style="display: flex; align-items: center; justify-content: space-between; height: 68px; padding: 0 20px; border-bottom: 1px solid #1F2E4D">
+<a href="home-phone.dc.html" style="font-family: 'Fraunces', serif; font-style: italic; font-size: 22px">bitofbytes</a>
+<button type="button" aria-label="Open menu" style="width: 44px; height: 44px; display: flex; align-items: center; justify-content: center; border: 1px solid #34486F; border-radius: 22px; background: transparent; color: #E8EEF9; cursor: pointer">
+<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><path d="M4 8h16M4 16h16"></path></svg></button>
+</header>
+
+<section style="padding: 44px 20px 28px; display: flex; flex-direction: column; gap: 16px">
+<p style="margin: 0; font-family: 'IBM Plex Mono', monospace; font-size: 12px; letter-spacing: 0.08em; text-transform: uppercase; color: #9FB0CC">Projects · 8</p>
+<h1 style="margin: 0; font-family: 'Fraunces', serif; font-weight: 400; font-size: 56px; line-height: 0.95; letter-spacing: -0.02em">Side <span style="font-style: italic; color: {{accent}}">projects</span></h1>
+<p style="margin: 0; font-size: 16px; line-height: 1.6; color: #C9D4E7">Small, private apps for everyday life, plus this site.</p>
+<div role="group" aria-label="Sort projects" style="display: flex; padding: 4px; margin-top: 4px; border: 1px solid #24365A; border-radius: 24px; background: #111C33">
+<button type="button" aria-pressed="true" style="flex-grow: 1; height: 40px; border: 0; border-radius: 20px; background: {{accent}}; color: #0A1224; font: 600 14px 'IBM Plex Sans', sans-serif; cursor: pointer">Recently updated</button>
+<button type="button" aria-pressed="false" style="flex-grow: 1; height: 40px; border: 0; border-radius: 20px; background: transparent; color: #B7C4DB; font: 500 14px 'IBM Plex Sans', sans-serif; cursor: pointer">Newest first</button>
+</div>
+</section>
+
+<section aria-label="All projects" style="padding: 0 20px 40px; display: flex; flex-direction: column">
+<sc-for list="{{projects}}" as="p" hint-placeholder-count="8">
+<article style="display: flex; flex-direction: column; gap: 12px; padding: 20px 0; border-top: 1px solid #1F2E4D">
+<div style="display: grid; grid-template-columns: 96px minmax(0, 1fr); gap: 16px; align-items: start">
+<sc-if value="{{p.img}}" hint-placeholder-val="{{true}}">
+<img src="{{p.img}}" alt="{{p.alt}}" style="width: 96px; height: 72px; object-fit: cover; object-position: top; border-radius: 8px; border: 1px solid #24365A; background: #111C33">
+</sc-if>
+<sc-if value="{{p.noImg}}" hint-placeholder-val="{{false}}">
+<div style="width: 96px; height: 72px; box-sizing: border-box; border-radius: 8px; border: 1px dashed #34486F; display: flex; align-items: center; justify-content: center; font-family: 'Fraunces', serif; font-style: italic; font-size: 14px; color: #9FB0CC">bitofbytes</div>
+</sc-if>
+<div style="display: flex; flex-direction: column; gap: 4px; min-width: 0">
+<h2 style="margin: 0; font-family: 'Fraunces', serif; font-weight: 600; font-size: 24px; line-height: 1.15"><a href="{{p.href}}">{{p.name}}</a></h2>
+<p style="margin: 0; display: flex; align-items: center; gap: 8px; font-family: 'IBM Plex Mono', monospace; font-size: 12px; color: #9FB0CC">
+<sc-if value="{{p.recent}}" hint-placeholder-val="{{true}}"><span style="width: 7px; height: 7px; border-radius: 4px; background: {{accent}}"></span></sc-if>Updated {{p.updated}}</p>
+</div>
+</div>
+<p style="margin: 0; font-size: 15px; line-height: 1.5; color: #C9D4E7">{{p.tagline}}</p>
+<p style="margin: 0; font-size: 14px; line-height: 1.55; color: #9FB0CC"><span style="font-family: 'IBM Plex Mono', monospace; font-size: 11px; letter-spacing: 0.08em; text-transform: uppercase; color: {{accent}}">Latest ·</span> {{p.note}}</p>
+</article>
+</sc-for>
+</section>
+
+<footer style="margin-top: auto; display: flex; flex-direction: column; gap: 12px; padding: 36px 20px; border-top: 1px solid #1F2E4D; font-size: 15px">
+<a href="mailto:daniel@bitofbytes.io" style="color: {{accent}}">daniel@bitofbytes.io</a>
+<div style="display: flex; gap: 24px"><a href="https://github.com/bitofbytes-io" style="display: inline-flex; align-items: center; min-height: 44px; color: #B7C4DB">GitHub</a><a href="https://www.linkedin.com/in/daniel-waters/" style="display: inline-flex; align-items: center; min-height: 44px; color: #B7C4DB">LinkedIn</a></div>
+</footer>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"accent":{"editor":"color","default":"#7EA6FF","options":["#7EA6FF","#5CC4FF","#9AA8FF","#4F8BFF"]},"$preview":{"width":390,"height":2540}}'>
+class Component extends DCLogic {
+renderVals() {
+const projects = [
+{ name: 'BitOfBytes', href: '#', img: '', alt: '', recent: true, updated: 'Sep 14', tagline: 'The personal landing page and project portfolio for Daniel Waters.', note: 'Handheld-inspired portfolio and refreshed recency copy, navigation, branding and styling.' },
+{ name: 'Dined', href: '#', img: '/_blob/b7952103fbc6b2167e8f6a68f4b6e450', alt: 'Dined home screen with a retro diner booth scene.', recent: true, updated: 'Sep 6', tagline: 'Proof that nobody actually agreed on dinner.', note: 'Improved visit reliability under load and tightened redirect safety.' },
+{ name: 'PermitPal', href: '#', img: '/_blob/4b89979729e0d91f2bfe1c71db629e10', alt: 'PermitPal dashboard with progress meters.', recent: true, updated: 'Sep 6', tagline: 'Your permit pal: less yelling, more tracking.', note: 'Progress entries reject invalid dates and non-finite driving hours.' },
+{ name: "Learn'd", href: '#', img: '/_blob/61b7bd26315dd0a64aaba30f2c7958ef', alt: "Learn'd resource journal with recent learning entries.", recent: true, updated: 'Sep 6', tagline: 'A personal learning journal for capturing and reviewing resources.', note: 'More reliable background summaries through safer job claiming and recovery.' },
+{ name: 'DejaView', href: '#', img: '/_blob/d784ed941f729db9dccd9ec4589ebd00', alt: 'DejaView movie collection grouped by family lists.', recent: true, updated: 'Sep 6', tagline: 'A family movie-night tracker for remembering picks, groups, and stats.', note: 'Movie search reads better; rating saves are all-or-nothing.' },
+{ name: 'Anthology', href: '#', img: '/_blob/3c7cc8ce0272b0054d18d58f1fda3403', alt: 'Anthology catalogue table with media items.', recent: true, updated: 'Sep 6', tagline: 'A two-tier catalogue for personal books, games, movies, and music.', note: 'Better shelf feedback, series limits and stronger CSV exports.' },
+{ name: 'Carma', href: '#', img: '/_blob/18c104a8e5aa8105d45150abb436e0f3', alt: 'Carma garage dashboard with an overdue oil-change reminder.', recent: false, updated: 'Aug 3', tagline: 'A shared household garage for maintenance history and what needs attention next.', note: 'Aligned reminder-status headers and added UI coverage for them.' },
+{ name: 'Noted', href: 'project-detail-phone.dc.html', img: '/_blob/1bf41c51abee028b7316670d68b4033d', alt: 'Noted library with a searchable score entry.', recent: false, updated: 'Jul 26', tagline: 'A private digital binder for finding and reading sheet music without breaking the flow.', note: 'Stabilized reader auto-scroll; controls stay clear of the score.' }
+].map((p) => ({ ...p, noImg: !p.img }));
+return { accent: this.props.accent ?? '#7EA6FF', projects };
+}
+}
+</script>
+</body>
+</html>

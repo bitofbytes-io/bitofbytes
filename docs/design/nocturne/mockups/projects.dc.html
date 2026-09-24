@@ -1,0 +1,96 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Nocturne · Projects</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin="">
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,400;0,9..144,600;1,9..144,400&amp;family=IBM+Plex+Sans:wght@400;500;600&amp;family=IBM+Plex+Mono:wght@400;500&amp;display=swap" rel="stylesheet">
+<style>
+body{margin:0;background:#0A1224;font-family:'IBM Plex Sans',system-ui,sans-serif;color:#E8EEF9}
+a{color:#E8EEF9;text-decoration:none}a:hover{color:#FFFFFF}
+</style>
+</helmet>
+<div style="width: 1280px; height: 2640px; box-sizing: border-box; background: #0A1224; color: #E8EEF9; font-family: 'IBM Plex Sans', system-ui, sans-serif; display: flex; flex-direction: column">
+
+<header style="display: flex; align-items: center; justify-content: space-between; padding: 28px 80px; border-bottom: 1px solid #1F2E4D">
+<a href="home.dc.html" style="font-family: 'Fraunces', serif; font-style: italic; font-size: 26px; color: #E8EEF9">bitofbytes</a>
+<nav aria-label="Main navigation" style="display: flex; gap: 36px; font-size: 16px">
+<a href="home.dc.html" style="color: #B7C4DB">Home</a>
+<a href="#" aria-current="page" style="color: {{accent}}; font-weight: 500">Projects</a>
+<a href="#" style="color: #B7C4DB">Resume</a>
+<a href="#" style="color: #B7C4DB">Contact</a>
+</nav>
+</header>
+
+<section style="padding: 96px 80px 48px; display: flex; align-items: flex-end; justify-content: space-between; gap: 48px">
+<div style="display: flex; flex-direction: column; gap: 20px">
+<p style="margin: 0; font-family: 'IBM Plex Mono', monospace; font-size: 14px; letter-spacing: 0.08em; text-transform: uppercase; color: #9FB0CC">Projects · 8</p>
+<h1 style="margin: 0; font-family: 'Fraunces', serif; font-weight: 400; font-size: 96px; line-height: 0.95; letter-spacing: -0.02em">Side <span style="font-style: italic; color: {{accent}}">projects</span></h1>
+<p style="margin: 0; max-width: 560px; font-size: 19px; line-height: 1.6; color: #C9D4E7">Small, private apps for everyday life, plus this site. Each one has its own page with screenshots and what changed most recently.</p>
+</div>
+<div role="group" aria-label="Sort projects" style="display: flex; padding: 4px; border: 1px solid #24365A; border-radius: 24px; background: #111C33">
+<button type="button" aria-pressed="true" style="height: 40px; padding: 0 18px; border: 0; border-radius: 20px; background: {{accent}}; color: #0A1224; font: 600 14px 'IBM Plex Sans', sans-serif; cursor: pointer">Recently updated</button>
+<button type="button" aria-pressed="false" style="height: 40px; padding: 0 18px; border: 0; border-radius: 20px; background: transparent; color: #B7C4DB; font: 500 14px 'IBM Plex Sans', sans-serif; cursor: pointer">Newest first</button>
+</div>
+</section>
+
+<section aria-label="All projects" style="padding: 0 80px 96px; display: flex; flex-direction: column">
+<sc-for list="{{projects}}" as="p" hint-placeholder-count="8">
+<article style="display: grid; grid-template-columns: 240px minmax(0, 1fr) 200px; gap: 40px; padding: 32px 0; border-top: 1px solid #1F2E4D">
+<sc-if value="{{p.img}}" hint-placeholder-val="{{true}}">
+<img src="{{p.img}}" alt="{{p.alt}}" style="width: 240px; height: 150px; object-fit: cover; object-position: top; border-radius: 10px; border: 1px solid #24365A; background: #111C33">
+</sc-if>
+<sc-if value="{{p.noImg}}" hint-placeholder-val="{{false}}">
+<div style="width: 240px; height: 150px; box-sizing: border-box; border-radius: 10px; border: 1px dashed #34486F; display: flex; align-items: center; justify-content: center; font-family: 'Fraunces', serif; font-style: italic; font-size: 24px; color: #9FB0CC">bitofbytes</div>
+</sc-if>
+<div style="display: flex; flex-direction: column; gap: 10px; min-width: 0">
+<h2 style="margin: 0; display: flex; align-items: center; gap: 14px; font-family: 'Fraunces', serif; font-weight: 600; font-size: 32px; line-height: 1.1"><a href="{{p.href}}">{{p.name}}</a>
+<sc-if value="{{p.recent}}" hint-placeholder-val="{{true}}"><span style="display: inline-flex; align-items: center; gap: 6px; height: 24px; padding: 0 10px; border-radius: 12px; background: #16274A; font-family: 'IBM Plex Sans', sans-serif; font-size: 12px; font-weight: 500; color: {{accent}}"><span style="width: 6px; height: 6px; border-radius: 3px; background: {{accent}}"></span>Updated this month</span></sc-if></h2>
+<p style="margin: 0; font-size: 17px; line-height: 1.5; color: #C9D4E7">{{p.tagline}}</p>
+<p style="margin: 4px 0 0; font-size: 15px; line-height: 1.55; color: #9FB0CC"><span style="font-family: 'IBM Plex Mono', monospace; font-size: 12px; letter-spacing: 0.08em; text-transform: uppercase; color: {{accent}}">Latest ·</span> {{p.note}}</p>
+<ul aria-label="{{p.name}} technology" style="margin: 6px 0 0; padding: 0; list-style: none; display: flex; flex-wrap: wrap; gap: 8px">
+<sc-for list="{{p.tech}}" as="t" hint-placeholder-count="4"><li style="padding: 4px 10px; border: 1px solid #24365A; border-radius: 6px; font-family: 'IBM Plex Mono', monospace; font-size: 12px; color: #B7C4DB">{{t}}</li></sc-for>
+</ul>
+</div>
+<div style="display: flex; flex-direction: column; gap: 14px; align-items: flex-start">
+<dl style="margin: 0; display: flex; flex-direction: column; gap: 12px">
+<div style="display: flex; flex-direction: column; gap: 2px"><dt style="font-family: 'IBM Plex Mono', monospace; font-size: 12px; letter-spacing: 0.08em; text-transform: uppercase; color: #8193B2">Updated</dt><dd style="margin: 0; font-size: 16px">{{p.updated}}</dd></div>
+<div style="display: flex; flex-direction: column; gap: 2px"><dt style="font-family: 'IBM Plex Mono', monospace; font-size: 12px; letter-spacing: 0.08em; text-transform: uppercase; color: #8193B2">Started</dt><dd style="margin: 0; font-size: 16px">{{p.started}}</dd></div>
+</dl>
+<a href="{{p.href}}" aria-label="{{p.name}} details" style="display: inline-flex; align-items: center; gap: 8px; margin-top: 4px; font-size: 15px; font-weight: 500; color: {{accent}}">Details
+<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6"></path></svg></a>
+</div>
+</article>
+</sc-for>
+</section>
+
+<footer style="margin-top: auto; display: flex; align-items: center; justify-content: space-between; padding: 48px 80px; border-top: 1px solid #1F2E4D; font-size: 15px; color: #9FB0CC">
+<a href="mailto:daniel@bitofbytes.io" style="color: {{accent}}">daniel@bitofbytes.io</a>
+<div style="display: flex; gap: 28px"><a href="https://github.com/bitofbytes-io" style="color: #B7C4DB">GitHub</a><a href="https://www.linkedin.com/in/daniel-waters/" style="color: #B7C4DB">LinkedIn</a></div>
+</footer>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"accent":{"editor":"color","default":"#7EA6FF","options":["#7EA6FF","#5CC4FF","#9AA8FF","#4F8BFF"]},"$preview":{"width":1280,"height":2640}}'>
+class Component extends DCLogic {
+renderVals() {
+const projects = [
+{ name: 'BitOfBytes', href: '#', img: '', alt: '', recent: true, updated: 'Sep 14, 2026', started: 'Jun 2024', tagline: 'The personal landing page and project portfolio for Daniel Waters.', note: 'Introduced a handheld-inspired portfolio and refreshed recency copy, navigation, branding and styling.', tech: ['Go', 'HTML templates', 'Tailwind CSS', 'Docker'] },
+{ name: 'Dined', href: '#', img: '/_blob/b7952103fbc6b2167e8f6a68f4b6e450', alt: 'Dined home screen with a retro diner booth scene and recent dine cards.', recent: true, updated: 'Sep 6, 2026', started: 'May 2026', tagline: 'Proof that nobody actually agreed on dinner.', note: 'Improved visit reliability under load and tightened redirect safety.', tech: ['Go', 'HTMX', 'PostgreSQL', 'Google Places API'] },
+{ name: 'PermitPal', href: '#', img: '/_blob/4b89979729e0d91f2bfe1c71db629e10', alt: 'PermitPal dashboard with progress meters and a skill mastery checklist.', recent: true, updated: 'Sep 6, 2026', started: 'May 2026', tagline: 'Your permit pal: less yelling, more tracking.', note: 'Progress entries now reject invalid dates and non-finite driving hours.', tech: ['Go', 'HTMX', 'Templ', 'PostgreSQL'] },
+{ name: "Learn'd", href: '#', img: '/_blob/61b7bd26315dd0a64aaba30f2c7958ef', alt: "Learn'd resource journal with a capture form and recent learning entries.", recent: true, updated: 'Sep 6, 2026', started: 'Jan 2026', tagline: 'A personal learning journal for capturing and reviewing resources.', note: 'Background summaries are more reliable through safer job claiming, recovery and refresh handling.', tech: ['Go', 'Templ', 'PostgreSQL', 'Playwright'] },
+{ name: 'DejaView', href: '#', img: '/_blob/d784ed941f729db9dccd9ec4589ebd00', alt: 'DejaView movie collection grouped by family movie night lists.', recent: true, updated: 'Sep 6, 2026', started: 'Jan 2026', tagline: 'A family movie-night tracker for remembering picks, groups, and stats.', note: 'Movie search reads better and rating saves are all-or-nothing.', tech: ['Go', 'Templ', 'PostgreSQL', 'TMDB API'] },
+{ name: 'Anthology', href: '#', img: '/_blob/3c7cc8ce0272b0054d18d58f1fda3403', alt: 'Anthology catalogue table with filters and media items.', recent: true, updated: 'Sep 6, 2026', started: 'Oct 2025', tagline: 'A two-tier catalogue for personal books, games, movies, and music.', note: 'Better shelf feedback, series limits, stronger CSV exports and restored API health checks.', tech: ['Go', 'Angular', 'PostgreSQL', 'Google Books API'] },
+{ name: 'Carma', href: '#', img: '/_blob/18c104a8e5aa8105d45150abb436e0f3', alt: 'Carma garage dashboard with a sample Ranger and an overdue oil-change reminder.', recent: false, updated: 'Aug 3, 2026', started: 'Jul 2026', tagline: 'A shared household garage for maintenance history and what needs attention next.', note: 'Aligned the reminder-status headers and added UI coverage for that structure.', tech: ['Go', 'HTMX', 'PostgreSQL', 'SMTP reminders'] },
+{ name: 'Noted', href: 'project-detail.dc.html', img: '/_blob/1bf41c51abee028b7316670d68b4033d', alt: 'Noted library with a searchable score entry and a composer name.', recent: false, updated: 'Jul 26, 2026', started: 'Jul 2026', tagline: 'A private digital binder for finding and reading sheet music without breaking the flow.', note: 'Stabilized reader auto-scroll and kept controls clear of the score itself.', tech: ['Go', 'Angular', 'PDF.js', 'PostgreSQL'] }
+].map((p) => ({ ...p, noImg: !p.img }));
+return { accent: this.props.accent ?? '#7EA6FF', projects };
+}
+}
+</script>
+</body>
+</html>
