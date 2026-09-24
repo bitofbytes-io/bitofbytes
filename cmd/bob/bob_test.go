@@ -32,7 +32,8 @@ func TestRoutesRenderCurrentSiteSurface(t *testing.T) {
 		want string
 	}{
 		{path: "/", want: "Daniel Waters"},
-		{path: "/projects", want: "Selected personal projects"},
+		{path: "/projects", want: "Recently updated"},
+		{path: "/projects?sort=newest", want: "Newest first"},
 		{path: "/projects/carma", want: "Carma"},
 		{path: "/projects/noted", want: "Noted"},
 		{path: "/projects/permitpal", want: "PermitPal"},
@@ -146,7 +147,7 @@ func TestPortfolioPreservesProjectContentAndScreenshots(t *testing.T) {
 				t.Fatalf("status = %d", rr.Code)
 			}
 			body := html.UnescapeString(rr.Body.String())
-			want := []string{project.Name, project.Tagline, project.RepoURL, project.LiveURL, project.LastUpdate, project.Notes}
+			want := []string{project.Name, project.Tagline, project.RepoURL, project.LiveURL, project.UpdatedLong(), project.StartedLong(), project.LatestNote()}
 			want = append(want, project.Paragraphs...)
 			want = append(want, project.Tech...)
 			want = append(want, project.Highlights...)
@@ -161,40 +162,82 @@ func TestPortfolioPreservesProjectContentAndScreenshots(t *testing.T) {
 					t.Errorf("missing content %q", text)
 				}
 			}
-			if strings.Contains(body, "atomic-handheld.js") {
-				t.Error("project detail loads homepage-only renderer")
+			if strings.Contains(body, "nocturne.js") {
+				t.Error("project detail loads the homepage-only keyboard script")
 			}
 		})
 	}
 }
 
-func TestHomepageHandheldAndContact(t *testing.T) {
+func TestHomepageKeyboardAndContact(t *testing.T) {
 	t.Parallel()
 	handler := newTestHandler()
 	rr := httptest.NewRecorder()
 	handler.ServeHTTP(rr, httptest.NewRequest(http.MethodGet, "/", nil))
+	if rr.Code != http.StatusOK {
+		t.Fatalf("home status = %d, want %d", rr.Code, http.StatusOK)
+	}
 	body := html.UnescapeString(rr.Body.String())
-	for _, want := range []string{`src="/static/atomic-handheld.js"`, `type="module"`, `id="contact"`, `href="mailto:daniel@bitofbytes.io"`, `href="https://www.linkedin.com/in/daniel-waters/"`, `href="https://github.com/bitofbytes-io"`, `class="screen-prev" disabled`, `class="screen-next" disabled`} {
+	for _, want := range []string{
+		`src="/static/nocturne.js"`,
+		`data-nc-octave`,
+		`data-nc-sound aria-pressed="true"`,
+		`id="contact"`,
+		`Say hello.`,
+		`href="mailto:daniel@bitofbytes.io"`,
+		`href="https://www.linkedin.com/in/daniel-waters/"`,
+		`href="https://github.com/bitofbytes-io"`,
+		`href="/projects/noted"`,
+		`href="/projects/anthology"`,
+	} {
 		if !strings.Contains(body, want) {
 			t.Errorf("missing homepage element %q", want)
 		}
 	}
-	for _, project := range models.Projects() {
-		for _, want := range []string{`data-slug="` + project.Slug + `"`, `data-name="` + project.Name + `"`, `data-summary="` + project.Summary + `"`} {
-			if !strings.Contains(body, want) {
-				t.Errorf("missing handheld data %q", want)
-			}
+	onKeys := models.SortByLastUpdate(models.Projects())
+	onKeys = onKeys[:min(len(onKeys), 8)]
+	if got, want := strings.Count(body, `<a class="nc-key`), len(onKeys); got != want {
+		t.Errorf("piano keys = %d, want %d", got, want)
+	}
+	for _, project := range onKeys {
+		if want := `href="/projects/` + project.Slug + `" data-note=`; !strings.Contains(body, want) {
+			t.Errorf("missing piano key for %q", project.Slug)
 		}
 	}
-	if strings.Contains(body, "Say hello") || strings.Contains(body, "<footer") {
-		t.Error("homepage restored removed contact/footer content")
+	for _, removed := range []string{"atomic-handheld.js", "three-r160", "data-scene"} {
+		if strings.Contains(body, removed) {
+			t.Errorf("homepage still references the retired handheld: %q", removed)
+		}
 	}
+
 	rr = httptest.NewRecorder()
 	handler.ServeHTTP(rr, httptest.NewRequest(http.MethodGet, "/projects", nil))
 	if rr.Code != http.StatusOK {
 		t.Fatalf("project index status = %d, want %d", rr.Code, http.StatusOK)
 	}
-	if strings.Contains(rr.Body.String(), "atomic-handheld.js") {
-		t.Error("project index loads homepage-only renderer")
+	if strings.Contains(rr.Body.String(), "nocturne.js") {
+		t.Error("project index loads the homepage-only keyboard script")
+	}
+}
+
+func TestStaticAssetsServeKeyboardScriptAndRetireHandheld(t *testing.T) {
+	t.Parallel()
+	handler := newTestHandler()
+
+	rr := httptest.NewRecorder()
+	handler.ServeHTTP(rr, httptest.NewRequest(http.MethodGet, "/static/nocturne.js", nil))
+	if rr.Code != http.StatusOK {
+		t.Fatalf("nocturne.js status = %d, want %d", rr.Code, http.StatusOK)
+	}
+	if !strings.Contains(rr.Body.String(), "window.Nocturne") {
+		t.Error("nocturne.js does not define window.Nocturne")
+	}
+
+	for _, path := range []string{"/static/atomic-handheld.js", "/static/vendor/three-r160.module.js"} {
+		rr := httptest.NewRecorder()
+		handler.ServeHTTP(rr, httptest.NewRequest(http.MethodGet, path, nil))
+		if rr.Code != http.StatusNotFound {
+			t.Errorf("%s status = %d, want %d", path, rr.Code, http.StatusNotFound)
+		}
 	}
 }

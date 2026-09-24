@@ -1,0 +1,1 @@
+Sample project screenshots used by the component previews (Noted's binder library and iPad reader, captured from a local preview with a rights-safe sample score). They are content, not brand assets: real pages use each project's own screenshots from `models/project.go`.

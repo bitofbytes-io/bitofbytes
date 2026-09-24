@@ -1,0 +1,35 @@
+<!-- @dsCard group="Signature" height=520 width=1280 subtitle="Hover the keys" -->
+<!doctype html>
+<html lang="en">
+<head><meta charset="utf-8"><title>OctaveKeyboard</title>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,400;0,9..144,600;1,9..144,400&amp;family=IBM+Plex+Sans:wght@400;500;600&amp;family=IBM+Plex+Mono:wght@400;500&amp;display=swap">
+<style>html,body{margin:0;background:var(--bg)}</style>
+</head>
+<body class="nc-page">
+<div style="padding:32px">
+<div style="display:flex;align-items:flex-end;justify-content:space-between;gap:40px;margin-bottom:32px">
+<div style="display:flex;flex-direction:column;gap:12px"><p class="nc-eyebrow">Eight side projects, one octave</p><h2 class="nc-heading nc-heading--section">What I'm building</h2></div>
+<div style="display:flex;flex-direction:column;align-items:flex-end;gap:16px"><p style="margin:0;max-width:380px;text-align:right;color:var(--ink-subtle)">Left to right in the order I started them. Keys lit blue were updated in the last 30 days. Hover to play.</p>
+<button type="button" class="nc-sound" data-nc-sound aria-pressed="true"><svg class="nc-sound__on" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M11 5L6 9H3v6h3l5 4V5z"></path><path d="M15.5 8.5a5 5 0 0 1 0 7M18.5 5.5a9 9 0 0 1 0 13"></path></svg><svg class="nc-sound__off" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M11 5L6 9H3v6h3l5 4V5z"></path><path d="M16 9l5 6M21 9l-5 6"></path></svg><span data-nc-sound-label>Sound on</span></button></div>
+</div>
+<div class="nc-octave" data-nc-octave style="--keys: 8">
+<div class="nc-octave__keys">
+<a class="nc-key nc-key--lit" href="#" data-note="C4"><span class="nc-key__name">BitOfBytes</span><span class="nc-key__since">since 2024</span></a>
+<a class="nc-key nc-key--lit" href="#" data-note="D4"><span class="nc-key__name">Anthology</span><span class="nc-key__since">since Oct '25</span></a>
+<a class="nc-key nc-key--lit" href="#" data-note="E4"><span class="nc-key__name">Learn'd</span><span class="nc-key__since">since Jan '26</span></a>
+<a class="nc-key nc-key--lit" href="#" data-note="F4"><span class="nc-key__name">DejaView</span><span class="nc-key__since">since Jan '26</span></a>
+<a class="nc-key nc-key--lit" href="#" data-note="G4"><span class="nc-key__name">PermitPal</span><span class="nc-key__since">since May '26</span></a>
+<a class="nc-key nc-key--lit" href="#" data-note="A4"><span class="nc-key__name">Dined</span><span class="nc-key__since">since May '26</span></a>
+<a class="nc-key" href="#" data-note="B4"><span class="nc-key__name">Noted</span><span class="nc-key__since">since Jul '26</span></a>
+<a class="nc-key" href="#" data-note="C5"><span class="nc-key__name">Carma</span><span class="nc-key__since">since Jul '26</span></a>
+</div>
+<div class="nc-black" aria-hidden="true" style="--pos:1"></div>
+<div class="nc-black" aria-hidden="true" style="--pos:2"></div>
+<div class="nc-black" aria-hidden="true" style="--pos:4"></div>
+<div class="nc-black" aria-hidden="true" style="--pos:5"></div>
+<div class="nc-black" aria-hidden="true" style="--pos:6"></div>
+</div>
+</div>
+<script>window.Nocturne && window.Nocturne.autoAttach();</script>
+</body>
+</html>

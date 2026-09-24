@@ -12,10 +12,13 @@ type Project struct {
 	LastUpdate      string
 	FirstCommitDate string
 	Notes           string
-	Tech            []string
-	Highlights      []string
-	Paragraphs      []string
-	Screenshots     []ProjectScreenshot
+	// Hobby ties a project to one of the hobbies on the home page ("piano" or
+	// "videogames"); it sets the eyebrow on the project's detail page.
+	Hobby       string
+	Tech        []string
+	Highlights  []string
+	Paragraphs  []string
+	Screenshots []ProjectScreenshot
 }
 
 type ProjectScreenshot struct {
@@ -80,6 +83,7 @@ func Projects() []Project {
 			LastUpdate:      "July 26, 2026",
 			FirstCommitDate: "2026-07-13",
 			Notes:           "Most recent work stabilized reader auto-scroll behavior and kept controls clear of the score itself.",
+			Hobby:           "piano",
 			Tech: []string{
 				"Go",
 				"Angular",
@@ -160,7 +164,7 @@ func Projects() []Project {
 		{
 			Slug:            "permitpal",
 			Name:            "PermitPal",
-			Tagline:         "Your permit pal-less yelling, more tracking.",
+			Tagline:         "Your permit pal: less yelling, more tracking.",
 			Summary:         "A focused dashboard for tracking North Carolina learner permit exam readiness and study progress.",
 			RepoURL:         "https://github.com/bitofbytes-io/permitpal",
 			LiveURL:         "https://permitpal.bitofbytes.io",
@@ -292,9 +296,9 @@ func Projects() []Project {
 			Summary:         "A personal site for presenting resume details, contact links, and selected project work.",
 			RepoURL:         "https://github.com/bitofbytes-io/bitofbytes",
 			LiveURL:         "https://www.bitofbytes.io",
-			LastUpdate:      "September 14, 2026",
+			LastUpdate:      "September 24, 2026",
 			FirstCommitDate: "2024-06-29",
-			Notes:           "Most recent work introduced an Atomic-inspired handheld portfolio experience while refreshing project recency copy and refining navigation, branding, layout, and production styling.",
+			Notes:           "Most recent work replaced the 3D handheld with Nocturne, a midnight-blue redesign whose project index is a playable piano octave.",
 			Tech: []string{
 				"Go",
 				"HTML templates",
@@ -305,24 +309,24 @@ func Projects() []Project {
 			Highlights: []string{
 				"Presents resume details, contact links, and selected personal projects in one focused site.",
 				"Gives each project room for screenshots, purpose, highlights, and links to the live app or code.",
-				"Removes older blog and utility pages so the site stays centered on professional context and current work.",
+				"Lays the side projects out as one octave of piano keys: lit keys mark recent work and each key plays its note on hover.",
 			},
 			Paragraphs: []string{
 				"BitOfBytes is the portfolio site for presenting who Daniel is, how to get in touch, and what personal projects are worth looking at. The project pages are meant to give each app enough context that a visitor can understand its purpose before opening the repo.",
-				"The current version trims the site down to the useful surface area: identity, contact, resume, and a small catalogue of project pages with screenshots and plain-language notes.",
+				"The current Nocturne design keeps that small surface area (identity, contact, resume and a catalogue of project pages) and gives it a quiet, late-night look built around Daniel's hobbies: programming, piano and videogames.",
 			},
 			Screenshots: []ProjectScreenshot{
 				{
 					Title: "Home page",
 					Path:  "/static/projects/bitofbytes/home.png",
-					Alt:   "The BitOfBytes home page using the Field Notebook design system.",
-					Note:  "Captured from the rebuilt local BitOfBytes home page.",
+					Alt:   "The BitOfBytes home page in the Nocturne design, with the latest updates card beside Daniel's name.",
+					Note:  "Captured from the local Nocturne build.",
 				},
 				{
 					Title: "Project index",
 					Path:  "/static/projects/bitofbytes/projects.png",
-					Alt:   "The rebuilt BitOfBytes projects index page.",
-					Note:  "Captured from the rebuilt local project index.",
+					Alt:   "The BitOfBytes projects index in the Nocturne design, sorted by most recent update.",
+					Note:  "Captured from the local Nocturne build.",
 				},
 			},
 		},
@@ -336,6 +340,7 @@ func Projects() []Project {
 			LastUpdate:      "September 6, 2026",
 			FirstCommitDate: "2025-10-30",
 			Notes:           "Most recent work improved shelf feedback, preserved media placements, enforced series limits, strengthened CSV exports, and restored public API health checks.",
+			Hobby:           "videogames",
 			Tech: []string{
 				"Go",
 				"Chi",

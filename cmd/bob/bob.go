@@ -65,7 +65,8 @@ func newHandler(cfg models.Config, logger *slog.Logger) http.Handler {
 
 func newHandlerWithStaticDir(cfg models.Config, logger *slog.Logger, staticDir string) http.Handler {
 	portfolio := controllers.Portfolio{
-		Projects: models.Projects(),
+		Projects:   models.Projects(),
+		Activities: models.CurrentActivities(),
 		Templates: controllers.PortfolioTemplates{
 			Home:          views.Must(views.ParseFS(templates.FS, "home/index.gohtml", "base.gohtml")),
 			ProjectsIndex: views.Must(views.ParseFS(templates.FS, "projects/index.gohtml", "base.gohtml")),

@@ -1,20 +1,40 @@
 {{ template "header" . }}
-<main class="projects-page">
-    <h1 class="page-title">Selected personal projects</h1>
-    <p class="page-intro">A compact list of recent applications and the site itself.</p>
-    <section class="project-list" aria-label="Projects">
+<main class="nc-wrap">
+    <section class="nc-page-head">
+        <div class="nc-page-head__titles">
+            <p class="nc-eyebrow">Projects · {{ len .Projects }}</p>
+            <h1 class="nc-heading nc-heading--page">Side <span class="nc-em">projects</span></h1>
+            <p class="nc-intro">Small, private apps for everyday life, plus this site. Each one has its own page with screenshots and what changed most recently.</p>
+        </div>
+        <nav class="nc-sort" aria-label="Sort projects">
+            <a href="/projects"{{ if eq .Sort "updated" }} aria-current="true"{{ end }}>Recently updated</a>
+            <a href="/projects?sort=newest"{{ if eq .Sort "newest" }} aria-current="true"{{ end }}>Newest first</a>
+        </nav>
+    </section>
+
+    <section class="nc-projects" aria-label="All projects">
         {{ range .Projects }}
-        <article class="project-entry">
-            <div>
-                <h2><a href="/projects/{{ .Slug }}">{{ .Name }}</a></h2>
-                <p class="updated">Updated: {{ .LastUpdate }}</p>
-            </div>
-            <div>
-                <p>{{ .Summary }}</p>
-                <ul class="tech-list" aria-label="{{ .Name }} technology">
-                    {{ range .Tech }}<li>{{ . }}</li>{{ end }}
+        <article class="nc-row">
+            {{ if .Thumbnail.Path }}
+            <img class="nc-thumb" src="{{ .Thumbnail.Path }}" alt="{{ .Thumbnail.Alt }}" loading="lazy">
+            {{ else }}
+            <div class="nc-thumb nc-thumb--empty" aria-hidden="true">{{ .Name }}</div>
+            {{ end }}
+            <div class="nc-row__body">
+                <h2 class="nc-row__title"><a href="/projects/{{ .Slug }}">{{ .Name }}</a>{{ if .Recent }}<span class="nc-badge">Updated recently</span>{{ end }}</h2>
+                <p class="nc-row__tagline">{{ .Tagline }}</p>
+                <p class="nc-row__latest"><b>Latest ·</b> {{ .LatestNote }}</p>
+                <ul class="nc-chips" aria-label="{{ .Name }} technology">
+                    {{ range .TechPreview }}<li class="nc-chip">{{ . }}</li>{{ end }}
                 </ul>
-                <a class="project-link" href="/projects/{{ .Slug }}" aria-label="{{ .Name }} details">Details</a>
+            </div>
+            <div class="nc-row__side">
+                <dl class="nc-meta">
+                    <div><dt>Updated</dt><dd>{{ .UpdatedLong }}</dd></div>
+                    <div><dt>Started</dt><dd>{{ .StartedMonth }}</dd></div>
+                </dl>
+                <a class="nc-link-arrow" href="/projects/{{ .Slug }}" aria-label="{{ .Name }} details">Details
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6"></path></svg></a>
             </div>
         </article>
         {{ end }}

@@ -1,11 +1,87 @@
 {{ template "header" . }}
 <main>
-  <section class="home-page" aria-label="About Daniel">
-   <div class="hardware-hero">
-    <div class="hardware-bio"><h1 aria-label="Daniel Waters">Daniel<br>Waters.</h1><p class="reading">I'm a Senior Software Engineer at Cisco, working on live video and real-time collaboration.</p><p class="reading">Outside work, I play piano and build small apps for everyday life. And yes, I still love a good handheld.</p><div class="hardware-actions"><a class="primary" href="/projects">View my projects</a><a href="/static/daniel-resume-2024.pdf" target="_blank" rel="noreferrer">My resume</a></div><address id="contact" class="contact-block" style="font-style:normal"><a class="contact-email" href="mailto:daniel@bitofbytes.io">daniel@bitofbytes.io</a><div class="contact-socials"><a href="https://www.linkedin.com/in/daniel-waters/">LinkedIn</a><a href="https://github.com/bitofbytes-io">GitHub</a></div></address><p class="hardware-location">Raleigh, North Carolina</p></div>
-    <div class="model-column"><div class="scene-slot" data-scene="atomic" aria-label="Interactive clear handheld"><div class="fallback-device" aria-hidden="true"><div class="fallback-display">Daniel<br>Waters<small>Software engineer</small></div><div class="fallback-controls"><span>✚</span><span>B &nbsp; A</span></div></div></div><div class="device-control-row" role="group" aria-label="Browse and open the handheld screen"><button class="screen-prev" disabled aria-label="Previous screen">‹</button><a class="device-status" href="/projects" aria-label="View all projects" aria-live="polite">About Daniel</a><button class="screen-next" disabled aria-label="Next screen">›</button></div><p class="engine-message" hidden></p></div>
-   </div>
-  </section>
-<div hidden id="handheld-projects">{{ range .Projects }}<span data-slug="{{ .Slug }}" data-name="{{ .Name }}" data-summary="{{ .Summary }}"></span>{{ end }}</div>
+    <section class="nc-wrap nc-home-hero" aria-label="About Daniel">
+        <div class="nc-home-hero__intro">
+            <p class="nc-eyebrow">Senior Software Engineer · Raleigh, NC</p>
+            <h1 class="nc-heading nc-heading--hero">Daniel<br><span class="nc-em">Waters.</span></h1>
+            <p class="nc-lead">I build live video and real-time collaboration software at Cisco. After hours I play piano, lose evenings to videogames, and write small apps for everyday life.</p>
+            <div class="nc-actions">
+                <a class="nc-btn nc-btn--primary" href="/projects">See the projects
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6"></path></svg></a>
+                <a class="nc-btn nc-btn--secondary" href="/static/daniel-resume-2024.pdf">Resume (PDF)</a>
+            </div>
+        </div>
+
+        <aside class="nc-card nc-updates" aria-labelledby="updates-title">
+            <div class="nc-updates__head">
+                <h2 class="nc-card__title" id="updates-title">Latest updates</h2>
+                {{ if .RecentCount }}<span class="nc-live">{{ .RecentCount }} in the last 30 days</span>{{ end }}
+            </div>
+            {{ range .Updates }}
+            <a class="nc-update" href="/projects/{{ .Slug }}">
+                <span class="nc-update__head">{{ .Name }}<span class="nc-update__date">{{ .UpdatedShort }}</span></span>
+                <span class="nc-update__note">{{ .LatestNote }}</span>
+            </a>
+            {{ end }}
+        </aside>
+    </section>
+
+    <section class="nc-wrap nc-section" aria-labelledby="octave-title">
+        <div class="nc-section__head">
+            <div class="nc-section__titles">
+                <p class="nc-eyebrow">{{ .KeyCount }} side projects, one octave</p>
+                <h2 class="nc-heading nc-heading--section" id="octave-title">What I'm building</h2>
+            </div>
+            <div class="nc-section__aside">
+                <p><span class="nc-desktop-only">Left to right</span><span class="nc-phone-only">Top to bottom</span> in the order I started them. Keys lit blue were updated in the last 30 days.<span class="nc-desktop-only"> Hover to play.</span></p>
+                <button type="button" class="nc-sound" data-nc-sound aria-pressed="true">
+                    <svg class="nc-sound__on" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M11 5L6 9H3v6h3l5 4V5z"></path><path d="M15.5 8.5a5 5 0 0 1 0 7M18.5 5.5a9 9 0 0 1 0 13"></path></svg>
+                    <svg class="nc-sound__off" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M11 5L6 9H3v6h3l5 4V5z"></path><path d="M16 9l5 6M21 9l-5 6"></path></svg>
+                    <span data-nc-sound-label>Sound on</span>
+                </button>
+            </div>
+        </div>
+
+        <div class="nc-octave" data-nc-octave style="--keys: {{ len .Keys }}">
+            <div class="nc-octave__keys">
+                {{ range .Keys }}
+                <a class="nc-key{{ if .Recent }} nc-key--lit{{ end }}" href="/projects/{{ .Slug }}" data-note="{{ .Note }}">
+                    <span class="nc-key__name">{{ .Name }}</span>
+                    <span class="nc-key__since">{{ .StartedKey }}</span>
+                </a>
+                {{ end }}
+            </div>
+            {{ range .BlackKeys }}<div class="nc-black" aria-hidden="true" style="--pos: {{ .Pos }}"></div>{{ end }}
+        </div>
+
+        <a class="nc-link-arrow" href="/projects">Browse all projects
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6"></path></svg></a>
+    </section>
+
+    <section class="nc-band" aria-labelledby="hobbies-title">
+        <div class="nc-wrap nc-band__inner">
+            <h2 class="nc-heading nc-heading--section" id="hobbies-title">Off the clock, <span class="nc-em">mostly keys.</span></h2>
+            <div class="nc-hobbies">
+                <article class="nc-card nc-hobby">
+                    <svg class="nc-hobby__icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="8 6 2 12 8 18"></polyline><polyline points="16 6 22 12 16 18"></polyline><line x1="14" y1="4" x2="10" y2="20"></line></svg>
+                    <h3 class="nc-hobby__title">Programming</h3>
+                    <p class="nc-hobby__copy">Real-time video at work; small, private apps at home. Mostly Go and PostgreSQL, each one scratching a household itch.</p>
+                    {{ with .Activities.Building }}<p class="nc-hobby__now">Building now: {{ . }}</p>{{ end }}
+                </article>
+                <article class="nc-card nc-hobby">
+                    <svg class="nc-hobby__icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="2" y="5" width="20" height="14" rx="1.5"></rect><line x1="7.5" y1="12" x2="7.5" y2="19"></line><line x1="12" y1="12" x2="12" y2="19"></line><line x1="16.5" y1="12" x2="16.5" y2="19"></line><rect x="6.5" y="5" width="2" height="7" fill="currentColor"></rect><rect x="15.5" y="5" width="2" height="7" fill="currentColor"></rect></svg>
+                    <h3 class="nc-hobby__title">Piano</h3>
+                    <p class="nc-hobby__copy">My sheet music lives on an iPad on the music stand, which is exactly why <a class="nc-prose-link" href="/projects/noted">Noted</a> exists.</p>
+                    {{ with .Activities.Practicing }}<p class="nc-hobby__now">On the stand: {{ . }}</p>{{ end }}
+                </article>
+                <article class="nc-card nc-hobby">
+                    <svg class="nc-hobby__icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M7 6h10a5 5 0 0 1 4.9 6l-.8 4.2a2.6 2.6 0 0 1-4.5 1.2L14.5 15h-5l-2.1 2.4a2.6 2.6 0 0 1-4.5-1.2L2.1 12A5 5 0 0 1 7 6z"></path><path d="M6 11h4M8 9v4"></path><circle cx="15.5" cy="10" r="0.8"></circle><circle cx="17.5" cy="12.5" r="0.8"></circle></svg>
+                    <h3 class="nc-hobby__title">Videogames</h3>
+                    <p class="nc-hobby__copy">Still love a good handheld. The game shelf is catalogued in <a class="nc-prose-link" href="/projects/anthology">Anthology</a>, right beside the books, movies and music.</p>
+                    {{ with .Activities.Playing }}<p class="nc-hobby__now">Playing: {{ . }}</p>{{ end }}
+                </article>
+            </div>
+        </div>
+    </section>
 </main>
 {{ template "footer" }}
