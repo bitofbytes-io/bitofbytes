@@ -1,5 +1,9 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" role="img" aria-label="BitOfBytes">
-  <rect x="1" y="1" width="62" height="62" rx="12" fill="#22332d"/>
-  <rect x="8" y="8" width="48" height="48" rx="9" fill="#306557" fill-opacity="0.055" stroke="#627c68" stroke-width="1.75"/>
-  <text x="32" y="39" fill="#eef2ee" font-family="IBM Plex Mono, SFMono-Regular, Menlo, Consolas, monospace" font-size="20" font-weight="700" text-anchor="middle">BoB</text>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" role="img" aria-label="bitofbytes">
+  <rect width="64" height="64" rx="14" fill="#0A1224"/>
+  <path d="M10 12h13v38a3 3 0 0 1-3 3h-7a3 3 0 0 1-3-3z" fill="#F2F4F9"/>
+  <path d="M25.5 12h13v38a3 3 0 0 1-3 3h-7a3 3 0 0 1-3-3z" fill="#DCE6FF"/>
+  <path d="M41 12h13v38a3 3 0 0 1-3 3h-7a3 3 0 0 1-3-3z" fill="#F2F4F9"/>
+  <path d="M25.5 46h13v4a3 3 0 0 1-3 3h-7a3 3 0 0 1-3-3z" fill="#7EA6FF"/>
+  <path d="M19.25 12h10v21.5a1.5 1.5 0 0 1-1.5 1.5h-7a1.5 1.5 0 0 1-1.5-1.5z" fill="#0A1224"/>
+  <path d="M34.75 12h10v21.5a1.5 1.5 0 0 1-1.5 1.5h-7a1.5 1.5 0 0 1-1.5-1.5z" fill="#0A1224"/>
 </svg>
