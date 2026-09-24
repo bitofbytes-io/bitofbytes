@@ -252,6 +252,21 @@ func TestProjectsIndexSortsByUpdateUnlessNewestRequested(t *testing.T) {
 	}
 }
 
+func TestProjectsIndexNewestFirstIgnoresDeclarationOrder(t *testing.T) {
+	t.Parallel()
+	shuffled := []models.Project{sampleProjects[2], sampleProjects[3], sampleProjects[0], sampleProjects[1]}
+	portfolio := keyboardPortfolio(t, shuffled)
+
+	rr := httptest.NewRecorder()
+	portfolio.ProjectsIndex(rr, httptest.NewRequest(http.MethodGet, "/projects?sort=newest", nil))
+	if got, want := rr.Body.String(), "newest: carma noted dined* site*"; got != want {
+		t.Fatalf("newest = %q, want %q", got, want)
+	}
+	if shuffled[0].Slug != "dined" {
+		t.Fatal("ProjectsIndex reordered the portfolio's projects")
+	}
+}
+
 func TestProjectDetailWithoutScreenshotsUsesSoloHero(t *testing.T) {
 	t.Parallel()
 	page := views.Must(views.ParseFS(templates.FS, "projects/detail.gohtml", "base.gohtml"))

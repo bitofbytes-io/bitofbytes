@@ -222,8 +222,10 @@ body { margin: 0; min-width: 320px; }
   .nc-key__name { font-weight: 600; font-size: 16px; line-height: 1.3; color: var(--key-ink); }
   .nc-key__since { font-family: var(--font-mono); font-size: 12px; color: var(--key-ink-idle); }
   .nc-key--lit .nc-key__since { color: var(--key-ink-lit); }
-  /* --pos = the white-key boundary the black key sits on (1, 2, 4, 5, 6 for C#, D#, F#, G#, A#) */
-  .nc-black { position: absolute; top: 0; left: calc(var(--pos) * ((100% + var(--space-1)) / 8) - 2px - var(--key-black-width) / 2); width: var(--key-black-width); height: var(--key-black-height); box-sizing: border-box; background: var(--bg); border: 1px solid var(--line-image); border-top: 0; border-radius: 0 0 8px 8px; transition: background 90ms, height 90ms; }
+  /* --keys = white keys rendered (set on .nc-octave, default 8).
+     --pos = the white-key boundary a black key sits on (1, 2, 4, 5, 6 for C#, D#, F#, G#, A#).
+     A black key is half a white-key slot wide, which is key-black-width (70px) at 1120px. */
+  .nc-black { --slot: calc((100% + var(--space-1)) / var(--keys, 8)); position: absolute; top: 0; left: calc(var(--pos) * var(--slot) - 2px - var(--slot) / 4); width: calc(var(--slot) / 2); height: var(--key-black-height); box-sizing: border-box; background: var(--bg); border: 1px solid var(--line-image); border-top: 0; border-radius: 0 0 8px 8px; transition: background 90ms, height 90ms; }
   .nc-black.is-pressed { background: var(--key-black-pressed); height: calc(var(--key-black-height) - 4px); }
 
   /* ---------- page layouts (Home, Projects, Project detail) ---------- */
@@ -267,6 +269,11 @@ body { margin: 0; min-width: 320px; }
   .nc-shot__pending { display: flex; align-items: center; justify-content: center; aspect-ratio: 548 / 520; border: 1px dashed var(--line-control); border-radius: var(--radius-lg); color: var(--ink-subtle); }
 
   @media (max-width: 1024px) {
+    .nc-wrap { padding-inline: var(--space-7); }
+    .nc-row { grid-template-columns: 180px minmax(0, 1fr); gap: 16px 32px; }
+    .nc-row .nc-thumb { width: 180px; height: 113px; }
+    .nc-row__side { grid-column: 2; flex-direction: row; align-items: center; justify-content: space-between; gap: 24px; }
+    .nc-row__side .nc-meta { flex-direction: row; gap: 32px; }
     .nc-home-hero { grid-template-columns: minmax(0, 1fr); gap: var(--space-8); padding-block: var(--space-9); }
     .nc-home-hero .nc-updates { max-width: 560px; }
     .nc-detail-hero { grid-template-columns: minmax(0, 1fr) 320px; gap: var(--space-8); }
@@ -275,6 +282,22 @@ body { margin: 0; min-width: 320px; }
     .nc-heading--hero, .nc-heading--project { font-size: 96px; }
     .nc-key { padding-inline: 10px; }
     .nc-key__name { font-size: 14px; }
+  }
+
+  @media (max-width: 860px) {
+    .nc-heading--hero, .nc-heading--project { font-size: 84px; }
+    .nc-heading--page { font-size: 72px; }
+    .nc-page-head { flex-direction: column; align-items: flex-start; }
+    .nc-section__head { flex-direction: column; align-items: flex-start; }
+    .nc-section__aside { align-items: flex-start; }
+    .nc-section__aside p { text-align: left; }
+    .nc-detail-hero { grid-template-columns: minmax(0, 1fr); }
+    .nc-hero-shot { width: 100%; max-width: 460px; height: auto; aspect-ratio: 3 / 4; }
+    .nc-detail-body { grid-template-columns: minmax(0, 1fr); }
+    .nc-hobbies { grid-template-columns: minmax(0, 1fr); }
+    .nc-key { padding-inline: 8px; }
+    .nc-key__name { font-size: 13px; }
+    .nc-key__since { font-size: 11px; }
   }
 
   @media (prefers-reduced-motion: reduce) {
@@ -336,13 +359,13 @@ body { margin: 0; min-width: 320px; }
     .nc-hero-shot { width: 100%; height: auto; aspect-ratio: 3 / 4; border-radius: 18px; }
     .nc-shots { gap: 12px; }
     /* the keyboard turns sideways: keys stack top to bottom, black keys come in from the right */
-    .nc-octave { height: calc(8 * var(--key-row-height) + 7 * 3px); }
+    .nc-octave { height: calc(var(--keys, 8) * (var(--key-row-height) + 3px) - 3px); }
     .nc-octave__keys { flex-direction: column; gap: 3px; }
     .nc-key { flex: 0 0 var(--key-row-height); flex-direction: row; align-items: center; justify-content: flex-start; gap: 10px; padding: 0 16px 0 14px; border-radius: var(--radius-md) 0 0 var(--radius-md); border-bottom: 0; border-left: 6px solid var(--key-idle-edge); transform-origin: left; }
     .nc-key--lit { border-left-color: var(--accent); }
     .nc-key.is-pressed { transform: scaleX(0.99); }
     .nc-key__since { font-size: 11px; }
-    .nc-black { left: auto; right: 0; top: calc(var(--pos) * (var(--key-row-height) + 3px) - 1.5px - 18px); width: 130px; height: 36px; border: 1px solid var(--line-image); border-right: 0; border-radius: 8px 0 0 8px; }
+    .nc-black { --slot: auto; left: auto; right: 0; top: calc(var(--pos) * (var(--key-row-height) + 3px) - 1.5px - 18px); width: 130px; height: 36px; border: 1px solid var(--line-image); border-right: 0; border-radius: 8px 0 0 8px; }
     .nc-black.is-pressed { height: 36px; width: 127px; }
   }
 }

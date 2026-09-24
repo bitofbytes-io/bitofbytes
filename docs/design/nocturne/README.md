@@ -35,7 +35,7 @@ Nocturne is the visual system for bitofbytes.io, the personal site and project p
 ### Color
 
 - Dark only. Paint every page `bg` with `ink` text. There is no light theme.
-- `accent` is the only hue. Spend it on: the primary button, the current nav item, links inside prose, the live dot and "Updated this month" badge, the lit-key edge, one italic word per heading, focus rings. Nothing else is blue except the piano keys.
+- `accent` is the only hue. Spend it on: the primary button, the current nav item, links inside prose, the live dot and "Updated recently" badge, the lit-key edge, one italic word per heading, focus rings. Nothing else is blue except the piano keys.
 - Text hierarchy on `bg`, `bg-band` and `surface`: `ink` for headings and names, `ink-soft` for lead paragraphs, taglines and prose, `ink-muted` for secondary copy and nav links, `ink-subtle` for eyebrows, dates and captions, `ink-faint` only for uppercase labels on `bg`.
 - Text on an `accent` fill is `on-accent`.
 - Hairlines are `line`. Chip and rail borders are `line-strong`. Image borders are `line-image`. Any border that is the visible edge of a control (outline button, sound toggle, menu button) is `line-control`, which holds 3:1 on `bg`.
@@ -66,7 +66,7 @@ Nocturne is the visual system for bitofbytes.io, the personal site and project p
 ### Motion and interaction
 
 - Keys press in 90ms: white keys dip (`scaleY(0.985)`) and darken, black keys shorten by 4px. `prefers-reduced-motion` removes the transform and transition, keeping only the color change.
-- Hovering a key plays its note (see Octave keyboard). Sound is on by default, remembered per browser, and switchable with the Sound toggle. Browsers stay silent until the visitor's first click or tap anywhere on the page; that is expected.
+- Hovering a key plays its note, and so does tabbing onto a white key (see Octave keyboard). Sound is on by default, remembered per browser, and switchable with the Sound toggle. Browsers stay silent until the visitor's first click or tap anywhere on the page; that is expected.
 - Focus: a solid 2px `accent` outline, offset 3px, on every link and button.
 - Touch targets are at least `control-height-sm` (44px).
 
@@ -93,7 +93,7 @@ These three page types are the whole site. Build them from the components below.
 - **Update list** (`nc-updates` in an `nc-card`): project name, short date and note per row.
 - **Octave keyboard** (`nc-octave`): the signature. Eight white keys, one per project, left to right in the order the projects were started (first commit date, oldest first). A key is lit when that project's last update is within 30 days. White keys play C4 to C5; black keys (C#, D#, F#, G#, A#) are decorative, `aria-hidden`, and play their sharps. Below 640px it turns sideways.
 - **Hobby card** (`nc-hobby` in an `nc-card`).
-- **Project row** (`nc-row`): thumbnail, name with an optional "Updated this month" Badge, tagline, "Latest ·" note, Tech chips, and an Updated / Started meta column with a Details link.
+- **Project row** (`nc-row`): thumbnail, name with an optional "Updated recently" Badge, tagline, "Latest ·" note, Tech chips, and an Updated / Started meta column with a Details link.
 - **Tech chip** (`nc-chip`) and **Badge** (`nc-badge`).
 - **Timeline** (`nc-timeline`): newest first; the newest item has a filled `accent` dot and a "latest" tag; the first commit closes the list.
 - **Screenshot** (`nc-shot`, `nc-hero-shot`).

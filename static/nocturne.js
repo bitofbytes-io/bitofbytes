@@ -29,12 +29,13 @@
   }
 
   // A soft, short piano-like pluck: triangle fundamental plus two quiet sine partials through a closing low-pass.
+  // Returns false when nothing sounded because audio is still locked (see unlockAndPlay).
   function playNote(note) {
-    if (!soundOn) return;
+    if (!soundOn) return true;
     var freq = typeof note === 'number' ? note : NOTES[note];
-    if (!freq) return;
-    var c = ctx; // only a click or tap creates or resumes the context (see unlock)
-    if (!c || c.state !== 'running') return;
+    if (!freq) return true;
+    var c = ctx; // only a user gesture creates or resumes the context
+    if (!c || c.state !== 'running') return false;
     var t = c.currentTime;
     var out = c.createGain();
     out.gain.setValueAtTime(0.0001, t);
@@ -57,6 +58,16 @@
       osc.start(t);
       osc.stop(t + 1.7);
     });
+    return true;
+  }
+
+  // Call only while handling a user gesture (click, tap, key press): starts or resumes audio, then plays.
+  function unlockAndPlay(note) {
+    if (!soundOn) return;
+    var c = audio();
+    if (!c) return;
+    if (c.state === 'running') { playNote(note); return; }
+    try { c.resume().then(function () { playNote(note); }).catch(function () {}); } catch (e) {}
   }
 
   function setSound(on, fromGesture) {
@@ -78,12 +89,26 @@
     for (var i = 0; i < keys.length; i++) {
       (function (el, index) {
         var note = el.getAttribute('data-note') || (el.classList.contains('nc-key') ? WHITE_ORDER[index] : null);
+        var pending = false;
         el.addEventListener('pointerenter', function () {
           el.classList.add('is-pressed');
-          playNote(note);
+          // A touch enters before its gesture counts, so the first tap waits for pointerdown/up below.
+          pending = !playNote(note);
         });
-        el.addEventListener('pointerleave', function () { el.classList.remove('is-pressed'); });
-        el.addEventListener('pointercancel', function () { el.classList.remove('is-pressed'); });
+        function settle() {
+          if (pending) { pending = false; unlockAndPlay(note); }
+        }
+        el.addEventListener('pointerdown', settle);
+        el.addEventListener('pointerup', settle);
+        el.addEventListener('pointerleave', function () { pending = false; el.classList.remove('is-pressed'); });
+        el.addEventListener('pointercancel', function () { pending = false; el.classList.remove('is-pressed'); });
+        // Keyboard users hear a white key when they tab onto it (the Tab press is the gesture).
+        el.addEventListener('focus', function () {
+          if (!el.matches(':focus-visible')) return;
+          el.classList.add('is-pressed');
+          unlockAndPlay(note);
+        });
+        el.addEventListener('blur', function () { el.classList.remove('is-pressed'); });
       })(keys[i], i);
     }
   }
@@ -98,11 +123,17 @@
       buttons[j].addEventListener('click', function () { setSound(!soundOn, true); });
     }
     setSound(soundOn, false);
-    // Browsers keep audio locked until the first gesture; unlock on the first click or tap anywhere.
-    document.addEventListener('pointerdown', function unlock() {
-      if (soundOn) audio();
-      document.removeEventListener('pointerdown', unlock);
-    });
+    // Browsers keep audio locked until the first gesture; unlock on the first click, tap or key press anywhere.
+    function unlock() {
+      if (!soundOn) return;
+      var c = audio();
+      if (c && c.state === 'running') {
+        document.removeEventListener('pointerdown', unlock);
+        document.removeEventListener('keydown', unlock);
+      }
+    }
+    document.addEventListener('pointerdown', unlock);
+    document.addEventListener('keydown', unlock);
   }
 
   window.Nocturne = { NOTES: NOTES, playNote: playNote, attachOctave: attachOctave, autoAttach: autoAttach, setSound: setSound };

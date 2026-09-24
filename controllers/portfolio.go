@@ -2,6 +2,7 @@ package controllers
 
 import (
 	"net/http"
+	"slices"
 	"time"
 
 	"github.com/DryWaters/bitofbytes/models"
@@ -114,7 +115,8 @@ func (p Portfolio) ProjectsIndex(w http.ResponseWriter, r *http.Request) {
 	projects := models.SortByLastUpdate(p.Projects)
 	if r.URL.Query().Get("sort") == sortNewest {
 		sort = sortNewest
-		projects = p.Projects
+		projects = models.SortByFirstCommit(p.Projects)
+		slices.Reverse(projects)
 	}
 
 	p.Templates.ProjectsIndex.Execute(w, r, ProjectsIndexData{

@@ -15,7 +15,7 @@
         <aside class="nc-card nc-updates" aria-labelledby="updates-title">
             <div class="nc-updates__head">
                 <h2 class="nc-card__title" id="updates-title">Latest updates</h2>
-                {{ if .RecentCount }}<span class="nc-live">{{ .RecentCount }} this month</span>{{ end }}
+                {{ if .RecentCount }}<span class="nc-live">{{ .RecentCount }} in the last 30 days</span>{{ end }}
             </div>
             {{ range .Updates }}
             <a class="nc-update" href="/projects/{{ .Slug }}">
@@ -42,7 +42,7 @@
             </div>
         </div>
 
-        <div class="nc-octave" data-nc-octave>
+        <div class="nc-octave" data-nc-octave style="--keys: {{ len .Keys }}">
             <div class="nc-octave__keys">
                 {{ range .Keys }}
                 <a class="nc-key{{ if .Recent }} nc-key--lit{{ end }}" href="/projects/{{ .Slug }}" data-note="{{ .Note }}">

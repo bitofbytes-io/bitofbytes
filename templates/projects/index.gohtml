@@ -21,7 +21,7 @@
             <div class="nc-thumb nc-thumb--empty" aria-hidden="true">{{ .Name }}</div>
             {{ end }}
             <div class="nc-row__body">
-                <h2 class="nc-row__title"><a href="/projects/{{ .Slug }}">{{ .Name }}</a>{{ if .Recent }}<span class="nc-badge">Updated this month</span>{{ end }}</h2>
+                <h2 class="nc-row__title"><a href="/projects/{{ .Slug }}">{{ .Name }}</a>{{ if .Recent }}<span class="nc-badge">Updated recently</span>{{ end }}</h2>
                 <p class="nc-row__tagline">{{ .Tagline }}</p>
                 <p class="nc-row__latest"><b>Latest ·</b> {{ .LatestNote }}</p>
                 <ul class="nc-chips" aria-label="{{ .Name }} technology">

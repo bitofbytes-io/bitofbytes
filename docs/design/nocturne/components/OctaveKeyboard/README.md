@@ -10,7 +10,7 @@ The signature component: the Home page's project index drawn as one octave of a 
 ## Markup
 
 ```html
-<div class="nc-octave" data-nc-octave>
+<div class="nc-octave" data-nc-octave style="--keys: 8">
   <div class="nc-octave__keys">
     <a class="nc-key nc-key--lit" href="/projects/bitofbytes" data-note="C4">
       <span class="nc-key__name">BitOfBytes</span><span class="nc-key__since">since 2024</span>
@@ -26,8 +26,9 @@ The signature component: the Home page's project index drawn as one octave of a 
 ```
 
 - White keys are real links (`<a>`), so the keyboard is a working, keyboard-focusable project index without JavaScript.
-- Black keys are decorative: `aria-hidden`, no link, no focus. `--pos` is the white-key boundary they sit on (1, 2, 4, 5, 6); there is none between E and F or after B.
-- Load `bundle.js` (deferred). It attaches to every `[data-nc-octave]`: pointer-enter adds `is-pressed` and plays the key's `data-note`, pointer-leave releases it.
+- Set `--keys` on `.nc-octave` to the number of white keys rendered (the site writes `len .Keys`); widths, black-key positions and the phone height follow it.
+- Black keys are decorative: `aria-hidden`, no link, no focus. Hovering one plays its sharp as a flourish, but they carry no information, so they have no keyboard equivalent; every project is reachable through its white-key link. `--pos` is the white-key boundary they sit on (1, 2, 4, 5, 6); there is none between E and F or after B, and the site omits any whose boundary is past the last key.
+- Load `bundle.js` (deferred). It attaches to every `[data-nc-octave]`: pointer-enter adds `is-pressed` and plays the key's `data-note`, pointer-leave releases it. Tabbing onto a white key (keyboard focus, `:focus-visible` only) plays it too. A first touch that arrives before audio is unlocked plays on pointer-down or pointer-up instead of staying silent.
 
 ## Look
 
@@ -39,4 +40,4 @@ The signature component: the Home page's project index drawn as one octave of a 
 
 - White keys play C4 to C5 (261.63 to 523.25 Hz), black keys their sharps. The tone is a soft synthesized pluck (triangle plus two quiet partials through a closing low-pass, 1.6s decay); no audio files.
 - Pair it with a SoundToggle. Audio stays silent until the visitor's first click or tap; never autoplay, never show a prompt about it.
-- Don't: make black keys links, add labels to black keys, animate keys on load, or play anything on focus or scroll.
+- Don't: make black keys links, add labels to black keys, animate keys on load, play anything on mouse focus or scroll, or autoplay.

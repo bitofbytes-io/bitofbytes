@@ -194,10 +194,12 @@ func TestHomepageKeyboardAndContact(t *testing.T) {
 			t.Errorf("missing homepage element %q", want)
 		}
 	}
-	if got, want := strings.Count(body, `<a class="nc-key`), len(models.Projects()); got != want {
-		t.Errorf("piano keys = %d, want one per project (%d)", got, want)
+	onKeys := models.SortByLastUpdate(models.Projects())
+	onKeys = onKeys[:min(len(onKeys), 8)]
+	if got, want := strings.Count(body, `<a class="nc-key`), len(onKeys); got != want {
+		t.Errorf("piano keys = %d, want %d", got, want)
 	}
-	for _, project := range models.Projects() {
+	for _, project := range onKeys {
 		if want := `href="/projects/` + project.Slug + `" data-note=`; !strings.Contains(body, want) {
 			t.Errorf("missing piano key for %q", project.Slug)
 		}
