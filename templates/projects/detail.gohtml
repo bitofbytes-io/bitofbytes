@@ -54,14 +54,12 @@
                 <section class="nc-aside-block">
                     <h2 class="nc-card__title">Timeline</h2>
                     <ol class="nc-timeline">
-                        <li class="nc-timeline__item nc-timeline__item--latest">
-                            <span class="nc-timeline__date">{{ .Project.UpdatedLong }} · <b>latest</b></span>
-                            <span class="nc-timeline__text">{{ .Project.LatestNote }}</span>
+                        {{ range $i, $update := .Project.TimelineUpdates }}
+                        <li class="nc-timeline__item{{ if eq $i 0 }} nc-timeline__item--latest{{ end }}">
+                            <span class="nc-timeline__date">{{ $update.Date }}{{ if eq $i 0 }} · <b>latest</b>{{ end }}</span>
+                            <span class="nc-timeline__text">{{ $update.Note }}</span>
                         </li>
-                        <li class="nc-timeline__item">
-                            <span class="nc-timeline__date">{{ .Project.StartedLong }}</span>
-                            <span class="nc-timeline__text">First commit.</span>
-                        </li>
+                        {{ end }}
                     </ol>
                 </section>
             </aside>

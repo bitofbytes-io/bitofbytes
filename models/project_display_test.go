@@ -66,6 +66,53 @@ func TestProjectLatestNoteDropsLeadIn(t *testing.T) {
 	}
 }
 
+func TestProjectTimelineUpdatesKeepsThreeMostRecent(t *testing.T) {
+	t.Parallel()
+
+	p := Project{
+		LastUpdate: "September 25, 2026",
+		Notes:      "Most recent work improved search.",
+		PreviousUpdates: []ProjectUpdate{
+			{Date: "September 6, 2026", Note: "Most recent work made rating saves reliable."},
+			{Date: "August 28, 2026", Note: "Most recent work refreshed the trophy room."},
+			{Date: "August 2, 2026", Note: "Most recent work added a license."},
+		},
+	}
+	want := []ProjectUpdate{
+		{Date: "Sep 25, 2026", Note: "Improved search."},
+		{Date: "Sep 6, 2026", Note: "Made rating saves reliable."},
+		{Date: "Aug 28, 2026", Note: "Refreshed the trophy room."},
+	}
+	if got := p.TimelineUpdates(); !slices.Equal(got, want) {
+		t.Errorf("TimelineUpdates = %+v, want %+v", got, want)
+	}
+	if p.PreviousUpdates[0].Note != "Most recent work made rating saves reliable." {
+		t.Error("TimelineUpdates modified source data")
+	}
+}
+
+func TestProjectUpdateHistoriesAreBoundedAndOrdered(t *testing.T) {
+	t.Parallel()
+
+	for _, project := range Projects() {
+		if len(project.PreviousUpdates) > 2 {
+			t.Errorf("%s has %d previous updates, want at most 2", project.Slug, len(project.PreviousUpdates))
+		}
+		newer := project.UpdatedOn()
+		for _, update := range project.PreviousUpdates {
+			date, err := time.Parse(lastUpdateLayout, update.Date)
+			if err != nil {
+				t.Errorf("%s invalid history date %q: %v", project.Slug, update.Date, err)
+				continue
+			}
+			if date.After(newer) {
+				t.Errorf("%s history date %q is newer than %s", project.Slug, update.Date, newer.Format(lastUpdateLayout))
+			}
+			newer = date
+		}
+	}
+}
+
 func TestProjectListingHelpers(t *testing.T) {
 	t.Parallel()
 

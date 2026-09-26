@@ -12,6 +12,8 @@ type Project struct {
 	LastUpdate      string
 	FirstCommitDate string
 	Notes           string
+	// PreviousUpdates holds up to two older update notes, newest first.
+	PreviousUpdates []ProjectUpdate
 	// Hobby ties a project to one of the hobbies on the home page ("piano" or
 	// "videogames"); it sets the eyebrow on the project's detail page.
 	Hobby       string
@@ -19,6 +21,11 @@ type Project struct {
 	Highlights  []string
 	Paragraphs  []string
 	Screenshots []ProjectScreenshot
+}
+
+type ProjectUpdate struct {
+	Date string
+	Note string
 }
 
 type ProjectScreenshot struct {
@@ -40,6 +47,9 @@ func Projects() []Project {
 			LastUpdate:      "September 6, 2026",
 			FirstCommitDate: "2026-07-31",
 			Notes:           "Most recent work made vehicle photo saves more reliable, tightened sign-in and asset cleanup, and strengthened service and reminder handling.",
+			PreviousUpdates: []ProjectUpdate{
+				{Date: "August 3, 2026", Note: "Most recent work aligned the reminder-status headers and added UI coverage for that structure."},
+			},
 			Tech: []string{
 				"Go",
 				"HTMX",
@@ -83,7 +93,10 @@ func Projects() []Project {
 			LastUpdate:      "September 23, 2026",
 			FirstCommitDate: "2026-07-13",
 			Notes:           "Most recent work added private score intake and page preparation, refined iPad reader reliability, and introduced IMSLP work search with page markers.",
-			Hobby:           "piano",
+			PreviousUpdates: []ProjectUpdate{
+				{Date: "July 26, 2026", Note: "Most recent work stabilized reader auto-scroll behavior and kept controls clear of the score itself."},
+			},
+			Hobby: "piano",
 			Tech: []string{
 				"Go",
 				"Angular",
@@ -128,6 +141,10 @@ func Projects() []Project {
 			LastUpdate:      "September 6, 2026",
 			FirstCommitDate: "2026-05-10",
 			Notes:           "Most recent work improved visit reliability under load and tightened redirect safety.",
+			PreviousUpdates: []ProjectUpdate{
+				{Date: "August 28, 2026", Note: "Most recent work clarified database migration workflows and added an MIT license."},
+				{Date: "August 2, 2026", Note: "Most recent work added an MIT license and Southern cuisine classification."},
+			},
 			Tech: []string{
 				"Go",
 				"HTMX",
@@ -171,6 +188,10 @@ func Projects() []Project {
 			LastUpdate:      "September 6, 2026",
 			FirstCommitDate: "2026-05-01",
 			Notes:           "Most recent work strengthened progress entry validation by rejecting invalid dates and non-finite driving hours.",
+			PreviousUpdates: []ProjectUpdate{
+				{Date: "August 2, 2026", Note: "Most recent work added an MIT license alongside clearer, safer self-hosting guidance."},
+				{Date: "July 10, 2026", Note: "Most recent work improved auth and progress flow observability and published clearer, safer self-hosting guidance."},
+			},
 			Tech: []string{
 				"Go",
 				"HTMX",
@@ -214,6 +235,10 @@ func Projects() []Project {
 			LastUpdate:      "September 6, 2026",
 			FirstCommitDate: "2026-01-02",
 			Notes:           "Most recent work made background summaries more reliable through safer job claiming, recovery, and refresh handling.",
+			PreviousUpdates: []ProjectUpdate{
+				{Date: "August 28, 2026", Note: "Most recent work clarified contributor build prerequisites and refreshed workflow guidance alongside safer self-hosting documentation."},
+				{Date: "July 10, 2026", Note: "Most recent work improved sanitized auth and learning flow observability, published clearer, safer self-hosting guidance, and streamlined contributor documentation."},
+			},
 			Tech: []string{
 				"Go",
 				"Templ",
@@ -257,6 +282,10 @@ func Projects() []Project {
 			LastUpdate:      "September 25, 2026",
 			FirstCommitDate: "2026-01-04",
 			Notes:           "Most recent work brought movie browsing and the trophy room into the Late Show design, improved search readability and mobile controls, and made rating saves more reliable.",
+			PreviousUpdates: []ProjectUpdate{
+				{Date: "September 6, 2026", Note: "Most recent work improved movie search readability and made rating saves more reliable with all-or-nothing batch validation."},
+				{Date: "August 28, 2026", Note: "Most recent work clarified contributor build prerequisites while keeping movie runtimes inline in the simplified Trophy Room alongside its friendly awards and clearer totals."},
+			},
 			Tech: []string{
 				"Go",
 				"Templ",
@@ -299,6 +328,10 @@ func Projects() []Project {
 			LastUpdate:      "September 24, 2026",
 			FirstCommitDate: "2024-06-29",
 			Notes:           "Most recent work brought in the Nocturne redesign, refined its playable project index across devices, and matched the site icon to its piano-key theme.",
+			PreviousUpdates: []ProjectUpdate{
+				{Date: "September 14, 2026", Note: "Most recent work introduced an Atomic-inspired handheld portfolio experience while refreshing project recency copy and refining navigation, branding, layout, and production styling."},
+				{Date: "August 28, 2026", Note: "Most recent work refreshed project recency copy and clarified local development workflow guidance."},
+			},
 			Tech: []string{
 				"Go",
 				"HTML templates",
@@ -340,7 +373,11 @@ func Projects() []Project {
 			LastUpdate:      "September 6, 2026",
 			FirstCommitDate: "2025-10-30",
 			Notes:           "Most recent work improved shelf feedback, preserved media placements, enforced series limits, strengthened CSV exports, and restored public API health checks.",
-			Hobby:           "videogames",
+			PreviousUpdates: []ProjectUpdate{
+				{Date: "August 28, 2026", Note: "Most recent work clarified frontend setup and local development workflows alongside safer self-hosting guidance."},
+				{Date: "July 10, 2026", Note: "Most recent work published a concise self-hosting guide with safer container setup and clearer production cookie guidance."},
+			},
+			Hobby: "videogames",
 			Tech: []string{
 				"Go",
 				"Chi",

@@ -55,6 +55,28 @@ func TestRoutesRenderCurrentSiteSurface(t *testing.T) {
 	}
 }
 
+func TestProjectDetailTimelinesShowUpdatesWithoutFirstCommit(t *testing.T) {
+	t.Parallel()
+
+	handler := newTestHandler()
+	for _, project := range models.Projects() {
+		req := httptest.NewRequest(http.MethodGet, "/projects/"+project.Slug, nil)
+		rr := httptest.NewRecorder()
+		handler.ServeHTTP(rr, req)
+		if rr.Code != http.StatusOK {
+			t.Errorf("%s status = %d", project.Slug, rr.Code)
+			continue
+		}
+		body := rr.Body.String()
+		if got, want := strings.Count(body, `class="nc-timeline__item`), len(project.TimelineUpdates()); got != want {
+			t.Errorf("%s timeline items = %d, want %d", project.Slug, got, want)
+		}
+		if strings.Contains(body, "First commit.") {
+			t.Errorf("%s still shows First commit", project.Slug)
+		}
+	}
+}
+
 func TestRemovedRoutesReturnNotFound(t *testing.T) {
 	t.Parallel()
 

@@ -96,7 +96,7 @@ These three page types are the whole site. Build them from the components below.
 - **Hobby card** (`nc-hobby` in an `nc-card`).
 - **Project row** (`nc-row`): thumbnail, name with an optional "Updated recently" Badge, tagline, "Latest ·" note, Tech chips, and an Updated / Started meta column with a Details link.
 - **Tech chip** (`nc-chip`) and **Badge** (`nc-badge`).
-- **Timeline** (`nc-timeline`): newest first; the newest item has a filled `accent` dot and a "latest" tag; the first commit closes the list.
+- **Timeline** (`nc-timeline`): up to three dated updates, newest first; the newest item has a filled `accent` dot and a "latest" tag.
 - **Screenshot** (`nc-shot`, `nc-hero-shot`).
 - **Footer** (`nc-footer`, `nc-footer--home`).
 
