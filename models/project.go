@@ -254,9 +254,9 @@ func Projects() []Project {
 			Summary:         "A movie tracker for organizing watched films, family viewing lists, and collection details.",
 			RepoURL:         "https://github.com/bitofbytes-io/dejaview",
 			LiveURL:         "https://dejaview.bitofbytes.io",
-			LastUpdate:      "September 6, 2026",
+			LastUpdate:      "September 25, 2026",
 			FirstCommitDate: "2026-01-04",
-			Notes:           "Most recent work improved movie search readability and made rating saves more reliable with all-or-nothing batch validation.",
+			Notes:           "Most recent work brought movie browsing and the trophy room into the Late Show design, improved search readability and mobile controls, and made rating saves more reliable.",
 			Tech: []string{
 				"Go",
 				"Templ",
@@ -298,7 +298,7 @@ func Projects() []Project {
 			LiveURL:         "https://www.bitofbytes.io",
 			LastUpdate:      "September 24, 2026",
 			FirstCommitDate: "2024-06-29",
-			Notes:           "Most recent work replaced the 3D handheld with Nocturne, a midnight-blue redesign whose project index is a playable piano octave.",
+			Notes:           "Most recent work brought in the Nocturne redesign, refined its playable project index across devices, and matched the site icon to its piano-key theme.",
 			Tech: []string{
 				"Go",
 				"HTML templates",
