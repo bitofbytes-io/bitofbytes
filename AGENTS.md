@@ -6,5 +6,5 @@
 - After configuring the ignored `.env`, use `go run ./cmd/bob` for a one-shot local server or `make local` for live reload with Tailwind watch and `air`.
 - Build production CSS with `make tail-prod`; the Dockerfile also builds Tailwind during image creation.
 - Run `go test ./...` for changes and verify rendered routes when templates, middleware, or static assets change.
-- The UI follows the Nocturne design system in `docs/design/nocturne/`: read its `README.md` before changing templates or styles. Keep `tailwind/styles.css` in sync with `docs/design/nocturne/tokens.css` and `components/bundle.css`, and `static/nocturne.js` in sync with `components/bundle.js`.
+- The UI follows the Nocturne design system in `docs/design/nocturne/`: read its `README.md` before changing templates or styles. For visual changes, update `tokens.json` or `components/bundle.css` there first, mirror the result into `tailwind/styles.css`, and run `make tail-prod`. Keep `static/nocturne.js` in sync with `components/bundle.js`.
 - Site copy never uses em dashes.
