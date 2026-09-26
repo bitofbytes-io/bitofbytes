@@ -37,9 +37,9 @@ func Projects() []Project {
 			Summary:         "A household vehicle-maintenance tracker for service records, receipts, reminders, and exports.",
 			RepoURL:         "https://github.com/bitofbytes-io/carma",
 			LiveURL:         "https://carma.bitofbytes.io",
-			LastUpdate:      "August 3, 2026",
+			LastUpdate:      "September 6, 2026",
 			FirstCommitDate: "2026-07-31",
-			Notes:           "Most recent work aligned the reminder-status headers and added UI coverage for that structure.",
+			Notes:           "Most recent work made vehicle photo saves more reliable, tightened sign-in and asset cleanup, and strengthened service and reminder handling.",
 			Tech: []string{
 				"Go",
 				"HTMX",
@@ -80,9 +80,9 @@ func Projects() []Project {
 			Summary:         "A private digital sheet-music binder with separate user libraries, PDF search, and an iPad-friendly reader.",
 			RepoURL:         "https://github.com/bitofbytes-io/noted",
 			LiveURL:         "https://noted.bitofbytes.io",
-			LastUpdate:      "July 26, 2026",
+			LastUpdate:      "September 23, 2026",
 			FirstCommitDate: "2026-07-13",
-			Notes:           "Most recent work stabilized reader auto-scroll behavior and kept controls clear of the score itself.",
+			Notes:           "Most recent work added private score intake and page preparation, refined iPad reader reliability, and introduced IMSLP work search with page markers.",
 			Hobby:           "piano",
 			Tech: []string{
 				"Go",
