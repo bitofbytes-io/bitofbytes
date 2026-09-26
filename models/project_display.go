@@ -71,7 +71,26 @@ func (p Project) StartedKey() string {
 
 // LatestNote is Notes without its "Most recent work" lead-in, as a sentence.
 func (p Project) LatestNote() string {
-	note := strings.TrimSpace(p.Notes)
+	return displayUpdateNote(p.Notes)
+}
+
+// TimelineUpdates returns the latest update followed by at most two older ones.
+func (p Project) TimelineUpdates() []ProjectUpdate {
+	updates := make([]ProjectUpdate, 0, 1+min(len(p.PreviousUpdates), 2))
+	updates = append(updates, ProjectUpdate{Date: p.UpdatedLong(), Note: p.LatestNote()})
+	for _, update := range p.PreviousUpdates[:min(len(p.PreviousUpdates), 2)] {
+		date, err := time.Parse(lastUpdateLayout, update.Date)
+		if err == nil {
+			update.Date = date.Format("Jan 2, 2006")
+		}
+		update.Note = displayUpdateNote(update.Note)
+		updates = append(updates, update)
+	}
+	return updates
+}
+
+func displayUpdateNote(raw string) string {
+	note := strings.TrimSpace(raw)
 	for _, prefix := range []string{"Most recent work ", "Most recent work: "} {
 		if rest, ok := strings.CutPrefix(note, prefix); ok {
 			note = rest
