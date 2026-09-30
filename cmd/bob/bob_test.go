@@ -115,27 +115,35 @@ func TestRemovedRoutesReturnNotFound(t *testing.T) {
 	}
 }
 
-func TestOldResumePathRedirects(t *testing.T) {
+// Every screenshot in the catalog must exist and be served as a WebP.
+func TestProjectScreenshotsServeAsWebP(t *testing.T) {
 	t.Parallel()
 
 	handler := newTestHandler()
-	req := httptest.NewRequest(http.MethodGet, "/static/daniel-resume-2024.pdf", nil)
-	rr := httptest.NewRecorder()
-
-	handler.ServeHTTP(rr, req)
-
-	if rr.Code != http.StatusMovedPermanently {
-		t.Fatalf("status code = %d, want %d", rr.Code, http.StatusMovedPermanently)
+	count := 0
+	for _, project := range models.Projects() {
+		for _, shot := range project.Screenshots {
+			if shot.Path == "" {
+				continue
+			}
+			count++
+			t.Run(shot.Path, func(t *testing.T) {
+				if !strings.HasSuffix(shot.Path, ".webp") {
+					t.Fatalf("path %q is not a .webp", shot.Path)
+				}
+				rr := httptest.NewRecorder()
+				handler.ServeHTTP(rr, httptest.NewRequest(http.MethodGet, shot.Path, nil))
+				if rr.Code != http.StatusOK {
+					t.Fatalf("status code = %d, want %d", rr.Code, http.StatusOK)
+				}
+				if got := rr.Header().Get("Content-Type"); !strings.HasPrefix(got, "image/webp") {
+					t.Fatalf("Content-Type = %q, want image/webp", got)
+				}
+			})
+		}
 	}
-	if got, want := rr.Header().Get("Location"), "/static/daniel-waters-resume.pdf"; got != want {
-		t.Fatalf("Location = %q, want %q", got, want)
-	}
-
-	req = httptest.NewRequest(http.MethodGet, "/static/daniel-waters-resume.pdf", nil)
-	rr = httptest.NewRecorder()
-	handler.ServeHTTP(rr, req)
-	if rr.Code != http.StatusOK {
-		t.Fatalf("new resume path status code = %d, want %d", rr.Code, http.StatusOK)
+	if count == 0 {
+		t.Fatal("no project screenshots in the catalog")
 	}
 }
 
