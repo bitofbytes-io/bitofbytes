@@ -3,8 +3,8 @@
 The runtime image expects configuration to be provided entirely by the
 orchestrator at container start, through environment variables. The application
 needs no secrets: CSRF protection checks the browser's `Sec-Fetch-Site` and
-`Origin` headers (via `filippo.io/csrf/gorilla`) instead of signed tokens, so
-there is no CSRF key to provision or rotate. Missing variables cause the
+`Origin` headers (via the standard library's `http.CrossOriginProtection`)
+instead of signed tokens, so there is no CSRF key to provision or rotate. Missing variables cause the
 application to exit with a clear error message, preventing an unexpectedly
 insecure default.
 

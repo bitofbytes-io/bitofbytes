@@ -336,7 +336,6 @@ func Projects() []Project {
 				"Go",
 				"HTML templates",
 				"Tailwind CSS",
-				"Gorilla CSRF",
 				"Docker",
 			},
 			Highlights: []string{
