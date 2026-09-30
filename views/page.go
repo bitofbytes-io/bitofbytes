@@ -11,7 +11,7 @@ import (
 	"path"
 	"strings"
 
-	"github.com/gorilla/csrf"
+	csrf "filippo.io/csrf/gorilla"
 )
 
 type Page struct {
