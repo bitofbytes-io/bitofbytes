@@ -1,6 +1,6 @@
 # Nocturne
 
-The design system for bitofbytes.io. This folder is the repo copy of the published system at https://claude.ai/artifact/3K9kPLTfxgeoVsRgiZH2ie; the approved page mockups live on the canvas at https://claude.ai/artifact/MyWmR2h4hcnTgwGSB6kbBG.
+The design system for bitofbytes.io. This folder is the repo copy of the published system at https://claude.ai/artifact/3K9kPLTfxgeoVsRgiZH2ie; the approved page mockups live on the canvas at https://claude.ai/artifact/MyWmR2h4hcnTgwGSB6kbBG. The Home revision that made the keyboard the hero (statement hero, keyboard first, Latest updates, now ledger) has its mockups at https://claude.ai/artifact/9xLLZe6GRGPad5WcedBekm.
 
 | Path | What |
 | --- | --- |
@@ -24,8 +24,8 @@ Nocturne is the visual system for bitofbytes.io, the personal site and project p
 - **Voice.** First person, plain and warm. Daniel talks about his own work: "I build live video and real-time collaboration software at Cisco." Never "we", never marketing superlatives.
 - **No em dashes.** Anywhere: headings, copy, taglines, alt text, captions. Use a period, comma or colon instead. "Your permit pal: less yelling, more tracking." A middle dot (`·`) is fine as a separator in eyebrows and meta lines.
 - **Casing.** Sentence case for headings and buttons ("See the projects", "Open live site"). The wordmark `bitofbytes` is always lower case. Eyebrows and definition-list labels are set uppercase by CSS; write them in normal case in the markup.
-- **Headings with a turn.** Section and page titles may end on an italic accent word: "Side *projects*", "Off the clock, *mostly keys.*", "Daniel / *Waters.*" One italic phrase per heading, never more.
-- **Dates.** "Sep 6, 2026" in meta and timelines; "Sep 6" inside the latest-updates list; "since Oct '25" on piano keys. Relative dates ("18 days ago") are not used.
+- **Headings with a turn.** Headings may carry one italic accent phrase: "Side *projects*", "Off the clock, *mostly keys.*", "Real-time video at work. *Small apps* at home." One italic phrase per heading, never more.
+- **Dates.** "Sep 6, 2026" in meta and timelines; "Sep 6" in the Latest updates feature and ledger; "since Oct '25" on piano keys. Relative dates ("18 days ago") are not used.
 - **Update notes.** One sentence, past tense, what changed for the user: "Improved visit reliability under load and tightened redirect safety." Drop the "Most recent work…" lead-in from the data when displaying it.
 - **Placeholders.** Never invent a piece, a game or a stat. In mockups, anything personal Claude does not know stays a visible placeholder in brackets, like `[GAME YOU'RE PLAYING]`; on the live site that content is simply left out until Daniel supplies it.
 - **No emoji.** Icons are inline stroke SVG (see Iconography).
@@ -35,33 +35,33 @@ Nocturne is the visual system for bitofbytes.io, the personal site and project p
 ### Color
 
 - Dark only. Paint every page `bg` with `ink` text. There is no light theme.
-- `accent` is the only hue. Spend it on: the primary button, the current nav item, links inside prose, the live dot and "Updated recently" badge, the lit-key edge, one italic word per heading, focus rings. Nothing else is blue except the piano keys.
+- `accent` is the only hue. Spend it on: the primary button, the current nav item, links inside prose, the "Updated recently" badge, the lit-key edge and its legend swatch, one italic word per heading, focus rings. Nothing else is blue except the piano keys.
 - Text hierarchy on `bg`, `bg-band` and `surface`: `ink` for headings and names, `ink-soft` for lead paragraphs, taglines and prose, `ink-muted` for secondary copy and nav links, `ink-subtle` for eyebrows, dates and captions, `ink-faint` only for uppercase labels on `bg`.
 - Text on an `accent` fill is `on-accent`.
 - Hairlines are `line`. Chip and rail borders are `line-strong`. Image borders are `line-image`. Any border that is the visible edge of a control (outline button, sound toggle, menu button) is `line-control`, which holds 3:1 on `bg`.
-- Piano keys have their own tokens (`key-*`). A key is `key-lit` with an `accent` bottom edge when its project was updated in the last 30 days, otherwise `key-idle` with a `key-idle-edge` edge. Black keys are `bg` with a `line-image` outline.
+- Piano keys have their own tokens (`key-*`). A key is `key-lit` (a clear periwinkle tint, visibly bluer than idle at a glance) with an `accent` bottom edge when its project was updated in the last 30 days, otherwise `key-idle` (near white) with a `key-idle-edge` edge. The legend under the keyboard names both. Black keys are `bg` with a `line-image` outline.
 
 ### Type
 
 - Three Google-hosted families: `display` (Fraunces, with the optical-size axis), `sans` (IBM Plex Sans), `mono` (IBM Plex Mono). Load them with one stylesheet link: `https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,400;0,9..144,600;1,9..144,400&family=IBM+Plex+Sans:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500&display=swap`.
-- Fraunces carries names and headings only: `hero`, `hero-project`, `page-title`, `section`, `subsection`, `row-title`, `card-title`, `tagline` (italic) and the `wordmark` (italic). Weight 400 for large sizes, 600 for row and card titles.
+- Fraunces carries names and headings only: `hero`, `hero-project`, `page-title`, `section`, `subsection`, `row-title`, `card-title`, `tagline` (italic) and the `wordmark` (italic). Weight 400 for large sizes, 600 for row titles and the featured update name.
 - Plex Sans carries all reading text: `lead` (21px), `intro` (19px), `prose` (18px, line-height 1.7), `body` (16px), `small` (15px).
 - Plex Mono carries metadata only: `eyebrow` (uppercase, 0.08em tracking), `meta` dates, `label`, `chip`. Never set a sentence of prose in mono.
-- Below 640px use the `-phone` display sizes (`hero-phone` 68px, `hero-project-phone` 84px, `page-title-phone` 56px, `section-phone` 40px).
-- Keep prose under about 65 characters a line: `lead` max 620px, `prose` max 680px.
+- Below 640px use the `-phone` display sizes (`hero-phone` 54px, `hero-project-phone` 84px, `page-title-phone` 56px, `section-phone` 40px).
+- Keep prose under about 65 characters a line: `lead` max 640px, `prose` max 680px.
 
 ### Spacing and layout
 
 - Desktop content is `content-width` (1120px) between `gutter` (80px) side paddings: a 1280px frame. Below 640px the gutter is `gutter-phone` (20px) and everything stacks to one column.
-- Sections breathe: `space-11` (96px) to `space-12` (112px) between major sections, `space-8` (48px) from a section heading to its content, `space-5` (24px) between cards.
-- Two-column heroes use `minmax(0, 1fr)` plus a fixed column (440px on Home for the updates card, 460px on a project page for the screenshot), with `space-10` (80px) or 72px between.
+- Sections breathe: `space-11` (96px) to `space-12` (112px) between major sections, `space-8` (48px) from a section heading to its content, `space-5` (24px) between screenshots.
+- The Home hero is a single column (heading max 1000px). The project page hero uses `minmax(0, 1fr)` plus a fixed 460px screenshot column with 72px between; Latest updates on Home is two equal columns with `space-10` (80px) between.
 - Lay out siblings with flex or grid and `gap`, never margins between siblings.
 
 ### Shape, borders and depth
 
-- Radii: `radius-sm` chips, `radius-md` thumbnails and key ends, `radius-lg` gallery screenshots, `radius-xl` cards and the hero screenshot, `radius-pill` every button and badge.
+- Radii: `radius-sm` chips, `radius-md` thumbnails and key ends, `radius-lg` gallery screenshots and the featured update, `radius-xl` the hero screenshot, `radius-pill` every button and badge.
 - Borders, not shadows, separate things. The only shadow on a page is `shadow-lift` on the single hero screenshot of a project page; `shadow-key-pressed` exists for the keyboard only.
-- Cards (`surface` with a `line` border) are used for exactly two things: the latest-updates list on Home and hobby cards. Project rows, highlights and meta are flat, divided by `line` rules.
+- There are no cards. Everything is flat and divided by `line` rules: the update ledger and now ledger on Home, project rows, highlights and meta. `surface` fills only controls (the sort track, the menu panel) and image placeholders.
 
 ### Motion and interaction
 
@@ -81,7 +81,7 @@ Nocturne is the visual system for bitofbytes.io, the personal site and project p
 
 These three page types are the whole site. Build them from the components below.
 
-- **Home.** Header; a two-column hero (eyebrow "Senior Software Engineer · Raleigh, NC", `hero` name with the last name italic in `accent`, `lead` intro, a primary "See the projects" and secondary "Resume (PDF)" button) beside the Update list of the four most recent project updates; the Octave keyboard section ("Eight side projects, one octave" / "What I'm building", with the Sound toggle); the hobbies band (`bg-band`, three Hobby cards: Programming, Piano, Videogames, each linking to the project it inspired and ending in a "now" line); the home footer ("Say hello.", email, GitHub, LinkedIn, location).
+- **Home.** Header; a single-column statement hero (eyebrow "Daniel Waters · Senior Software Engineer · Raleigh, NC", `hero` heading "Real-time video at work. *Small apps* at home." with the italic phrase in `accent`, `lead` intro ending "Eight of them live below, one per key.", a primary "See the projects" and secondary "Resume (PDF)" button); the Octave keyboard immediately under it, with no heading, and its caption row (the legend: "Eight side projects, one octave…", a lit and a resting swatch, and the Sound toggle); Latest updates (eyebrow "Changelog · N updates in the last 30 days", `section` heading "Latest *updates.*", the Featured update with its live screenshot beside the Update ledger of the three newest other updates); the Now ledger band (`bg-band`, "Off the clock, *mostly keys.*": Programming, Piano, Videogames, each with what Daniel is doing now and a link to the project it inspired); the home footer ("Say hello.", email, GitHub, LinkedIn, location).
 - **Projects.** Header; eyebrow "Projects · N", `page-title` "Side *projects*", `intro`; the Sort toggle (Recently updated, Newest first); one Project row per project, sorted by last update, newest first; footer.
 - **Project detail.** Header; Breadcrumb; a two-column hero (accent eyebrow with an icon when the project ties to a hobby, `hero-project` name, italic `tagline`, "Open live site" primary and "View on GitHub" secondary buttons, a Started / Last update / Stack meta row) beside the hero screenshot; "What it does" `prose` paragraphs and roman-numeral Highlights beside an aside holding Stack chips and the Timeline; the Screenshots gallery; footer. There is no previous/next project navigation and no separate "latest update" box: the Timeline carries the latest update.
 
@@ -91,9 +91,10 @@ These three page types are the whole site. Build them from the components below.
 - **Button** (`nc-btn--primary`, `nc-btn--secondary`): pills, 52px tall. One primary per view.
 - **Sound toggle** (`nc-sound`): an `aria-pressed` button that switches keyboard audio.
 - **Sort toggle** (`nc-sort`): a segmented pair of options, as `aria-pressed` buttons or as links to `?sort=` with `aria-current="true"` on the current one (what the site uses).
-- **Update list** (`nc-updates` in an `nc-card`): project name, short date and note per row.
-- **Octave keyboard** (`nc-octave`): the signature. Eight white keys, one per project, left to right in the order the projects were started (first commit date, oldest first). A key is lit when that project's last update is within 30 days. White keys play C4 to C5; black keys (C#, D#, F#, G#, A#) are decorative, `aria-hidden` and silent, and let the pointer through to the white key beneath. Below 640px it turns sideways.
-- **Hobby card** (`nc-hobby` in an `nc-card`).
+- **Featured update** (`nc-featured`): the newest project update with a screenshot (never this site itself): 4:3 screenshot, name and short date, italic tagline, note. See UpdateLedger.
+- **Update ledger** (`nc-ledger`): flat rows of short date, name and note for the three newest updates other than the featured one. The nav and the hero button already lead to the full projects page, so the ledger has no "see all" link. See UpdateLedger.
+- **Octave keyboard** (`nc-octave`): the signature. Eight white keys, one per project, left to right in the order the projects were started (first commit date, oldest first). A key is lit when that project's last update is within 30 days. White keys play C4 to C5; black keys (C#, D#, F#, G#, A#) are decorative, `aria-hidden` and silent, and let the pointer through to the white key beneath. Below 640px it turns sideways. A caption row under it (`nc-octave__caption`) holds the legend (`nc-legend`: what the keys are, plus a lit and a resting swatch) and the Sound toggle.
+- **Now ledger** (`nc-now`): three flat columns (Programming, Piano, Videogames) ruled by `line`, each a label, an optional italic "now" value and a line of copy. No cards, no icons.
 - **Project row** (`nc-row`): thumbnail, name with an optional "Updated recently" Badge, tagline, "Latest ·" note, Tech chips, and an Updated / Started meta column with a Details link.
 - **Tech chip** (`nc-chip`) and **Badge** (`nc-badge`).
 - **Timeline** (`nc-timeline`): up to three dated updates, newest first; the newest item has a filled `accent` dot and a "latest" tag.
@@ -102,7 +103,8 @@ These three page types are the whole site. Build them from the components below.
 
 ## Building bitofbytes with Nocturne
 
-- The site is Go `html/template` plus Tailwind. `tailwind/styles.css` holds the tokens in `:root` and `components/bundle.css` inside `@layer components`; `make tail-prod` builds `static/styles.css` (never edit that file). Page layouts (`nc-home-hero`, `nc-section`, `nc-page-head`, `nc-detail-hero`, `nc-detail-body`) are in the same stylesheet.
+- The site is Go `html/template` plus Tailwind. `tailwind/styles.css` holds the tokens in `:root` and `components/bundle.css` inside `@layer components`; `make tail-prod` builds `static/styles.css` (never edit that file). Page layouts (`nc-home-hero`, `nc-octave-section`, `nc-section`, `nc-page-head`, `nc-detail-hero`, `nc-detail-body`) are in the same stylesheet.
 - `components/bundle.js` ships as `static/nocturne.js`, loaded with `defer` on Home only. It attaches itself to every `[data-nc-octave]` and `[data-nc-sound]` on the page.
 - Project content stays in `models/project.go`; display helpers (dates, the latest note, sorting) are in `models/project_display.go`. "Recently updated" means `LastUpdate` within 30 days of the request (`models.RecentWindow`); keyboard order comes from `FirstCommitDate`; the projects page sorts by `LastUpdate` unless `?sort=newest`.
-- The hobby cards' "now" lines come from `models.CurrentActivities()`. An empty field hides its line; the live site never shows a bracketed placeholder.
+- The now ledger's values come from `models.CurrentActivities()`, first letter capitalized for display by the controller. An empty field hides its value and its label suffix; the live site never shows a bracketed placeholder.
+- The featured update is the most recently updated project with a screenshot whose slug is not `bitofbytes`; the ledger is the three newest by `LastUpdate` other than the featured one, so a project newer than the featured one (this site, usually) still appears.

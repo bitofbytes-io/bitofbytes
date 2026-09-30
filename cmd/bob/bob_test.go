@@ -99,6 +99,30 @@ func TestRemovedRoutesReturnNotFound(t *testing.T) {
 	}
 }
 
+func TestOldResumePathRedirects(t *testing.T) {
+	t.Parallel()
+
+	handler := newTestHandler()
+	req := httptest.NewRequest(http.MethodGet, "/static/daniel-resume-2024.pdf", nil)
+	rr := httptest.NewRecorder()
+
+	handler.ServeHTTP(rr, req)
+
+	if rr.Code != http.StatusMovedPermanently {
+		t.Fatalf("status code = %d, want %d", rr.Code, http.StatusMovedPermanently)
+	}
+	if got, want := rr.Header().Get("Location"), "/static/daniel-waters-resume.pdf"; got != want {
+		t.Fatalf("Location = %q, want %q", got, want)
+	}
+
+	req = httptest.NewRequest(http.MethodGet, "/static/daniel-waters-resume.pdf", nil)
+	rr = httptest.NewRecorder()
+	handler.ServeHTTP(rr, req)
+	if rr.Code != http.StatusOK {
+		t.Fatalf("new resume path status code = %d, want %d", rr.Code, http.StatusOK)
+	}
+}
+
 func TestIconRoutesServeStaticFiles(t *testing.T) {
 	t.Parallel()
 
