@@ -7,7 +7,7 @@ COPY ./templates ./templates
 COPY ./tailwind/styles.css src/styles.css
 RUN npx @tailwindcss/cli -i src/styles.css -o /styles.css --minify
 
-FROM golang:1.26.4-alpine3.23 AS builder
+FROM golang:1.26.6-alpine3.23 AS builder
 ARG VERSION=dev
 ARG REVISION=unknown
 WORKDIR /app
@@ -35,7 +35,6 @@ LABEL org.opencontainers.image.source="${SOURCE_URL}" \
       org.opencontainers.image.title="bitofbytes" \
       org.opencontainers.image.description="BitOfBytes web application"
 
-ENV CSRF_KEY_FILE=/run/secrets/csrf_key
 ENV SERVER_ADDRESS=:3000
 ENV CSRF_SECURE=true
 ENV LOG_LEVEL=${LOG_LEVEL}

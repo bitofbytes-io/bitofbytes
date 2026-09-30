@@ -3,16 +3,13 @@ package middleware
 import (
 	"net/http"
 
-	"github.com/gorilla/csrf"
+	csrf "filippo.io/csrf/gorilla"
 )
 
-const csrfCookiePath = "/"
-
-// CSRF returns middleware that configures gorilla/csrf with the provided key and flags.
-func CSRF(key []byte, secure bool) func(http.Handler) http.Handler {
-	return csrf.Protect(
-		key,
-		csrf.Secure(secure),
-		csrf.Path(csrfCookiePath),
-	)
+// CSRF returns middleware that rejects cross-origin state-changing requests.
+//
+// It uses filippo.io/csrf/gorilla, a drop-in replacement for gorilla/csrf that
+// checks Sec-Fetch-Site and Origin headers instead of tokens (GHSA-82ff-hg59-8x73).
+func CSRF() func(http.Handler) http.Handler {
+	return csrf.Protect(nil)
 }

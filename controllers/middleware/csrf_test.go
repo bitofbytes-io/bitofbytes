@@ -4,43 +4,46 @@ import (
 	"net/http"
 	"net/http/httptest"
 	"testing"
-
-	"github.com/gorilla/csrf"
 )
 
 func TestCSRF(t *testing.T) {
 	t.Parallel()
 
-	key := []byte("01234567890123456789012345678901")
-
-	handler := CSRF(key, true)(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
-		if token := csrf.Token(r); token == "" {
-			t.Fatal("expected CSRF token to be present on the request context")
-		}
+	handler := CSRF()(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		w.WriteHeader(http.StatusOK)
 	}))
 
-	req := httptest.NewRequest(http.MethodGet, "/", nil)
-	rr := httptest.NewRecorder()
-
-	handler.ServeHTTP(rr, req)
-
-	var csrfCookie *http.Cookie
-	for _, c := range rr.Result().Cookies() {
-		if c.Name == "_gorilla_csrf" {
-			csrfCookie = c
-			break
-		}
+	tests := []struct {
+		name         string
+		method       string
+		secFetchSite string
+		origin       string
+		want         int
+	}{
+		{"same-origin POST allowed", http.MethodPost, "same-origin", "", http.StatusOK},
+		{"cross-site POST blocked", http.MethodPost, "cross-site", "", http.StatusForbidden},
+		{"mismatched origin POST blocked", http.MethodPost, "", "https://attacker.example", http.StatusForbidden},
+		// Non-browser clients send neither header; Origin-less requests are allowed.
+		{"headerless POST allowed", http.MethodPost, "", "", http.StatusOK},
+		{"cross-site GET allowed", http.MethodGet, "cross-site", "", http.StatusOK},
 	}
 
-	if csrfCookie == nil {
-		t.Fatalf("expected CSRF cookie to be set")
-	}
+	for _, tc := range tests {
+		t.Run(tc.name, func(t *testing.T) {
+			req := httptest.NewRequest(tc.method, "https://bitofbytes.io/contact", nil)
+			if tc.secFetchSite != "" {
+				req.Header.Set("Sec-Fetch-Site", tc.secFetchSite)
+			}
+			if tc.origin != "" {
+				req.Header.Set("Origin", tc.origin)
+			}
 
-	if !csrfCookie.Secure {
-		t.Errorf("expected CSRF cookie to be secure")
-	}
+			rr := httptest.NewRecorder()
+			handler.ServeHTTP(rr, req)
 
-	if csrfCookie.Path != "/" {
-		t.Errorf("expected CSRF cookie path to be '/', got %q", csrfCookie.Path)
+			if rr.Code != tc.want {
+				t.Errorf("got status %d, want %d", rr.Code, tc.want)
+			}
+		})
 	}
 }

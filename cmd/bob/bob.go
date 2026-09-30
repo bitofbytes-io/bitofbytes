@@ -92,7 +92,7 @@ func newHandlerWithStaticDir(cfg models.Config, logger *slog.Logger, staticDir s
 	r.Handle("GET /static/", http.StripPrefix("/static/", staticHandler))
 
 	var handler http.Handler = r
-	handler = middleware.CSRF(cfg.CSRF.Key, cfg.CSRF.Secure)(handler)
+	handler = middleware.CSRF()(handler)
 	handler = middleware.SecureHeaders(cfg.CSRF.Secure)(handler)
 	handler = middleware.RequestLogger(logger)(handler)
 

@@ -5,7 +5,6 @@ BitOfBytes is the Go web application behind the BitOfBytes portfolio. It renders
 ## Requirements
 
 - Docker 24+
-- OpenSSL or another secure random generator for the CSRF key
 
 ## Build the image
 
@@ -17,17 +16,10 @@ docker build -f Docker/Dockerfile -t bitofbytes:local .
 
 ## Configure the application
 
-Generate a Base64-encoded 32-byte CSRF key:
-
-```bash
-openssl rand -base64 32
-```
-
-Create the ignored `.env` file and paste the generated value:
+Create the ignored `.env` file:
 
 ```dotenv
 SERVER_ADDRESS=:3000
-CSRF_KEY=replace-with-generated-value
 CSRF_SECURE=false
 LOG_LEVEL=info
 LOG_FORMAT=text
@@ -38,13 +30,9 @@ Do not commit this file.
 | Setting | Required | Purpose |
 | --- | --- | --- |
 | `SERVER_ADDRESS` | Yes | Listen address inside the container; use `:3000` |
-| `CSRF_KEY` | One of | Base64 value that decodes to exactly 32 bytes |
 | `CSRF_SECURE` | Yes | Set `false` for local HTTP and `true` behind production HTTPS |
-| `CSRF_KEY_FILE` | One of | Read the CSRF key from a mounted file instead of `CSRF_KEY` |
 | `LOG_LEVEL` | No | `debug`, `info`, `warn`, or `error` |
 | `LOG_FORMAT` | No | `text` or `json`; defaults to `text` |
-
-The container defaults `CSRF_KEY_FILE` to `/run/secrets/csrf_key`, so a secret mount can be used instead of an environment value.
 
 ## Run with Docker
 
@@ -57,15 +45,15 @@ docker run --rm --name bitofbytes \
 
 Open <http://localhost:3000>. The health endpoint is <http://localhost:3000/healthz>.
 
-For production, terminate TLS at a reverse proxy, set `CSRF_SECURE=true`, and provide the CSRF key through your deployment platform's secret manager.
+For production, terminate TLS at a reverse proxy, and set `CSRF_SECURE=true`.
 
 ## Development
 
-Copy the template configuration and generate a local key:
+Copy the template configuration:
 
 ```bash
 cp .env.template .env
-# Set SERVER_ADDRESS=:3000, CSRF_SECURE=false, and CSRF_KEY to the generated value.
+# Set SERVER_ADDRESS=:3000 and CSRF_SECURE=false.
 go run ./cmd/bob
 ```
 
