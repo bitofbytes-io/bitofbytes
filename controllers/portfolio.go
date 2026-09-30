@@ -3,7 +3,10 @@ package controllers
 import (
 	"net/http"
 	"slices"
+	"strconv"
 	"time"
+	"unicode"
+	"unicode/utf8"
 
 	"github.com/DryWaters/bitofbytes/models"
 	"github.com/DryWaters/bitofbytes/views"
@@ -41,12 +44,21 @@ type BlackKey struct {
 }
 
 type HomeData struct {
-	Updates     []ProjectView
-	Keys        []OctaveKey
-	BlackKeys   []BlackKey
+	// Featured is the most recently updated project with a screenshot, other
+	// than this site itself; HasFeatured is false when there is none.
+	Featured    ProjectView
+	HasFeatured bool
+	// Updates are the next most recently updated projects after Featured.
+	Updates   []ProjectView
+	Keys      []OctaveKey
+	BlackKeys []BlackKey
+	// KeyCount is the number of keys as a capitalized word ("Eight").
 	KeyCount    string
 	RecentCount int
-	Activities  models.Activities
+	// RecentLabel is RecentCount with its noun ("1 update", "6 updates").
+	RecentLabel string
+	// Activities are the "now" lines, first letter capitalized for display.
+	Activities models.Activities
 }
 
 type ProjectsIndexData struct {
@@ -59,10 +71,13 @@ type ProjectDetailData struct {
 }
 
 const (
-	homeUpdateCount = 4
-	octaveSize      = 8
-	sortUpdated     = "updated"
-	sortNewest      = "newest"
+	homeUpdateCount = 3
+	// siteSlug is this site's own project; Home never features a screenshot
+	// of itself.
+	siteSlug    = "bitofbytes"
+	octaveSize  = 8
+	sortUpdated = "updated"
+	sortNewest  = "newest"
 )
 
 var (
@@ -99,14 +114,61 @@ func (p Portfolio) Home(w http.ResponseWriter, r *http.Request) {
 		}
 	}
 
+	featured, hasFeatured, updates := latestUpdates(byUpdate)
+
 	p.Templates.Home.Execute(w, r, HomeData{
-		Updates:     byUpdate[:min(len(byUpdate), homeUpdateCount)],
+		Featured:    featured,
+		HasFeatured: hasFeatured,
+		Updates:     updates,
 		Keys:        keys,
 		BlackKeys:   black,
 		KeyCount:    countWords[len(keys)],
 		RecentCount: recent,
-		Activities:  p.Activities,
+		RecentLabel: pluralize(recent, "update", "updates"),
+		Activities: models.Activities{
+			Building:   capitalize(p.Activities.Building),
+			Practicing: capitalize(p.Activities.Practicing),
+			Playing:    capitalize(p.Activities.Playing),
+		},
 	})
+}
+
+// latestUpdates splits projects, most recently updated first, into the
+// featured project (the newest one with a screenshot that is not this site)
+// and the ledger of the next homeUpdateCount projects after it.
+func latestUpdates(byUpdate []ProjectView) (featured ProjectView, ok bool, ledger []ProjectView) {
+	for _, project := range byUpdate {
+		if project.Slug != siteSlug && project.Thumbnail().Path != "" {
+			featured, ok = project, true
+			break
+		}
+	}
+	for _, project := range byUpdate {
+		if len(ledger) == homeUpdateCount {
+			break
+		}
+		if ok && project.Slug == featured.Slug {
+			continue
+		}
+		ledger = append(ledger, project)
+	}
+	return featured, ok, ledger
+}
+
+func pluralize(n int, one, many string) string {
+	if n == 1 {
+		return "1 " + one
+	}
+	return strconv.Itoa(n) + " " + many
+}
+
+// capitalize upper-cases the first letter of s.
+func capitalize(s string) string {
+	r, size := utf8.DecodeRuneInString(s)
+	if size == 0 {
+		return s
+	}
+	return string(unicode.ToUpper(r)) + s[size:]
 }
 
 func (p Portfolio) ProjectsIndex(w http.ResponseWriter, r *http.Request) {

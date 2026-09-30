@@ -16,8 +16,8 @@
   --ink-faint: #8193B2;
   --accent: #7EA6FF;
   --on-accent: #0A1224;
-  --key-lit: #DCE6FF;
-  --key-lit-pressed: #B9CCFF;
+  --key-lit: #D3DFFF;
+  --key-lit-pressed: #B3C7FF;
   --key-idle: #F2F4F9;
   --key-idle-pressed: #DDE3EE;
   --key-idle-edge: #C8D0DF;
@@ -51,8 +51,8 @@
   --content-width: 1120px;
   --control-height: 52px;
   --control-height-sm: 44px;
-  --key-height: 280px;
-  --key-black-height: 160px;
+  --key-height: 220px;
+  --key-black-height: 126px;
   --key-black-width: 70px;
   --key-row-height: 60px;
   --thumb-width: 240px;

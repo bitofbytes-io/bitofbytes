@@ -208,10 +208,67 @@ func TestHomeKeyboardOrdersByStartAndLightsRecentWork(t *testing.T) {
 
 	want := "[site C4 lit][dined D4 lit][noted E4][carma F4]" +
 		"|12" +
-		"|site dined carma noted " +
+		"|site dined carma " +
 		"|Four 2"
 	if got := rr.Body.String(); got != want {
 		t.Fatalf("home data =\n%q\nwant\n%q", got, want)
+	}
+}
+
+func TestHomeFeaturesNewestScreenshotOtherThanThisSite(t *testing.T) {
+	t.Parallel()
+	shot := []models.ProjectScreenshot{{Path: "/static/shot.png", Alt: "A screenshot"}}
+	projects := []models.Project{
+		{Slug: "bitofbytes", FirstCommitDate: "2024-06-29", LastUpdate: "September 24, 2026", Screenshots: shot},
+		{Slug: "bare", FirstCommitDate: "2026-08-01", LastUpdate: "September 20, 2026"},
+		{Slug: "dined", FirstCommitDate: "2026-05-10", LastUpdate: "September 6, 2026", Screenshots: shot},
+		{Slug: "noted", FirstCommitDate: "2026-07-13", LastUpdate: "July 26, 2026", Screenshots: shot},
+		{Slug: "carma", FirstCommitDate: "2026-07-31", LastUpdate: "July 3, 2026", Screenshots: shot},
+	}
+	fsys := fstest.MapFS{"home/index.tmpl": {Data: []byte(
+		`{{ if .HasFeatured }}{{ .Featured.Slug }}{{ end }}|{{ range .Updates }}{{ .Slug }} {{ end }}|{{ .RecentLabel }}`)}}
+	portfolio := Portfolio{
+		Projects:  projects,
+		Templates: PortfolioTemplates{Home: views.Must(views.ParseFS(fsys, "home/index.tmpl"))},
+		Now:       fixedNow,
+	}
+
+	rr := httptest.NewRecorder()
+	portfolio.Home(rr, httptest.NewRequest(http.MethodGet, "/", nil))
+	// bitofbytes is skipped as the feature but stays in the ledger; bare has
+	// no screenshot; the ledger leaves out the featured dined.
+	if got, want := rr.Body.String(), "dined|bitofbytes bare noted |3 updates"; got != want {
+		t.Fatalf("home data = %q, want %q", got, want)
+	}
+
+	portfolio.Projects = projects[:2]
+	rr = httptest.NewRecorder()
+	portfolio.Home(rr, httptest.NewRequest(http.MethodGet, "/", nil))
+	if got, want := rr.Body.String(), "|bitofbytes bare |2 updates"; got != want {
+		t.Fatalf("home data without a feature = %q, want %q", got, want)
+	}
+
+	portfolio.Projects = projects[4:]
+	rr = httptest.NewRecorder()
+	portfolio.Home(rr, httptest.NewRequest(http.MethodGet, "/", nil))
+	if got, want := rr.Body.String(), "carma||0 updates"; got != want {
+		t.Fatalf("home data with only a feature = %q, want %q", got, want)
+	}
+}
+
+func TestHomeCapitalizesActivitiesForDisplay(t *testing.T) {
+	t.Parallel()
+	fsys := fstest.MapFS{"home/index.tmpl": {Data: []byte(
+		`{{ .Activities.Building }}|{{ .Activities.Practicing }}|{{ .Activities.Playing }}`)}}
+	portfolio := Portfolio{
+		Activities: models.Activities{Building: "this redesign", Playing: "éclair quest"},
+		Templates:  PortfolioTemplates{Home: views.Must(views.ParseFS(fsys, "home/index.tmpl"))},
+		Now:        fixedNow,
+	}
+	rr := httptest.NewRecorder()
+	portfolio.Home(rr, httptest.NewRequest(http.MethodGet, "/", nil))
+	if got, want := rr.Body.String(), "This redesign||Éclair quest"; got != want {
+		t.Fatalf("activities = %q, want %q", got, want)
 	}
 }
 
