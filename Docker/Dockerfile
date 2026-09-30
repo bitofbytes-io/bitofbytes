@@ -35,7 +35,6 @@ LABEL org.opencontainers.image.source="${SOURCE_URL}" \
       org.opencontainers.image.title="bitofbytes" \
       org.opencontainers.image.description="BitOfBytes web application"
 
-ENV CSRF_KEY_FILE=/run/secrets/csrf_key
 ENV SERVER_ADDRESS=:3000
 ENV CSRF_SECURE=true
 ENV LOG_LEVEL=${LOG_LEVEL}

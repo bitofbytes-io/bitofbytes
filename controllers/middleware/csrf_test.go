@@ -9,8 +9,7 @@ import (
 func TestCSRF(t *testing.T) {
 	t.Parallel()
 
-	key := []byte("01234567890123456789012345678901")
-	handler := CSRF(key, true)(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+	handler := CSRF()(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		w.WriteHeader(http.StatusOK)
 	}))
 
@@ -24,6 +23,8 @@ func TestCSRF(t *testing.T) {
 		{"same-origin POST allowed", http.MethodPost, "same-origin", "", http.StatusOK},
 		{"cross-site POST blocked", http.MethodPost, "cross-site", "", http.StatusForbidden},
 		{"mismatched origin POST blocked", http.MethodPost, "", "https://attacker.example", http.StatusForbidden},
+		// Non-browser clients send neither header; Origin-less requests are allowed.
+		{"headerless POST allowed", http.MethodPost, "", "", http.StatusOK},
 		{"cross-site GET allowed", http.MethodGet, "cross-site", "", http.StatusOK},
 	}
 

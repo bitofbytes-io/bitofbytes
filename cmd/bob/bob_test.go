@@ -14,7 +14,6 @@ import (
 
 func newTestHandler() http.Handler {
 	var cfg models.Config
-	cfg.CSRF.Key = []byte("01234567890123456789012345678901")
 	cfg.CSRF.Secure = false
 
 	logger := slog.New(slog.NewTextHandler(io.Discard, nil))

@@ -1,7 +1,6 @@
 package models
 
 import (
-	"encoding/base64"
 	"errors"
 	"fmt"
 	"log/slog"
@@ -14,7 +13,6 @@ import (
 
 type Config struct {
 	CSRF struct {
-		Key    []byte
 		Secure bool
 	}
 	Server struct {
@@ -60,39 +58,6 @@ func LoadEnvConfig() (Config, error) {
 		return cfg, fmt.Errorf("load config: CSRF secure: %w", err)
 	}
 	cfg.CSRF.Secure = secure
-
-	csrfKey := strings.TrimSpace(os.Getenv("CSRF_KEY"))
-	if csrfKey == "" {
-		keyPath := os.Getenv("CSRF_KEY_FILE")
-		if keyPath == "" {
-			keyPath = "/run/secrets/csrf_key"
-		}
-
-		keyData, err := os.ReadFile(keyPath)
-		if err != nil {
-			if errors.Is(err, os.ErrNotExist) {
-				return cfg, fmt.Errorf("load config: CSRF key file %q: %w", keyPath, err)
-			}
-			return cfg, fmt.Errorf("load config: read CSRF key file %q: %w", keyPath, err)
-		}
-
-		csrfKey = strings.TrimSpace(string(keyData))
-	}
-
-	if csrfKey == "" {
-		return cfg, errors.New("load config: CSRF key is empty")
-	}
-
-	decodedKey, err := base64.StdEncoding.DecodeString(csrfKey)
-	if err != nil {
-		return cfg, fmt.Errorf("load config: decode CSRF key: %w", err)
-	}
-
-	if keyLen := len(decodedKey); keyLen != 32 {
-		return cfg, fmt.Errorf("load config: CSRF key must decode to 32 bytes, got %d", keyLen)
-	}
-
-	cfg.CSRF.Key = decodedKey
 
 	if err := loadLoggingConfig(&cfg); err != nil {
 		return cfg, err
