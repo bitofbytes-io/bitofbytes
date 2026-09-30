@@ -5,7 +5,7 @@ The Home page's "Latest updates" section: one Featured update with a live screen
 ## What the consumer provides
 
 - **Featured update**: the most recently updated project that has a screenshot and is not this site itself (the home page never features a screenshot of itself). Its thumbnail path and alt text, name, short date ("Sep 6"), tagline and latest note.
-- **Update ledger**: the next three projects by `LastUpdate`, newest first, leaving out the featured one. BitOfBytes still appears here.
+- **Update ledger**: the three newest projects by `LastUpdate` other than the featured one, newest first. A project newer than the featured one (BitOfBytes, usually) still appears here.
 - The recent count for the eyebrow: projects whose `LastUpdate` is within the rolling 30-day `RecentWindow`, not the calendar month. "1 update" or "N updates"; omit the count when zero.
 - Notes are the project's `Notes` with the "Most recent work…" lead-in removed (`LatestNote`).
 

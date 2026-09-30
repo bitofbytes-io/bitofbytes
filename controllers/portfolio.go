@@ -48,7 +48,8 @@ type HomeData struct {
 	// than this site itself; HasFeatured is false when there is none.
 	Featured    ProjectView
 	HasFeatured bool
-	// Updates are the next most recently updated projects after Featured.
+	// Updates are the most recently updated projects other than Featured,
+	// newest first; they may be newer than Featured.
 	Updates   []ProjectView
 	Keys      []OctaveKey
 	BlackKeys []BlackKey
@@ -135,7 +136,8 @@ func (p Portfolio) Home(w http.ResponseWriter, r *http.Request) {
 
 // latestUpdates splits projects, most recently updated first, into the
 // featured project (the newest one with a screenshot that is not this site)
-// and the ledger of the next homeUpdateCount projects after it.
+// and the ledger: the homeUpdateCount newest projects other than the featured
+// one, so a project newer than Featured (such as this site) still appears.
 func latestUpdates(byUpdate []ProjectView) (featured ProjectView, ok bool, ledger []ProjectView) {
 	for _, project := range byUpdate {
 		if project.Slug != siteSlug && project.Thumbnail().Path != "" {
