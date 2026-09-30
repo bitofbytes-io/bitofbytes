@@ -88,11 +88,6 @@ func newHandlerWithStaticDir(cfg models.Config, logger *slog.Logger, staticDir s
 	r.HandleFunc("GET /apple-touch-icon.png", serveStaticFile(staticDir, "apple-touch-icon.png"))
 	r.HandleFunc("GET /apple-touch-icon-precomposed.png", serveStaticFile(staticDir, "apple-touch-icon.png"))
 
-	// The resume used to carry a year in its filename; keep the old link working.
-	r.HandleFunc("GET /static/daniel-resume-2024.pdf", func(w http.ResponseWriter, r *http.Request) {
-		http.Redirect(w, r, "/static/daniel-waters-resume.pdf", http.StatusMovedPermanently)
-	})
-
 	staticHandler := http.FileServer(http.Dir(staticDir))
 	r.Handle("GET /static/", http.StripPrefix("/static/", staticHandler))
 
