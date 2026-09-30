@@ -1,7 +1,7 @@
 # Agent Guidance
 
 - Edit `tailwind/styles.css`, not generated `static/styles.css`; rebuild it before validating production output.
-- Preserve CSRF protection for state-changing routes and include the CSRF template field in new forms.
+- Preserve CSRF protection: state-changing routes must use POST, PUT, PATCH, or DELETE (never GET) so the `middleware.CSRF` cross-origin check covers them; forms need no token field.
 - Keep portfolio content in `models/project.go` and follow the existing embedded-template pattern for new pages.
 - After configuring the ignored `.env`, use `go run ./cmd/bob` for a one-shot local server or `make local` for live reload with Tailwind watch and `air`.
 - Build production CSS with `make tail-prod`; the Dockerfile also builds Tailwind during image creation.

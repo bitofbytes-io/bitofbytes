@@ -10,8 +10,6 @@ import (
 	"net/http"
 	"path"
 	"strings"
-
-	csrf "filippo.io/csrf/gorilla"
 )
 
 type Page struct {
@@ -27,9 +25,6 @@ func (p Page) Execute(w http.ResponseWriter, r *http.Request, data any) {
 		return
 	}
 	tpl.Funcs(template.FuncMap{
-		"csrfField": func() template.HTML {
-			return csrf.TemplateField(r)
-		},
 		"category": func() string {
 			return p.category
 		},
@@ -58,9 +53,6 @@ func ParseFS(fs fs.FS, patterns ...string) (Page, error) {
 	category, _, _ := strings.Cut(patterns[0], "/")
 	tpl, err := template.New(path.Base(patterns[0])).Funcs(
 		template.FuncMap{
-			"csrfField": func() (template.HTML, error) {
-				return "", fmt.Errorf("csrfField not implemented")
-			},
 			"category": func() string {
 				return ""
 			},

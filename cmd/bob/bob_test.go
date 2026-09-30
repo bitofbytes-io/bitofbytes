@@ -54,6 +54,22 @@ func TestRoutesRenderCurrentSiteSurface(t *testing.T) {
 	}
 }
 
+func TestHandlerRejectsCrossSitePost(t *testing.T) {
+	t.Parallel()
+
+	handler := newTestHandler()
+
+	req := httptest.NewRequest(http.MethodPost, "/", nil)
+	req.Header.Set("Sec-Fetch-Site", "cross-site")
+	rr := httptest.NewRecorder()
+
+	handler.ServeHTTP(rr, req)
+
+	if rr.Code != http.StatusForbidden {
+		t.Fatalf("cross-site POST status code = %d, want %d", rr.Code, http.StatusForbidden)
+	}
+}
+
 func TestProjectDetailTimelinesShowUpdatesWithoutFirstCommit(t *testing.T) {
 	t.Parallel()
 
