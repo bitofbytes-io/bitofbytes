@@ -8,3 +8,4 @@
 - Run `go test ./...` for changes and verify rendered routes when templates, middleware, or static assets change.
 - The UI follows the Nocturne design system in `docs/design/nocturne/`: read its `README.md` before changing templates or styles. For visual changes, update `tokens.json` or `components/bundle.css` there first, keep `tokens.css` in sync with token edits, mirror the result into `tailwind/styles.css`, and run `make tail-prod`. Keep `static/nocturne.js` in sync with `components/bundle.js`.
 - Site copy never uses em dashes.
+- Project screenshots under `static/projects/<slug>/` are WebP (quality 90); desktop captures are a 1280 by 900 viewport, not full page, and device captures keep their native size. The `Path` in `models/project.go` points at the `.webp`. Encode new captures with Chromium's canvas encoder (Playwright) or `cwebp -q 90`; do not add PNG screenshots.

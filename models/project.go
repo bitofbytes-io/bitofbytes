@@ -71,13 +71,13 @@ func Projects() []Project {
 			Screenshots: []ProjectScreenshot{
 				{
 					Title: "Local garage dashboard",
-					Path:  "/static/projects/carma/local-garage-dashboard.png",
+					Path:  "/static/projects/carma/local-garage-dashboard.webp",
 					Alt:   "Carma local garage dashboard with a sample Ranger and an overdue oil-change reminder.",
 					Note:  "Captured from a local Carma preview using clearly labelled sample data.",
 				},
 				{
 					Title: "Local reminder settings",
-					Path:  "/static/projects/carma/local-reminders.png",
+					Path:  "/static/projects/carma/local-reminders.webp",
 					Alt:   "Carma local reminder settings for a sample Ranger, showing an overdue oil-change interval.",
 					Note:  "Captured from a local Carma preview using clearly labelled sample data.",
 				},
@@ -119,13 +119,13 @@ func Projects() []Project {
 			Screenshots: []ProjectScreenshot{
 				{
 					Title: "Local binder library",
-					Path:  "/static/projects/noted/local-library.png",
+					Path:  "/static/projects/noted/local-library.webp",
 					Alt:   "Noted local library preview with a searchable score entry and a composer name.",
 					Note:  "Captured from a local Noted preview with a rights-safe sample score.",
 				},
 				{
 					Title: "Local iPad reader",
-					Path:  "/static/projects/noted/local-reader-ipad.png",
+					Path:  "/static/projects/noted/local-reader-ipad.webp",
 					Alt:   "Noted local iPad-sized reader showing a score page and page-reading controls.",
 					Note:  "Captured from a local Noted preview with a rights-safe sample score.",
 				},
@@ -166,13 +166,13 @@ func Projects() []Project {
 			Screenshots: []ProjectScreenshot{
 				{
 					Title: "Booth home",
-					Path:  "/static/projects/dined/booth-home.png",
+					Path:  "/static/projects/dined/booth-home.webp",
 					Alt:   "Dined home screen with a retro diner booth scene and recent dine cards.",
 					Note:  "Captured from the local Dined memory preview.",
 				},
 				{
 					Title: "Trophy case",
-					Path:  "/static/projects/dined/trophy-case.png",
+					Path:  "/static/projects/dined/trophy-case.webp",
 					Alt:   "Dined trophy case screen with record-style stats, a dining map, and top restaurant rankings.",
 					Note:  "Captured from the live Dined trophy case.",
 				},
@@ -213,13 +213,13 @@ func Projects() []Project {
 			Screenshots: []ProjectScreenshot{
 				{
 					Title: "Local dashboard",
-					Path:  "/static/projects/permitpal/dashboard.png",
+					Path:  "/static/projects/permitpal/dashboard.webp",
 					Alt:   "PermitPal local dashboard with progress meters and a skill mastery checklist.",
 					Note:  "Captured from the local PermitPal preview at localhost:4600.",
 				},
 				{
 					Title: "Mobile dashboard",
-					Path:  "/static/projects/permitpal/dashboard-mobile.png",
+					Path:  "/static/projects/permitpal/dashboard-mobile.webp",
 					Alt:   "PermitPal dashboard captured at a mobile viewport.",
 					Note:  "Captured from the local in-memory workflow.",
 				},
@@ -260,13 +260,13 @@ func Projects() []Project {
 			Screenshots: []ProjectScreenshot{
 				{
 					Title: "Resource journal",
-					Path:  "/static/projects/learnd/dashboard.png",
+					Path:  "/static/projects/learnd/dashboard.webp",
 					Alt:   "Learn'd resource journal with a capture form and recent learning entries.",
 					Note:  "Captured from the authenticated Learn'd live site.",
 				},
 				{
 					Title: "Mobile capture",
-					Path:  "/static/projects/learnd/mobile.png",
+					Path:  "/static/projects/learnd/mobile.webp",
 					Alt:   "Learn'd mobile view showing the resource capture form and recent entries.",
 					Note:  "Captured from the authenticated mobile workflow.",
 				},
@@ -306,15 +306,15 @@ func Projects() []Project {
 			Screenshots: []ProjectScreenshot{
 				{
 					Title: "Movie collection",
-					Path:  "/static/projects/dejaview/movie-collection-posters.png",
-					Alt:   "DejaView public movie collection screen grouped by family movie night lists.",
+					Path:  "/static/projects/dejaview/movie-collection-posters.webp",
+					Alt:   "DejaView public movie collection in the Late Show design, posters grouped by family movie night lists.",
 					Note:  "Captured from the public DejaView site.",
 				},
 				{
 					Title: "Stats view",
-					Path:  "/static/projects/dejaview/stats.png",
-					Alt:   "DejaView authenticated stats page with family movie-night awards and pick metrics.",
-					Note:  "Captured from the authenticated DejaView stats view.",
+					Path:  "/static/projects/dejaview/stats.webp",
+					Alt:   "DejaView authenticated Trophy Room with family movie-night totals, the next movie night bonus and awards.",
+					Note:  "Captured from the authenticated DejaView Trophy Room.",
 				},
 			},
 		},
@@ -351,15 +351,15 @@ func Projects() []Project {
 			Screenshots: []ProjectScreenshot{
 				{
 					Title: "Home page",
-					Path:  "/static/projects/bitofbytes/home.png",
-					Alt:   "The BitOfBytes home page in the Nocturne design, with the latest updates card beside Daniel's name.",
-					Note:  "Captured from the local Nocturne build.",
+					Path:  "/static/projects/bitofbytes/home.webp",
+					Alt:   "The BitOfBytes home page in the Nocturne design, with the statement hero above the playable piano octave.",
+					Note:  "Captured from the live site.",
 				},
 				{
 					Title: "Project index",
-					Path:  "/static/projects/bitofbytes/projects.png",
+					Path:  "/static/projects/bitofbytes/projects.webp",
 					Alt:   "The BitOfBytes projects index in the Nocturne design, sorted by most recent update.",
-					Note:  "Captured from the local Nocturne build.",
+					Note:  "Captured from the live site.",
 				},
 			},
 		},
@@ -400,13 +400,13 @@ func Projects() []Project {
 			Screenshots: []ProjectScreenshot{
 				{
 					Title: "Catalogue dashboard",
-					Path:  "/static/projects/anthology/catalogue.png",
+					Path:  "/static/projects/anthology/catalogue.webp",
 					Alt:   "Anthology catalogue table with filters and media items.",
 					Note:  "Captured from the authenticated Anthology live site.",
 				},
 				{
 					Title: "Shelves workflow",
-					Path:  "/static/projects/anthology/shelves.png",
+					Path:  "/static/projects/anthology/shelves.webp",
 					Alt:   "Anthology shelves screen showing storage locations and item counts.",
 					Note:  "Captured from the authenticated shelves workflow.",
 				},

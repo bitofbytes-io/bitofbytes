@@ -99,6 +99,23 @@ func TestRemovedRoutesReturnNotFound(t *testing.T) {
 	}
 }
 
+func TestProjectScreenshotsServeAsWebP(t *testing.T) {
+	t.Parallel()
+
+	handler := newTestHandler()
+	req := httptest.NewRequest(http.MethodGet, "/static/projects/dined/booth-home.webp", nil)
+	rr := httptest.NewRecorder()
+
+	handler.ServeHTTP(rr, req)
+
+	if rr.Code != http.StatusOK {
+		t.Fatalf("status code = %d, want %d", rr.Code, http.StatusOK)
+	}
+	if got := rr.Header().Get("Content-Type"); !strings.HasPrefix(got, "image/webp") {
+		t.Fatalf("Content-Type = %q, want image/webp", got)
+	}
+}
+
 func TestOldResumePathRedirects(t *testing.T) {
 	t.Parallel()
 
