@@ -28,7 +28,7 @@ The signature component: the Home page's project index drawn as one octave of a 
 - White keys are real links (`<a>`), so the keyboard is a working, keyboard-focusable project index without JavaScript.
 - Set `--keys` on `.nc-octave` to the number of white keys rendered (the site writes `len .Keys`); widths, black-key positions and the phone height follow it.
 - Black keys are purely decorative: `aria-hidden`, no link, no focus, no sound, and `pointer-events: none`, so hovering one plays the white key underneath. Every sound on the keyboard is therefore reachable by keyboard too. `--pos` is the white-key boundary they sit on (1, 2, 4, 5, 6); there is none between E and F or after B, and the site omits any whose boundary is past the last key.
-- Load `bundle.js` (deferred). It attaches to every `[data-nc-octave]`: pointer-enter adds `is-pressed` and plays the key's `data-note`, pointer-leave releases it. Tabbing onto a white key (keyboard focus, `:focus-visible` only) plays it too. A first touch that arrives before audio is unlocked plays on pointer-down or pointer-up instead of staying silent.
+- Load `static/nocturne.js` (deferred). It attaches to every `[data-nc-octave]`: pointer-enter adds `is-pressed` and plays the key's `data-note`, pointer-leave releases it. Tabbing onto a white key (keyboard focus, `:focus-visible` only) plays it too. A first touch that arrives before audio is unlocked plays on pointer-down or pointer-up instead of staying silent.
 
 ## Caption and legend
 
@@ -52,7 +52,7 @@ Under the keys, one row (`nc-octave__caption`): the legend on the left, the Soun
 ```
 
 - The legend is 15px `ink-subtle` (14px on phone). Each swatch is a 14px miniature key: `key-lit` with a 3px `accent` bottom edge, or `key-idle` with a `key-idle-edge` edge. On phone the edge moves to the left, like the sideways keys.
-- `bundle.js` only rewrites the `[data-nc-sound-label]` text, so the "Hover to play ·" prefix sits outside it. The extra wrapping span keeps the prefix and the label together inside the button's flex gap.
+- `static/nocturne.js` only rewrites the `[data-nc-sound-label]` text, so the "Hover to play ·" prefix sits outside it. The extra wrapping span keeps the prefix and the label together inside the button's flex gap.
 
 ## Look
 
