@@ -18,8 +18,10 @@ func newTestHandler() http.Handler {
 
 	logger := slog.New(slog.NewTextHandler(io.Discard, nil))
 
-	return newHandler(cfg, logger, "../../static")
+	return newHandler(cfg, logger, "../../static", testAssetVersion)
 }
+
+const testAssetVersion = "testrev"
 
 func TestRoutesRenderCurrentSiteSurface(t *testing.T) {
 	t.Parallel()
@@ -225,7 +227,7 @@ func TestHomepageKeyboardAndContact(t *testing.T) {
 	}
 	body := html.UnescapeString(rr.Body.String())
 	for _, want := range []string{
-		`src="/static/nocturne.js"`,
+		`src="/static/nocturne.js?v=` + testAssetVersion + `"`,
 		`data-nc-octave`,
 		`data-nc-sound aria-pressed="true"`,
 		`id="contact"`,

@@ -14,11 +14,11 @@ func TestParseFSReturnsPageWithCategory(t *testing.T) {
 
 	fsys := fstest.MapFS{
 		"blog/index.tmpl": {
-			Data: []byte("Category: {{category}}"),
+			Data: []byte("Category: {{category}} Version: {{assetVersion}}"),
 		},
 	}
 
-	page, err := ParseFS(fsys, "blog/index.tmpl")
+	page, err := ParseFS("abc123", fsys, "blog/index.tmpl")
 	if err != nil {
 		t.Fatalf("ParseFS returned unexpected error: %v", err)
 	}
@@ -37,8 +37,8 @@ func TestParseFSReturnsPageWithCategory(t *testing.T) {
 	}
 
 	body := rr.Body.String()
-	if !strings.Contains(body, "Category: blog") {
-		t.Fatalf("Execute rendered %q, want to contain %q", body, "Category: blog")
+	if want := "Category: blog Version: abc123"; body != want {
+		t.Fatalf("Execute rendered %q, want %q", body, want)
 	}
 }
 
@@ -51,8 +51,11 @@ func TestParseFSReturnsErrorOnInvalidTemplate(t *testing.T) {
 		},
 	}
 
-	if _, err := ParseFS(fsys, "blog/index.tmpl"); err == nil {
+	if _, err := ParseFS("", fsys, "blog/index.tmpl"); err == nil {
 		t.Fatalf("ParseFS expected to return an error for invalid template")
+	}
+	if _, err := ParseFS("", fsys); err == nil {
+		t.Fatalf("ParseFS expected to return an error without patterns")
 	}
 }
 
@@ -60,7 +63,7 @@ func TestPageExecuteHandlesTemplateErrors(t *testing.T) {
 	t.Parallel()
 
 	tpl := template.Must(template.New("index.tmpl").Option("missingkey=error").Parse("Value: {{.Value}}"))
-	page := Page{category: "blog", htmlTpl: tpl}
+	page := Page{htmlTpl: tpl}
 
 	req := httptest.NewRequest(http.MethodGet, "/", nil)
 	rr := httptest.NewRecorder()

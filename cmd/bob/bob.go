@@ -7,6 +7,7 @@ import (
 	"os"
 	"os/signal"
 	"path/filepath"
+	"strconv"
 	"syscall"
 	"time"
 
@@ -56,7 +57,7 @@ func run(cfg models.Config, logger *slog.Logger) error {
 
 	server := &http.Server{
 		Addr:              cfg.Server.Address,
-		Handler:           newHandler(cfg, logger, "static"),
+		Handler:           newHandler(cfg, logger, "static", assetVersion()),
 		ReadTimeout:       5 * time.Second,
 		ReadHeaderTimeout: 2 * time.Second,
 		WriteTimeout:      10 * time.Second,
@@ -87,14 +88,24 @@ func serve(ctx context.Context, server *http.Server, logger *slog.Logger) error 
 	return server.Shutdown(shutdownCtx)
 }
 
-func newHandler(cfg models.Config, logger *slog.Logger, staticDir string) http.Handler {
+// assetVersion is the ?v= value on CSS and JS URLs: the git revision in a
+// release build, or the start time in development, where air restarts the
+// server on every change.
+func assetVersion() string {
+	if revision != "unknown" {
+		return revision
+	}
+	return strconv.FormatInt(time.Now().Unix(), 10)
+}
+
+func newHandler(cfg models.Config, logger *slog.Logger, staticDir string, assetVersion string) http.Handler {
 	portfolio := controllers.Portfolio{
 		Projects:   models.Projects(),
 		Activities: models.CurrentActivities(),
 		Templates: controllers.PortfolioTemplates{
-			Home:          views.Must(views.ParseFS(templates.FS, "home/index.gohtml", "base.gohtml")),
-			ProjectsIndex: views.Must(views.ParseFS(templates.FS, "projects/index.gohtml", "base.gohtml")),
-			ProjectDetail: views.Must(views.ParseFS(templates.FS, "projects/detail.gohtml", "base.gohtml")),
+			Home:          views.Must(views.ParseFS(assetVersion, templates.FS, "home/index.gohtml", "base.gohtml")),
+			ProjectsIndex: views.Must(views.ParseFS(assetVersion, templates.FS, "projects/index.gohtml", "base.gohtml")),
+			ProjectDetail: views.Must(views.ParseFS(assetVersion, templates.FS, "projects/detail.gohtml", "base.gohtml")),
 		},
 	}
 
@@ -108,12 +119,12 @@ func newHandler(cfg models.Config, logger *slog.Logger, staticDir string) http.H
 	})
 	// Support browser default icon discovery paths in addition to the template's
 	// explicit /static/... icon links.
-	r.HandleFunc("GET /favicon.ico", serveStaticFile(staticDir, "favicon.ico"))
-	r.HandleFunc("GET /apple-touch-icon.png", serveStaticFile(staticDir, "apple-touch-icon.png"))
-	r.HandleFunc("GET /apple-touch-icon-precomposed.png", serveStaticFile(staticDir, "apple-touch-icon.png"))
+	r.Handle("GET /favicon.ico", cacheStatic(assetVersion, serveStaticFile(staticDir, "favicon.ico")))
+	r.Handle("GET /apple-touch-icon.png", cacheStatic(assetVersion, serveStaticFile(staticDir, "apple-touch-icon.png")))
+	r.Handle("GET /apple-touch-icon-precomposed.png", cacheStatic(assetVersion, serveStaticFile(staticDir, "apple-touch-icon.png")))
 
-	staticHandler := http.FileServer(http.Dir(staticDir))
-	r.Handle("GET /static/", http.StripPrefix("/static/", staticHandler))
+	staticHandler := http.FileServer(noDirFS{http.Dir(staticDir)})
+	r.Handle("GET /static/", cacheStatic(assetVersion, http.StripPrefix("/static/", staticHandler)))
 
 	var handler http.Handler = r
 	handler = middleware.CSRF()(handler)

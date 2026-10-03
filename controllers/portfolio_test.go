@@ -29,15 +29,15 @@ func newTestPortfolio(t *testing.T) Portfolio {
 		},
 	}
 
-	home, err := views.ParseFS(fsys, "home/index.tmpl")
+	home, err := views.ParseFS("", fsys, "home/index.tmpl")
 	if err != nil {
 		t.Fatalf("parse home template: %v", err)
 	}
-	index, err := views.ParseFS(fsys, "projects/index.tmpl")
+	index, err := views.ParseFS("", fsys, "projects/index.tmpl")
 	if err != nil {
 		t.Fatalf("parse index template: %v", err)
 	}
-	detail, err := views.ParseFS(fsys, "projects/detail.tmpl")
+	detail, err := views.ParseFS("", fsys, "projects/detail.tmpl")
 	if err != nil {
 		t.Fatalf("parse detail template: %v", err)
 	}
@@ -140,7 +140,7 @@ func TestPortfolioProjectDetailReturnsNotFoundForUnknownSlug(t *testing.T) {
 
 func TestHomepageEscapesProjectContent(t *testing.T) {
 	t.Parallel()
-	page := views.Must(views.ParseFS(templates.FS, "home/index.gohtml", "base.gohtml"))
+	page := views.Must(views.ParseFS("", templates.FS, "home/index.gohtml", "base.gohtml"))
 	portfolio := Portfolio{
 		Projects: []models.Project{{
 			Slug:            "example",
@@ -186,8 +186,8 @@ func keyboardPortfolio(t *testing.T, projects []models.Project) Portfolio {
 	return Portfolio{
 		Projects: projects,
 		Templates: PortfolioTemplates{
-			Home:          views.Must(views.ParseFS(fsys, "home/index.tmpl")),
-			ProjectsIndex: views.Must(views.ParseFS(fsys, "projects/index.tmpl")),
+			Home:          views.Must(views.ParseFS("", fsys, "home/index.tmpl")),
+			ProjectsIndex: views.Must(views.ParseFS("", fsys, "projects/index.tmpl")),
 		},
 		Now: fixedNow,
 	}
@@ -229,7 +229,7 @@ func TestHomeFeaturesNewestScreenshotOtherThanThisSite(t *testing.T) {
 		`{{ if .HasFeatured }}{{ .Featured.Slug }}{{ end }}|{{ range .Updates }}{{ .Slug }} {{ end }}|{{ .RecentLabel }}`)}}
 	portfolio := Portfolio{
 		Projects:  projects,
-		Templates: PortfolioTemplates{Home: views.Must(views.ParseFS(fsys, "home/index.tmpl"))},
+		Templates: PortfolioTemplates{Home: views.Must(views.ParseFS("", fsys, "home/index.tmpl"))},
 		Now:       fixedNow,
 	}
 
@@ -310,7 +310,7 @@ func TestProjectsIndexNewestFirstIgnoresDeclarationOrder(t *testing.T) {
 
 func TestProjectDetailWithoutScreenshotsUsesSoloHero(t *testing.T) {
 	t.Parallel()
-	page := views.Must(views.ParseFS(templates.FS, "projects/detail.gohtml", "base.gohtml"))
+	page := views.Must(views.ParseFS("", templates.FS, "projects/detail.gohtml", "base.gohtml"))
 	portfolio := Portfolio{
 		Projects: []models.Project{{
 			Slug:            "bare",
