@@ -1,10 +1,13 @@
 package main
 
 import (
+	"context"
 	"log/slog"
 	"net/http"
 	"os"
+	"os/signal"
 	"path/filepath"
+	"syscall"
 	"time"
 
 	"github.com/DryWaters/bitofbytes/controllers"
@@ -43,7 +46,14 @@ func main() {
 	}
 }
 
+// shutdownTimeout bounds how long in-flight requests get to finish on
+// SIGTERM; it stays under Docker's default 10s stop grace period.
+const shutdownTimeout = 5 * time.Second
+
 func run(cfg models.Config, logger *slog.Logger) error {
+	ctx, stop := signal.NotifyContext(context.Background(), os.Interrupt, syscall.SIGTERM)
+	defer stop()
+
 	server := &http.Server{
 		Addr:              cfg.Server.Address,
 		Handler:           newHandler(cfg, logger, "static"),
@@ -56,7 +66,25 @@ func run(cfg models.Config, logger *slog.Logger) error {
 
 	logger.Info("Starting the server", "address", cfg.Server.Address, "version", version, "revision", revision)
 
-	return server.ListenAndServe()
+	return serve(ctx, server, logger)
+}
+
+// serve runs server until it fails or ctx is done, then shuts it down
+// gracefully. A listener that cannot bind returns its error at once.
+func serve(ctx context.Context, server *http.Server, logger *slog.Logger) error {
+	errs := make(chan error, 1)
+	go func() { errs <- server.ListenAndServe() }()
+
+	select {
+	case err := <-errs:
+		return err
+	case <-ctx.Done():
+	}
+
+	logger.Info("Shutting down the server")
+	shutdownCtx, cancel := context.WithTimeout(context.Background(), shutdownTimeout)
+	defer cancel()
+	return server.Shutdown(shutdownCtx)
 }
 
 func newHandler(cfg models.Config, logger *slog.Logger, staticDir string) http.Handler {
