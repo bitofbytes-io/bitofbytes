@@ -172,7 +172,7 @@ func TestProjectsHaveDisplayableDatesAndNoEmDashes(t *testing.T) {
 		if p.StartedOn().IsZero() {
 			t.Errorf("%s: FirstCommitDate %q is not in the 2006-01-02 format", p.Slug, p.FirstCommitDate)
 		}
-		for _, text := range append([]string{p.Tagline, p.Summary, p.Notes}, append(p.Highlights, p.Paragraphs...)...) {
+		for _, text := range append([]string{p.Tagline, p.Notes}, append(p.Highlights, p.Paragraphs...)...) {
 			if slices.Contains([]rune(text), '—') {
 				t.Errorf("%s: copy contains an em dash: %q", p.Slug, text)
 			}

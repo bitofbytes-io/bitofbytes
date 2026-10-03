@@ -46,7 +46,7 @@ func main() {
 func run(cfg models.Config, logger *slog.Logger) error {
 	server := &http.Server{
 		Addr:              cfg.Server.Address,
-		Handler:           newHandler(cfg, logger),
+		Handler:           newHandler(cfg, logger, "static"),
 		ReadTimeout:       5 * time.Second,
 		ReadHeaderTimeout: 2 * time.Second,
 		WriteTimeout:      10 * time.Second,
@@ -59,11 +59,7 @@ func run(cfg models.Config, logger *slog.Logger) error {
 	return server.ListenAndServe()
 }
 
-func newHandler(cfg models.Config, logger *slog.Logger) http.Handler {
-	return newHandlerWithStaticDir(cfg, logger, "static")
-}
-
-func newHandlerWithStaticDir(cfg models.Config, logger *slog.Logger, staticDir string) http.Handler {
+func newHandler(cfg models.Config, logger *slog.Logger, staticDir string) http.Handler {
 	portfolio := controllers.Portfolio{
 		Projects:   models.Projects(),
 		Activities: models.CurrentActivities(),
