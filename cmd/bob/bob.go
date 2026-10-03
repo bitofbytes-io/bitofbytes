@@ -7,7 +7,6 @@ import (
 	"os"
 	"os/signal"
 	"path/filepath"
-	"strconv"
 	"syscall"
 	"time"
 
@@ -89,13 +88,13 @@ func serve(ctx context.Context, server *http.Server, logger *slog.Logger) error 
 }
 
 // assetVersion is the ?v= value on CSS and JS URLs: the git revision in a
-// release build, or the start time in development, where air restarts the
-// server on every change.
+// release build. A development build has none, so its assets are never cached
+// as immutable and edits show up on reload.
 func assetVersion() string {
-	if revision != "unknown" {
-		return revision
+	if revision == "unknown" {
+		return ""
 	}
-	return strconv.FormatInt(time.Now().Unix(), 10)
+	return revision
 }
 
 func newHandler(cfg models.Config, logger *slog.Logger, staticDir string, assetVersion string) http.Handler {

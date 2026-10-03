@@ -1,11 +1,15 @@
 package main
 
 import (
+	"io"
+	"log/slog"
 	"net/http"
 	"net/http/httptest"
 	"regexp"
 	"strings"
 	"testing"
+
+	"github.com/DryWaters/bitofbytes/models"
 )
 
 var staticRef = regexp.MustCompile(`(?:href|src)="(/static/[^"]+)"`)
@@ -80,6 +84,29 @@ func TestStaticCacheControl(t *testing.T) {
 		}
 		if got := rr.Header().Get("Cache-Control"); got != tt.want {
 			t.Errorf("%s Cache-Control = %q, want %q", tt.path, got, tt.want)
+		}
+	}
+}
+
+// A development build has no asset version: URLs carry no ?v= and nothing is
+// cached as immutable, so edits show up on reload.
+func TestDevelopmentAssetsAreNotVersioned(t *testing.T) {
+	t.Parallel()
+	var cfg models.Config
+	handler := newHandler(cfg, slog.New(slog.NewTextHandler(io.Discard, nil)), "../../static", "")
+
+	rr := httptest.NewRecorder()
+	handler.ServeHTTP(rr, httptest.NewRequest(http.MethodGet, "/", nil))
+	body := rr.Body.String()
+	if !strings.Contains(body, `href="/static/styles.css"`) || !strings.Contains(body, `src="/static/nocturne.js"`) {
+		t.Error("development pages should link CSS and JS without ?v=")
+	}
+
+	for _, path := range []string{"/static/styles.css", "/static/styles.css?v=", "/static/nocturne.js"} {
+		rr := httptest.NewRecorder()
+		handler.ServeHTTP(rr, httptest.NewRequest(http.MethodGet, path, nil))
+		if got := rr.Header().Get("Cache-Control"); got != "no-cache" {
+			t.Errorf("%s Cache-Control = %q, want no-cache", path, got)
 		}
 	}
 }

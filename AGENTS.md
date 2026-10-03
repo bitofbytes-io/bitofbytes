@@ -1,7 +1,7 @@
 # Agent Guidance
 
 - `static/styles.css` is hand-written and served as is; there is no CSS build step.
-- Link CSS and JS from templates as `/static/<file>?v={{ assetVersion }}`: a URL carrying the current release's version is cached for a year, anything else is revalidated.
+- Link CSS and JS from templates as `/static/<file>{{ with assetVersion }}?v={{ . }}{{ end }}`: a URL carrying the current release's version is cached for a year, anything else is revalidated. Development builds have no version, so nothing is cached there.
 - The CSP has no `'unsafe-inline'` for styles, so never use `style` attributes or `<style>` blocks; add a class instead.
 - Preserve CSRF protection: state-changing routes must use POST, PUT, PATCH, or DELETE (never GET) so the `middleware.CSRF` cross-origin check covers them; forms need no token field.
 - Keep portfolio content in `models/project.go` and follow the existing embedded-template pattern for new pages.

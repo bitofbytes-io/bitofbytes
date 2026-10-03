@@ -40,7 +40,8 @@ func Must(p Page, err error) Page {
 // ParseFS parses patterns into a page. The page's category, the directory of
 // the first pattern ("home" for "home/index.gohtml"), is bound once here as the
 // {{ category }} template function. {{ assetVersion }} returns assetVersion,
-// which templates append to static asset URLs so each release busts the cache.
+// which templates append to static asset URLs so each release busts the cache;
+// it is empty in development.
 func ParseFS(assetVersion string, fsys fs.FS, patterns ...string) (Page, error) {
 	if len(patterns) == 0 {
 		return Page{}, errors.New("parsing template: no patterns")
