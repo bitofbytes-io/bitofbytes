@@ -10,23 +10,23 @@ The signature component: the Home page's project index drawn as one octave of a 
 ## Markup
 
 ```html
-<div class="nc-octave" data-nc-octave style="--keys: 8">
+<div class="nc-octave nc-octave--keys-8" data-nc-octave>
   <div class="nc-octave__keys">
     <a class="nc-key nc-key--lit" href="/projects/bitofbytes" data-note="C4">
       <span class="nc-key__name">BitOfBytes</span><span class="nc-key__since">since 2024</span>
     </a>
     <!-- … D4 E4 F4 G4 A4 B4 C5; drop nc-key--lit when not updated in 30 days -->
   </div>
-  <div class="nc-black" aria-hidden="true" style="--pos:1"></div>
-  <div class="nc-black" aria-hidden="true" style="--pos:2"></div>
-  <div class="nc-black" aria-hidden="true" style="--pos:4"></div>
-  <div class="nc-black" aria-hidden="true" style="--pos:5"></div>
-  <div class="nc-black" aria-hidden="true" style="--pos:6"></div>
+  <div class="nc-black nc-black--pos-1" aria-hidden="true"></div>
+  <div class="nc-black nc-black--pos-2" aria-hidden="true"></div>
+  <div class="nc-black nc-black--pos-4" aria-hidden="true"></div>
+  <div class="nc-black nc-black--pos-5" aria-hidden="true"></div>
+  <div class="nc-black nc-black--pos-6" aria-hidden="true"></div>
 </div>
 ```
 
 - White keys are real links (`<a>`), so the keyboard is a working, keyboard-focusable project index without JavaScript.
-- Set `--keys` on `.nc-octave` to the number of white keys rendered (the site writes `len .Keys`); widths, black-key positions and the phone height follow it.
+- Add `nc-octave--keys-N` to `.nc-octave` for the number of white keys rendered, 1 to 8 (the site writes `len .Keys`); it sets `--keys`, and widths, black-key positions and the phone height follow it. Each black key takes `nc-black--pos-N` for its boundary. The site's CSP blocks inline styles, so never set these with a `style` attribute.
 - Black keys are purely decorative: `aria-hidden`, no link, no focus, no sound, and `pointer-events: none`, so hovering one plays the white key underneath. Every sound on the keyboard is therefore reachable by keyboard too. `--pos` is the white-key boundary they sit on (1, 2, 4, 5, 6); there is none between E and F or after B, and the site omits any whose boundary is past the last key.
 - Load `static/nocturne.js` (deferred). It attaches to every `[data-nc-octave]`: pointer-enter adds `is-pressed` and plays the key's `data-note`, pointer-leave releases it. Tabbing onto a white key (keyboard focus, `:focus-visible` only) plays it too. A first touch that arrives before audio is unlocked plays on pointer-down or pointer-up instead of staying silent.
 
@@ -36,7 +36,7 @@ Under the keys, one row (`nc-octave__caption`): the legend on the left, the Soun
 
 ```html
 <section class="nc-wrap nc-octave-section" aria-label="Eight side projects, one octave">
-  <div class="nc-octave" data-nc-octave style="--keys: 8">…</div>
+  <div class="nc-octave nc-octave--keys-8" data-nc-octave>…</div>
   <div class="nc-octave__caption">
     <p class="nc-legend">
       <span>Eight side projects, one octave. <span class="nc-desktop-only">Left to right</span><span class="nc-phone-only">Top to bottom</span> in the order I started them.</span>
