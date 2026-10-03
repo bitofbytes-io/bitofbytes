@@ -1,7 +1,8 @@
 package models
 
-// Activities are the "now" values in the home page now ledger.
-// Leave a field empty to hide its line rather than showing a placeholder.
+// Activities are the "now" values in the home page now ledger, written as
+// displayed (first letter capitalized). Leave a field empty to hide its line
+// rather than showing a placeholder.
 type Activities struct {
 	Building   string
 	Practicing string
@@ -11,7 +12,7 @@ type Activities struct {
 // CurrentActivities is what Daniel is building, practicing and playing now.
 func CurrentActivities() Activities {
 	return Activities{
-		Building:   "this redesign",
+		Building:   "This redesign",
 		Practicing: "Allegro from Six Light Keyboard Pieces, Op. 52, No. 2",
 		Playing:    "007 First Light on PS5",
 	}

@@ -256,22 +256,6 @@ func TestHomeFeaturesNewestScreenshotOtherThanThisSite(t *testing.T) {
 	}
 }
 
-func TestHomeCapitalizesActivitiesForDisplay(t *testing.T) {
-	t.Parallel()
-	fsys := fstest.MapFS{"home/index.tmpl": {Data: []byte(
-		`{{ .Activities.Building }}|{{ .Activities.Practicing }}|{{ .Activities.Playing }}`)}}
-	portfolio := Portfolio{
-		Activities: models.Activities{Building: "this redesign", Playing: "éclair quest"},
-		Templates:  PortfolioTemplates{Home: views.Must(views.ParseFS(fsys, "home/index.tmpl"))},
-		Now:        fixedNow,
-	}
-	rr := httptest.NewRecorder()
-	portfolio.Home(rr, httptest.NewRequest(http.MethodGet, "/", nil))
-	if got, want := rr.Body.String(), "This redesign||Éclair quest"; got != want {
-		t.Fatalf("activities = %q, want %q", got, want)
-	}
-}
-
 func TestHomeKeyboardHoldsOneOctaveOfTheMostRecentlyUpdated(t *testing.T) {
 	t.Parallel()
 	var projects []models.Project
