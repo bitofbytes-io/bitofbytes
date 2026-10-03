@@ -1,12 +1,3 @@
-FROM node:24.15.0-alpine3.23 AS tailwind-builder
-ARG TAILWIND_VERSION=4.3.0
-WORKDIR /app
-RUN npm init -y \
-    && npm install tailwindcss@${TAILWIND_VERSION} @tailwindcss/cli@${TAILWIND_VERSION} @tailwindcss/typography
-COPY ./templates ./templates
-COPY ./tailwind/styles.css src/styles.css
-RUN npx @tailwindcss/cli -i src/styles.css -o /styles.css --minify
-
 FROM golang:1.26.6-alpine3.23 AS builder
 ARG VERSION=dev
 ARG REVISION=unknown
@@ -24,7 +15,6 @@ ARG SOURCE_URL=https://github.com/bitofbytes-io/bitofbytes
 WORKDIR /bob
 COPY ./static ./static
 COPY --from=builder /app/bob ./bob
-COPY --from=tailwind-builder /styles.css ./static/styles.css
 RUN addgroup -S bob \
     && adduser -S -G bob bob \
     && chown -R bob:bob /bob

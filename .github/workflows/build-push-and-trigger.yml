@@ -64,18 +64,6 @@ jobs:
           username: ${{ secrets.REGISTRY_USERNAME }}
           password: ${{ secrets.REGISTRY_PASSWORD }}
 
-      - name: Install Tailwind CLI binary
-        run: |
-          curl -sLO https://github.com/tailwindlabs/tailwindcss/releases/latest/download/tailwindcss-linux-arm64
-          chmod +x tailwindcss-linux-arm64
-          sudo mv tailwindcss-linux-arm64 /usr/local/bin/tailwindcss
-          tailwindcss --version   # sanity check
-
-      - name: Debug refs
-        run: |
-          echo "IMAGE_REG=${IMAGE_REG}"
-          echo "TAG=${{ steps.meta.outputs.TAG }}"
-
       - name: make build-github (push)
         env:
           VERSION: ${{ steps.meta.outputs.TAG }}
