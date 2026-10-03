@@ -47,3 +47,25 @@ func TestCSRF(t *testing.T) {
 		})
 	}
 }
+
+// Local development serves plain HTTP; a same-origin POST there must pass.
+func TestCSRFAllowsSameOriginPlainHTTPPost(t *testing.T) {
+	t.Parallel()
+
+	handler := CSRF()(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		w.WriteHeader(http.StatusOK)
+	}))
+
+	for _, secFetchSite := range []string{"same-origin", ""} {
+		req := httptest.NewRequest(http.MethodPost, "http://localhost:3000/", nil)
+		req.Header.Set("Origin", "http://localhost:3000")
+		if secFetchSite != "" {
+			req.Header.Set("Sec-Fetch-Site", secFetchSite)
+		}
+		rr := httptest.NewRecorder()
+		handler.ServeHTTP(rr, req)
+		if rr.Code != http.StatusOK {
+			t.Errorf("Sec-Fetch-Site %q: got status %d, want %d", secFetchSite, rr.Code, http.StatusOK)
+		}
+	}
+}
