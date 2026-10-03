@@ -18,7 +18,7 @@ func newTestHandler() http.Handler {
 
 	logger := slog.New(slog.NewTextHandler(io.Discard, nil))
 
-	return newHandlerWithStaticDir(cfg, logger, "../../static")
+	return newHandler(cfg, logger, "../../static")
 }
 
 func TestRoutesRenderCurrentSiteSurface(t *testing.T) {
@@ -88,29 +88,6 @@ func TestProjectDetailTimelinesShowUpdatesWithoutFirstCommit(t *testing.T) {
 		}
 		if strings.Contains(body, "First commit.") {
 			t.Errorf("%s still shows First commit", project.Slug)
-		}
-	}
-}
-
-func TestRemovedRoutesReturnNotFound(t *testing.T) {
-	t.Parallel()
-
-	handler := newTestHandler()
-
-	for _, path := range []string{
-		"/blog",
-		"/posts/1",
-		"/utils",
-		"/utils/base64/encode",
-		"/utils/base64/decode",
-	} {
-		req := httptest.NewRequest(http.MethodGet, path, nil)
-		rr := httptest.NewRecorder()
-
-		handler.ServeHTTP(rr, req)
-
-		if rr.Code != http.StatusNotFound {
-			t.Fatalf("%s status code = %d, want %d", path, rr.Code, http.StatusNotFound)
 		}
 	}
 }

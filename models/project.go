@@ -6,7 +6,6 @@ type Project struct {
 	Slug            string
 	Name            string
 	Tagline         string
-	Summary         string
 	RepoURL         string
 	LiveURL         string
 	LastUpdate      string
@@ -41,7 +40,6 @@ func Projects() []Project {
 			Slug:            "carma",
 			Name:            "Carma",
 			Tagline:         "A shared household garage for maintenance history and what needs attention next.",
-			Summary:         "A household vehicle-maintenance tracker for service records, receipts, reminders, and exports.",
 			RepoURL:         "https://github.com/bitofbytes-io/carma",
 			LiveURL:         "https://carma.bitofbytes.io",
 			LastUpdate:      "September 28, 2026",
@@ -88,7 +86,6 @@ func Projects() []Project {
 			Slug:            "noted",
 			Name:            "Noted",
 			Tagline:         "A private digital binder for finding and reading sheet music without breaking the flow.",
-			Summary:         "A private digital sheet-music binder with separate user libraries, PDF search, and an iPad-friendly reader.",
 			RepoURL:         "https://github.com/bitofbytes-io/noted",
 			LiveURL:         "https://noted.bitofbytes.io",
 			LastUpdate:      "October 2, 2026",
@@ -137,7 +134,6 @@ func Projects() []Project {
 			Slug:            "dined",
 			Name:            "Dined",
 			Tagline:         "Proof that nobody actually agreed on dinner.",
-			Summary:         "A private family restaurant memory ledger for remembering where everyone ate, who picked it, and how the table rated it.",
 			RepoURL:         "https://github.com/bitofbytes-io/dined",
 			LiveURL:         "https://dined.bitofbytes.io",
 			LastUpdate:      "September 28, 2026",
@@ -184,7 +180,6 @@ func Projects() []Project {
 			Slug:            "permitpal",
 			Name:            "PermitPal",
 			Tagline:         "Your permit pal: less yelling, more tracking.",
-			Summary:         "A focused dashboard for tracking North Carolina learner permit exam readiness and study progress.",
 			RepoURL:         "https://github.com/bitofbytes-io/permitpal",
 			LiveURL:         "https://permitpal.bitofbytes.io",
 			LastUpdate:      "September 28, 2026",
@@ -231,7 +226,6 @@ func Projects() []Project {
 			Slug:            "learnd",
 			Name:            "Learn'd",
 			Tagline:         "A personal learning journal for capturing and reviewing resources.",
-			Summary:         "A personal learning journal for saving useful training material and revisiting it over time.",
 			RepoURL:         "https://github.com/bitofbytes-io/learnd",
 			LiveURL:         "https://learnd.bitofbytes.io",
 			LastUpdate:      "September 30, 2026",
@@ -278,7 +272,6 @@ func Projects() []Project {
 			Slug:            "dejaview",
 			Name:            "DejaView",
 			Tagline:         "A family movie-night tracker for remembering picks, groups, and stats.",
-			Summary:         "A movie tracker for organizing watched films, family viewing lists, and collection details.",
 			RepoURL:         "https://github.com/bitofbytes-io/dejaview",
 			LiveURL:         "https://dejaview.bitofbytes.io",
 			LastUpdate:      "September 28, 2026",
@@ -324,7 +317,6 @@ func Projects() []Project {
 			Slug:            "bitofbytes",
 			Name:            "BitOfBytes",
 			Tagline:         "The personal landing page and project portfolio for Daniel Waters.",
-			Summary:         "A personal site for presenting resume details, contact links, and selected project work.",
 			RepoURL:         "https://github.com/bitofbytes-io/bitofbytes",
 			LiveURL:         "https://www.bitofbytes.io",
 			LastUpdate:      "September 30, 2026",
@@ -368,7 +360,6 @@ func Projects() []Project {
 			Slug:            "anthology",
 			Name:            "Anthology",
 			Tagline:         "A two-tier catalogue for personal books, games, movies, and music.",
-			Summary:         "A personal media catalogue for organizing books, games, movies, music, and where they live.",
 			RepoURL:         "https://github.com/bitofbytes-io/anthology",
 			LiveURL:         "https://anthology.bitofbytes.io",
 			LastUpdate:      "September 30, 2026",
