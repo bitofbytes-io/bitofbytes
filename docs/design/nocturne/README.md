@@ -7,13 +7,12 @@ The design system for bitofbytes.io. This folder is the repo copy of the publish
 | `README.md` | This brand book: the rules every page follows. |
 | `tokens.json`, `tokens.css` | Colors, type, spacing, radii, shadows and fixed sizes. `tokens.css` is `tokens.json` as CSS custom properties. |
 | `components/<Name>/README.md`, `preview.html` | Guidelines and a static preview for each component. Previews expect `tokens.css` and `components/bundle.css` to be loaded. |
-| `components/bundle.css` | The component and page-layout styles, mirrored into `tailwind/styles.css`. |
-| `components/bundle.js` | The piano keyboard sound, shipped as `static/nocturne.js`. |
+| `components/bundle.css` | The component and page-layout styles, mirrored into `static/styles.css`. |
 | `mockups/*.dc.html` | The approved desktop and phone mockups (Home, Projects, Project detail) as canvas artboards. |
 | `screenshots/` | The pages as built, at 1280px. |
 | `assets/` | Notes on the example screenshots the published previews use (the images themselves are `static/projects/noted/`). |
 
-When the look changes, update `tokens.json` or `components/bundle.css` here first, mirror it into `tailwind/styles.css`, rebuild with `make tail-prod`, and republish the system so the two copies match.
+When the look changes, update `tokens.json` or `components/bundle.css` here first, mirror it into `static/styles.css`, and republish the system so the two copies match. The piano keyboard sound lives only in `static/nocturne.js`.
 
 ---
 
@@ -103,8 +102,8 @@ These three page types are the whole site. Build them from the components below.
 
 ## Building bitofbytes with Nocturne
 
-- The site is Go `html/template` plus Tailwind. `tailwind/styles.css` holds the tokens in `:root` and `components/bundle.css` inside `@layer components`; `make tail-prod` builds `static/styles.css` (never edit that file). Page layouts (`nc-home-hero`, `nc-octave-section`, `nc-section`, `nc-page-head`, `nc-detail-hero`, `nc-detail-body`) are in the same stylesheet.
-- `components/bundle.js` ships as `static/nocturne.js`, loaded with `defer` on Home only. It attaches itself to every `[data-nc-octave]` and `[data-nc-sound]` on the page.
+- The site is Go `html/template` plus one hand-written stylesheet, `static/styles.css`, served as is with no build step. It holds a small reset in `@layer base`, the tokens in `:root` and `components/bundle.css` inside `@layer components`. Page layouts (`nc-home-hero`, `nc-octave-section`, `nc-section`, `nc-page-head`, `nc-detail-hero`, `nc-detail-body`) are in the same stylesheet.
+- `static/nocturne.js` plays the keyboard, loaded with `defer` on Home only. It attaches itself to every `[data-nc-octave]` and `[data-nc-sound]` on the page.
 - Project content stays in `models/project.go`; display helpers (dates, the latest note, sorting) are in `models/project_display.go`. "Recently updated" means `LastUpdate` within 30 days of the request (`models.RecentWindow`); keyboard order comes from `FirstCommitDate`; the projects page sorts by `LastUpdate` unless `?sort=newest`.
 - The now ledger's values come from `models.CurrentActivities()`, first letter capitalized for display by the controller. An empty field hides its value and its label suffix; the live site never shows a bracketed placeholder.
 - The featured update is the most recently updated project with a screenshot whose slug is not `bitofbytes`; the ledger is the three newest by `LastUpdate` other than the featured one, so a project newer than the featured one (this site, usually) still appears.

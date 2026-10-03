@@ -8,7 +8,7 @@ BitOfBytes is the Go web application behind the BitOfBytes portfolio. It renders
 
 ## Build the image
 
-The multi-stage Dockerfile builds the Go binary and Tailwind CSS:
+The multi-stage Dockerfile builds the Go binary and copies the static assets:
 
 ```bash
 docker build -f Docker/Dockerfile -t bitofbytes:local .
@@ -57,7 +57,7 @@ cp .env.template .env
 go run ./cmd/bob
 ```
 
-For live reload, install `air` and the Tailwind CSS CLI, then run:
+For live reload, install `air`, then run:
 
 ```bash
 make local
