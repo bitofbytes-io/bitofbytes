@@ -6,7 +6,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="theme-color" content="#0A1224">
     <title>BitOfBytes | Daniel Waters</title>
-    <link rel="stylesheet" href="/static/styles.css">
+    <link rel="stylesheet" href="/static/styles.css{{ with assetVersion }}?v={{ . }}{{ end }}">
     <link rel="icon" href="/static/favicon.ico?v=20260924" sizes="any">
     <link rel="icon" type="image/svg+xml" href="/static/favicon.svg?v=20260924">
     <link rel="icon" type="image/png" sizes="32x32" href="/static/favicon-32x32.png?v=20260924">
@@ -67,9 +67,9 @@
     </div>
 </footer>
 {{ end }}
-<script defer src="/static/nav-menu.js"></script>
-{{ if eq category "home" }}<script defer src="/static/nocturne.js"></script>{{ end }}
-<script defer src="/static/umami-loader.js"></script>
+<script defer src="/static/nav-menu.js{{ with assetVersion }}?v={{ . }}{{ end }}"></script>
+{{ if eq category "home" }}<script defer src="/static/nocturne.js{{ with assetVersion }}?v={{ . }}{{ end }}"></script>{{ end }}
+<script defer src="/static/umami-loader.js{{ with assetVersion }}?v={{ . }}{{ end }}"></script>
 </body>
 </html>
 {{ end }}

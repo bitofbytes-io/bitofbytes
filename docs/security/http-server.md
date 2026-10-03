@@ -12,6 +12,10 @@ The article recommends the following production-friendly defaults:
 | `WriteTimeout`       | 10 seconds     | Bounds the amount of time we spend writing the response, protecting server resources when clients read slowly. |
 | `IdleTimeout`        | 120 seconds    | Keeps idle keep-alive connections from lingering forever while still being generous for typical browsers. |
 
+On SIGINT or SIGTERM the server stops accepting connections and gives in-flight
+requests up to 5 seconds (`shutdownTimeout`) to finish, inside Docker's default
+10-second stop grace period.
+
 These values provide hardened defaults while remaining practical for the
 application's use case. Adjust them if future functional requirements demand
 more permissive thresholds. 

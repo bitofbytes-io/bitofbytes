@@ -3,6 +3,7 @@ package middleware
 import (
 	"net/http"
 	"net/http/httptest"
+	"strings"
 	"testing"
 )
 
@@ -18,6 +19,9 @@ func TestSecureHeadersAddsBrowserHardeningHeaders(t *testing.T) {
 
 	if got := rr.Header().Get("Content-Security-Policy"); got != contentSecurityPolicy {
 		t.Fatalf("Content-Security-Policy header = %q, want %q", got, contentSecurityPolicy)
+	}
+	if strings.Contains(contentSecurityPolicy, "unsafe-inline") {
+		t.Fatalf("Content-Security-Policy allows 'unsafe-inline': %q", contentSecurityPolicy)
 	}
 	if got := rr.Header().Get("X-Content-Type-Options"); got != "nosniff" {
 		t.Fatalf("X-Content-Type-Options header = %q, want nosniff", got)

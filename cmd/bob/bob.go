@@ -1,10 +1,13 @@
 package main
 
 import (
+	"context"
 	"log/slog"
 	"net/http"
 	"os"
+	"os/signal"
 	"path/filepath"
+	"syscall"
 	"time"
 
 	"github.com/DryWaters/bitofbytes/controllers"
@@ -43,10 +46,17 @@ func main() {
 	}
 }
 
+// shutdownTimeout bounds how long in-flight requests get to finish on
+// SIGTERM; it stays under Docker's default 10s stop grace period.
+const shutdownTimeout = 5 * time.Second
+
 func run(cfg models.Config, logger *slog.Logger) error {
+	ctx, stop := signal.NotifyContext(context.Background(), os.Interrupt, syscall.SIGTERM)
+	defer stop()
+
 	server := &http.Server{
 		Addr:              cfg.Server.Address,
-		Handler:           newHandler(cfg, logger, "static"),
+		Handler:           newHandler(cfg, logger, "static", assetVersion()),
 		ReadTimeout:       5 * time.Second,
 		ReadHeaderTimeout: 2 * time.Second,
 		WriteTimeout:      10 * time.Second,
@@ -56,17 +66,45 @@ func run(cfg models.Config, logger *slog.Logger) error {
 
 	logger.Info("Starting the server", "address", cfg.Server.Address, "version", version, "revision", revision)
 
-	return server.ListenAndServe()
+	return serve(ctx, server, logger)
 }
 
-func newHandler(cfg models.Config, logger *slog.Logger, staticDir string) http.Handler {
+// serve runs server until it fails or ctx is done, then shuts it down
+// gracefully. A listener that cannot bind returns its error at once.
+func serve(ctx context.Context, server *http.Server, logger *slog.Logger) error {
+	errs := make(chan error, 1)
+	go func() { errs <- server.ListenAndServe() }()
+
+	select {
+	case err := <-errs:
+		return err
+	case <-ctx.Done():
+	}
+
+	logger.Info("Shutting down the server")
+	shutdownCtx, cancel := context.WithTimeout(context.Background(), shutdownTimeout)
+	defer cancel()
+	return server.Shutdown(shutdownCtx)
+}
+
+// assetVersion is the ?v= value on CSS and JS URLs: the git revision in a
+// release build. A development build has none, so its assets are never cached
+// as immutable and edits show up on reload.
+func assetVersion() string {
+	if revision == "unknown" {
+		return ""
+	}
+	return revision
+}
+
+func newHandler(cfg models.Config, logger *slog.Logger, staticDir string, assetVersion string) http.Handler {
 	portfolio := controllers.Portfolio{
 		Projects:   models.Projects(),
 		Activities: models.CurrentActivities(),
 		Templates: controllers.PortfolioTemplates{
-			Home:          views.Must(views.ParseFS(templates.FS, "home/index.gohtml", "base.gohtml")),
-			ProjectsIndex: views.Must(views.ParseFS(templates.FS, "projects/index.gohtml", "base.gohtml")),
-			ProjectDetail: views.Must(views.ParseFS(templates.FS, "projects/detail.gohtml", "base.gohtml")),
+			Home:          views.Must(views.ParseFS(assetVersion, templates.FS, "home/index.gohtml", "base.gohtml")),
+			ProjectsIndex: views.Must(views.ParseFS(assetVersion, templates.FS, "projects/index.gohtml", "base.gohtml")),
+			ProjectDetail: views.Must(views.ParseFS(assetVersion, templates.FS, "projects/detail.gohtml", "base.gohtml")),
 		},
 	}
 
@@ -80,12 +118,12 @@ func newHandler(cfg models.Config, logger *slog.Logger, staticDir string) http.H
 	})
 	// Support browser default icon discovery paths in addition to the template's
 	// explicit /static/... icon links.
-	r.HandleFunc("GET /favicon.ico", serveStaticFile(staticDir, "favicon.ico"))
-	r.HandleFunc("GET /apple-touch-icon.png", serveStaticFile(staticDir, "apple-touch-icon.png"))
-	r.HandleFunc("GET /apple-touch-icon-precomposed.png", serveStaticFile(staticDir, "apple-touch-icon.png"))
+	r.Handle("GET /favicon.ico", cacheStatic(assetVersion, serveStaticFile(staticDir, "favicon.ico")))
+	r.Handle("GET /apple-touch-icon.png", cacheStatic(assetVersion, serveStaticFile(staticDir, "apple-touch-icon.png")))
+	r.Handle("GET /apple-touch-icon-precomposed.png", cacheStatic(assetVersion, serveStaticFile(staticDir, "apple-touch-icon.png")))
 
-	staticHandler := http.FileServer(http.Dir(staticDir))
-	r.Handle("GET /static/", http.StripPrefix("/static/", staticHandler))
+	staticHandler := http.FileServer(noDirFS{http.Dir(staticDir)})
+	r.Handle("GET /static/", cacheStatic(assetVersion, http.StripPrefix("/static/", staticHandler)))
 
 	var handler http.Handler = r
 	handler = middleware.CSRF()(handler)

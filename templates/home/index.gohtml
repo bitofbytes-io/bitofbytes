@@ -12,7 +12,7 @@
     </section>
 
     <section class="nc-wrap nc-octave-section" aria-label="{{ .KeyCount }} side projects, one octave">
-        <div class="nc-octave" data-nc-octave style="--keys: {{ len .Keys }}">
+        <div class="nc-octave nc-octave--keys-{{ len .Keys }}" data-nc-octave>
             <div class="nc-octave__keys">
                 {{ range .Keys }}
                 <a class="nc-key{{ if .Recent }} nc-key--lit{{ end }}" href="/projects/{{ .Slug }}" data-note="{{ .Note }}">
@@ -21,7 +21,7 @@
                 </a>
                 {{ end }}
             </div>
-            {{ range .BlackKeys }}<div class="nc-black" aria-hidden="true" style="--pos: {{ .Pos }}"></div>{{ end }}
+            {{ range .BlackKeys }}<div class="nc-black nc-black--pos-{{ .Pos }}" aria-hidden="true"></div>{{ end }}
         </div>
         <div class="nc-octave__caption">
             <p class="nc-legend">

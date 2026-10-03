@@ -13,11 +13,12 @@ ARG VERSION=dev
 ARG REVISION=unknown
 ARG SOURCE_URL=https://github.com/bitofbytes-io/bitofbytes
 WORKDIR /bob
+# The binary and static files stay owned by root, so the bob user can read
+# them but not change them.
 COPY ./static ./static
 COPY --from=builder /app/bob ./bob
 RUN addgroup -S bob \
-    && adduser -S -G bob bob \
-    && chown -R bob:bob /bob
+    && adduser -S -G bob bob
 
 LABEL org.opencontainers.image.source="${SOURCE_URL}" \
       org.opencontainers.image.revision="${REVISION}" \
@@ -32,4 +33,6 @@ ENV LOG_LEVEL=${LOG_LEVEL}
 USER bob
 
 EXPOSE 3000
+HEALTHCHECK --interval=30s --timeout=5s --start-period=5s --retries=3 \
+    CMD wget -qO- "http://localhost:${SERVER_ADDRESS##*:}/healthz" >/dev/null || exit 1
 CMD ["./bob"]

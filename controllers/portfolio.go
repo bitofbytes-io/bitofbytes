@@ -5,8 +5,6 @@ import (
 	"slices"
 	"strconv"
 	"time"
-	"unicode"
-	"unicode/utf8"
 
 	"github.com/DryWaters/bitofbytes/models"
 	"github.com/DryWaters/bitofbytes/views"
@@ -58,7 +56,7 @@ type HomeData struct {
 	RecentCount int
 	// RecentLabel is RecentCount with its noun ("1 update", "6 updates").
 	RecentLabel string
-	// Activities are the "now" lines, first letter capitalized for display.
+	// Activities are the "now" lines.
 	Activities models.Activities
 }
 
@@ -126,11 +124,7 @@ func (p Portfolio) Home(w http.ResponseWriter, r *http.Request) {
 		KeyCount:    countWords[len(keys)],
 		RecentCount: recent,
 		RecentLabel: pluralize(recent, "update", "updates"),
-		Activities: models.Activities{
-			Building:   capitalize(p.Activities.Building),
-			Practicing: capitalize(p.Activities.Practicing),
-			Playing:    capitalize(p.Activities.Playing),
-		},
+		Activities:  p.Activities,
 	})
 }
 
@@ -162,15 +156,6 @@ func pluralize(n int, one, many string) string {
 		return "1 " + one
 	}
 	return strconv.Itoa(n) + " " + many
-}
-
-// capitalize upper-cases the first letter of s.
-func capitalize(s string) string {
-	r, size := utf8.DecodeRuneInString(s)
-	if size == 0 {
-		return s
-	}
-	return string(unicode.ToUpper(r)) + s[size:]
 }
 
 func (p Portfolio) ProjectsIndex(w http.ResponseWriter, r *http.Request) {

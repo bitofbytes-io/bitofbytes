@@ -247,11 +247,25 @@ body { margin: 0; min-width: 320px; }
   .nc-key__name { font-weight: 600; font-size: 16px; line-height: 1.3; color: var(--key-ink); }
   .nc-key__since { font-family: var(--font-mono); font-size: 12px; color: var(--key-ink-idle); }
   .nc-key--lit .nc-key__since { color: var(--key-ink-lit); }
-  /* --keys = white keys rendered (set on .nc-octave, default 8).
-     --pos = the white-key boundary a black key sits on (1, 2, 4, 5, 6 for C#, D#, F#, G#, A#).
+  /* --keys = white keys rendered (set on .nc-octave by an nc-octave--keys-N class, default 8).
+     --pos = the white-key boundary a black key sits on (set by an nc-black--pos-N class: 1, 2, 4, 5, 6 for C#, D#, F#, G#, A#).
+     Modifier classes rather than style attributes keep inline styles out of the CSP.
      A black key is half a white-key slot wide, which is key-black-width (70px) at 1120px.
      Black keys are decorative: the pointer passes through to the white key underneath. */
   .nc-black { --slot: calc((100% + var(--space-1)) / var(--keys, 8)); position: absolute; top: 0; left: calc(var(--pos) * var(--slot) - 2px - var(--slot) / 4); width: calc(var(--slot) / 2); height: var(--key-black-height); box-sizing: border-box; background: var(--bg); border: 1px solid var(--line-image); border-top: 0; border-radius: 0 0 8px 8px; pointer-events: none; }
+  .nc-octave--keys-1 { --keys: 1; }
+  .nc-octave--keys-2 { --keys: 2; }
+  .nc-octave--keys-3 { --keys: 3; }
+  .nc-octave--keys-4 { --keys: 4; }
+  .nc-octave--keys-5 { --keys: 5; }
+  .nc-octave--keys-6 { --keys: 6; }
+  .nc-octave--keys-7 { --keys: 7; }
+  .nc-octave--keys-8 { --keys: 8; }
+  .nc-black--pos-1 { --pos: 1; }
+  .nc-black--pos-2 { --pos: 2; }
+  .nc-black--pos-4 { --pos: 4; }
+  .nc-black--pos-5 { --pos: 5; }
+  .nc-black--pos-6 { --pos: 6; }
   /* caption under the keyboard: what the keys are, a lit/resting legend, and the Sound toggle */
   .nc-octave__caption { display: flex; align-items: center; justify-content: space-between; gap: var(--space-7); }
   .nc-octave__caption .nc-sound { flex-shrink: 0; white-space: nowrap; }
