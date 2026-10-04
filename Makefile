@@ -33,4 +33,4 @@ docker-push: ensure-image-tag
 build-github: configure-image
 	echo ">> Building and pushing $(IMAGE)"
 	-docker buildx inspect >/dev/null 2>&1 || docker buildx create --use
-	docker buildx build $(DOCKER_BUILD_ARGS) --platform=linux/arm64/v8 $(if $(METADATA_FILE),--metadata-file $(METADATA_FILE)) --push .
+	docker buildx build $(DOCKER_BUILD_ARGS) --platform=linux/arm64/v8 $(if $(METADATA_FILE),--metadata-file "$(METADATA_FILE)") --push .
