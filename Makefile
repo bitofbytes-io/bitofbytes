@@ -28,8 +28,9 @@ docker-build: ensure-image-tag
 docker-push: ensure-image-tag
 	docker push $(IMAGE)
 
-# CI: build the arm64 image and push it in one step.
+# CI: build the arm64 image and push it in one step. METADATA_FILE, when set,
+# receives buildx's build metadata; CI reads the pushed digest from it.
 build-github: configure-image
 	echo ">> Building and pushing $(IMAGE)"
 	-docker buildx inspect >/dev/null 2>&1 || docker buildx create --use
-	docker buildx build $(DOCKER_BUILD_ARGS) --platform=linux/arm64/v8 --push .
+	docker buildx build $(DOCKER_BUILD_ARGS) --platform=linux/arm64/v8 $(if $(METADATA_FILE),--metadata-file "$(METADATA_FILE)") --push .
