@@ -121,6 +121,8 @@ func newHandler(cfg models.Config, logger *slog.Logger, staticDir string, assetV
 	r.Handle("GET /favicon.ico", cacheStatic(assetVersion, serveStaticFile(staticDir, "favicon.ico")))
 	r.Handle("GET /apple-touch-icon.png", cacheStatic(assetVersion, serveStaticFile(staticDir, "apple-touch-icon.png")))
 	r.Handle("GET /apple-touch-icon-precomposed.png", cacheStatic(assetVersion, serveStaticFile(staticDir, "apple-touch-icon.png")))
+	r.HandleFunc("GET /robots.txt", serveRobotsTXT)
+	r.HandleFunc("GET /sitemap.xml", serveSitemapXML)
 
 	staticHandler := http.FileServer(noDirFS{http.Dir(staticDir)})
 	r.Handle("GET /static/", cacheStatic(assetVersion, http.StripPrefix("/static/", staticHandler)))

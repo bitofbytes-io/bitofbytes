@@ -184,6 +184,118 @@ func TestUnknownProjectReturnsNotFound(t *testing.T) {
 	}
 }
 
+// Every page must carry a unique, per-page title plus search and social meta
+// with absolute canonical and og: URLs (scrapers reject relative ones).
+func TestPagesHaveUniqueTitleAndMeta(t *testing.T) {
+	t.Parallel()
+
+	handler := newTestHandler()
+
+	homeWant := map[string]string{
+		`<title>BitOfBytes | Daniel Waters</title>`:                                                           "home title",
+		`<meta name="description" content="The personal landing page and project portfolio for Daniel Waters`: "home description",
+		`<link rel="canonical" href="https://bitofbytes.io/">`:                                                "home canonical",
+		`<meta property="og:title" content="BitOfBytes | Daniel Waters">`:                                     "home og:title",
+		`<meta property="og:url" content="https://bitofbytes.io/">`:                                           "home og:url",
+		`<meta name="twitter:card" content="summary_large_image">`:                                            "twitter card",
+	}
+	rr := httptest.NewRecorder()
+	handler.ServeHTTP(rr, httptest.NewRequest(http.MethodGet, "/", nil))
+	if rr.Code != http.StatusOK {
+		t.Fatalf("home status = %d", rr.Code)
+	}
+	for want, what := range homeWant {
+		if !strings.Contains(rr.Body.String(), want) {
+			t.Errorf("home missing %s: %q", what, want)
+		}
+	}
+
+	// Every project detail page: "<Name> | BitOfBytes" title, Tagline
+	// description, canonical + og:image pointing at the first screenshot.
+	titles := map[string]bool{}
+	for _, project := range models.Projects() {
+		t.Run(project.Slug, func(t *testing.T) {
+			rr := httptest.NewRecorder()
+			handler.ServeHTTP(rr, httptest.NewRequest(http.MethodGet, "/projects/"+project.Slug, nil))
+			if rr.Code != http.StatusOK {
+				t.Fatalf("status = %d", rr.Code)
+			}
+			// Unescape like the other content tests: html/template escapes the
+			// apostrophe in "Learn'd" as &#39; in the raw body.
+			body := html.UnescapeString(rr.Body.String())
+			wantTitle := "<title>" + project.Name + " | BitOfBytes</title>"
+			if !strings.Contains(body, wantTitle) {
+				t.Errorf("missing %q", wantTitle)
+			}
+			if !strings.Contains(body, `<meta name="description" content="`+project.Tagline+`">`) {
+				t.Errorf("missing tagline meta description")
+			}
+			if !strings.Contains(body, `<link rel="canonical" href="https://bitofbytes.io/projects/`+project.Slug+`">`) {
+				t.Errorf("missing per-page canonical")
+			}
+			if thumb := project.Thumbnail(); thumb.Path != "" {
+				abs := "https://bitofbytes.io" + thumb.Path
+				if !strings.Contains(body, `<meta property="og:image" content="`+abs+`">`) {
+					t.Errorf("missing absolute og:image %q", abs)
+				}
+			}
+			if !strings.Contains(body, `"@type": "SoftwareApplication"`) {
+				t.Errorf("missing SoftwareApplication JSON-LD data block")
+			}
+		})
+		titles[project.Name+" | BitOfBytes"] = true
+	}
+	if len(titles) != len(models.Projects()) {
+		t.Errorf("detail titles not unique: got %d for %d projects", len(titles), len(models.Projects()))
+	}
+}
+
+// The sitemap must be valid XML and list the home page, the projects index,
+// and every project slug.
+func TestSitemapListsAllProjectPages(t *testing.T) {
+	t.Parallel()
+
+	handler := newTestHandler()
+	rr := httptest.NewRecorder()
+	handler.ServeHTTP(rr, httptest.NewRequest(http.MethodGet, "/sitemap.xml", nil))
+	if rr.Code != http.StatusOK {
+		t.Fatalf("sitemap status = %d, want %d", rr.Code, http.StatusOK)
+	}
+	if got := rr.Header().Get("Content-Type"); !strings.HasPrefix(got, "application/xml") {
+		t.Errorf("Content-Type = %q, want application/xml", got)
+	}
+
+	body := rr.Body.String()
+	for _, want := range []string{"https://bitofbytes.io/", "https://bitofbytes.io/projects"} {
+		if !strings.Contains(body, want) {
+			t.Errorf("sitemap missing %q", want)
+		}
+	}
+	for _, project := range models.Projects() {
+		if !strings.Contains(body, "<loc>https://bitofbytes.io/projects/"+project.Slug+"</loc>") {
+			t.Errorf("sitemap missing project %q", project.Slug)
+		}
+	}
+}
+
+// robots.txt must allow crawling and point at the sitemap.
+func TestRobotsTXT(t *testing.T) {
+	t.Parallel()
+
+	handler := newTestHandler()
+	rr := httptest.NewRecorder()
+	handler.ServeHTTP(rr, httptest.NewRequest(http.MethodGet, "/robots.txt", nil))
+	if rr.Code != http.StatusOK {
+		t.Fatalf("robots.txt status = %d", rr.Code)
+	}
+	body := rr.Body.String()
+	for _, want := range []string{"User-agent: *", "Allow: /", "Sitemap: https://bitofbytes.io/sitemap.xml"} {
+		if !strings.Contains(body, want) {
+			t.Errorf("robots.txt missing %q", want)
+		}
+	}
+}
+
 func TestPortfolioPreservesProjectContentAndScreenshots(t *testing.T) {
 	t.Parallel()
 	handler := newTestHandler()

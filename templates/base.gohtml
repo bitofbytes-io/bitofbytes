@@ -5,7 +5,20 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="theme-color" content="#0A1224">
-    <title>BitOfBytes | Daniel Waters</title>
+    <title>{{ .Meta.Title }}</title>
+    <meta name="description" content="{{ .Meta.Description }}">
+    <link rel="canonical" href="https://bitofbytes.io{{ .Meta.Path }}">
+    <meta property="og:type" content="website">
+    <meta property="og:site_name" content="BitOfBytes">
+    <meta property="og:title" content="{{ .Meta.Title }}">
+    <meta property="og:description" content="{{ .Meta.Description }}">
+    <meta property="og:url" content="https://bitofbytes.io{{ .Meta.Path }}">
+    {{ with .Meta.Image }}<meta property="og:image" content="https://bitofbytes.io{{ . }}">{{ end }}
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:title" content="{{ .Meta.Title }}">
+    <meta name="twitter:description" content="{{ .Meta.Description }}">
+    {{ with .Meta.Image }}<meta name="twitter:image" content="https://bitofbytes.io{{ . }}">{{ end }}
+    {{ with .JSONLD }}<script type="application/ld+json">{{ . }}</script>{{ end }}
     <link rel="stylesheet" href="/static/styles.css{{ with assetVersion }}?v={{ . }}{{ end }}">
     <link rel="icon" href="/static/favicon.ico?v=20260924" sizes="any">
     <link rel="icon" type="image/svg+xml" href="/static/favicon.svg?v=20260924">

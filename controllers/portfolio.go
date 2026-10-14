@@ -1,6 +1,8 @@
 package controllers
 
 import (
+	"encoding/json"
+	"html/template"
 	"net/http"
 	"slices"
 	"strconv"
@@ -42,6 +44,11 @@ type BlackKey struct {
 }
 
 type HomeData struct {
+	views.Meta
+	// JSONLD is the pre-rendered JSON-LD data block for the page, emitted
+	// verbatim in the head. It is built from models' data only, so wrapping
+	// it as template.JS is safe and keeps html/template from JS-escaping it.
+	JSONLD template.JS
 	// Featured is the most recently updated project with a screenshot, other
 	// than this site itself; HasFeatured is false when there is none.
 	Featured    ProjectView
@@ -61,11 +68,15 @@ type HomeData struct {
 }
 
 type ProjectsIndexData struct {
+	views.Meta
+	JSONLD   template.JS
 	Projects []ProjectView
 	Sort     string
 }
 
 type ProjectDetailData struct {
+	views.Meta
+	JSONLD  template.JS
 	Project ProjectView
 }
 
@@ -77,6 +88,9 @@ const (
 	octaveSize  = 8
 	sortUpdated = "updated"
 	sortNewest  = "newest"
+	// canonicalHost is the apex origin the site is served from (Traefik
+	// redirects www to the apex), hardcoded for canonical and og: URLs.
+	canonicalHost = "https://bitofbytes.io"
 )
 
 var (
@@ -115,7 +129,19 @@ func (p Portfolio) Home(w http.ResponseWriter, r *http.Request) {
 
 	featured, hasFeatured, updates := latestUpdates(byUpdate)
 
+	image := "/static/projects/bitofbytes/home.webp"
+	if hasFeatured {
+		image = featured.Thumbnail().Path
+	}
+
 	p.Templates.Home.Execute(w, r, HomeData{
+		Meta: views.Meta{
+			Title:       "BitOfBytes | Daniel Waters",
+			Description: "The personal landing page and project portfolio for Daniel Waters: real-time video at work, small apps at home.",
+			Path:        "/",
+			Image:       image,
+		},
+		JSONLD:      personJSONLD(),
 		Featured:    featured,
 		HasFeatured: hasFeatured,
 		Updates:     updates,
@@ -168,6 +194,13 @@ func (p Portfolio) ProjectsIndex(w http.ResponseWriter, r *http.Request) {
 	}
 
 	p.Templates.ProjectsIndex.Execute(w, r, ProjectsIndexData{
+		Meta: views.Meta{
+			Title:       "Projects | BitOfBytes",
+			Description: "Small, private apps for everyday life, plus this site. Each one has its own page with screenshots and what changed most recently.",
+			Path:        "/projects",
+			Image:       "/static/projects/bitofbytes/projects.webp",
+		},
+		JSONLD:   personJSONLD(),
 		Projects: p.views(projects),
 		Sort:     sort,
 	})
@@ -181,6 +214,13 @@ func (p Portfolio) ProjectDetail(w http.ResponseWriter, r *http.Request) {
 	}
 
 	p.Templates.ProjectDetail.Execute(w, r, ProjectDetailData{
+		Meta: views.Meta{
+			Title:       project.Name + " | BitOfBytes",
+			Description: project.Tagline,
+			Path:        "/projects/" + project.Slug,
+			Image:       project.Thumbnail().Path,
+		},
+		JSONLD:  projectJSONLD(project),
 		Project: p.view(project),
 	})
 }
@@ -215,4 +255,76 @@ func (p Portfolio) views(projects []models.Project) []ProjectView {
 		out[i] = p.view(project)
 	}
 	return out
+}
+
+// personJSONLD is the site owner's schema.org Person block, served as a data
+// block on the home and projects index pages. Values are static/constants;
+// it is safe to emit as template.JS.
+func personJSONLD() template.JS {
+	const block = `{
+  "@context": "https://schema.org",
+  "@type": "Person",
+  "name": "Daniel Waters",
+  "url": "https://bitofbytes.io/",
+  "jobTitle": "Senior Software Engineer",
+  "worksFor": { "@type": "Organization", "name": "Cisco" },
+  "sameAs": [
+    "https://github.com/bitofbytes-io",
+    "https://www.linkedin.com/in/daniel-waters/"
+  ]
+}`
+	return template.JS(block)
+}
+
+// projectJSONLD is a schema.org SoftwareApplication block for a project
+// detail page, built from models' data only (no request input), so emitting
+// it as template.JS is safe.
+func projectJSONLD(project models.Project) template.JS {
+	type softwareApp struct {
+		Context             string `json:"@context"`
+		Type                string `json:"@type"`
+		Name                string `json:"name"`
+		Description         string `json:"description"`
+		URL                 string `json:"url"`
+		Image               string `json:"image,omitempty"`
+		ApplicationCategory string `json:"applicationCategory"`
+		OperatingSystem     string `json:"operatingSystem"`
+		DateModified        string `json:"dateModified,omitempty"`
+		Author              struct {
+			Type string `json:"@type"`
+			Name string `json:"name"`
+			URL  string `json:"url"`
+		} `json:"author"`
+	}
+
+	app := softwareApp{
+		Context:             "https://schema.org",
+		Type:                "SoftwareApplication",
+		Name:                project.Name,
+		Description:         project.Tagline,
+		URL:                 canonicalHost + "/projects/" + project.Slug,
+		ApplicationCategory: "WebApplication",
+		OperatingSystem:     "Web",
+		Author: struct {
+			Type string `json:"@type"`
+			Name string `json:"name"`
+			URL  string `json:"url"`
+		}{
+			Type: "Person",
+			Name: "Daniel Waters",
+			URL:  canonicalHost + "/",
+		},
+	}
+	if image := project.Thumbnail().Path; image != "" {
+		app.Image = canonicalHost + image
+	}
+	if updated := project.UpdatedOn(); !updated.IsZero() {
+		app.DateModified = updated.Format("2006-01-02")
+	}
+
+	out, err := json.MarshalIndent(app, "", "  ")
+	if err != nil {
+		return template.JS(`{"@context":"https://schema.org","@type":"SoftwareApplication","name":"BitOfBytes"}`)
+	}
+	return template.JS(out)
 }
