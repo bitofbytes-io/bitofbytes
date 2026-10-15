@@ -23,7 +23,7 @@
         <nav class="nc-nav" aria-label="Main navigation">
             <a href="/"{{ if eq category "home" }} aria-current="page"{{ end }}>Home</a>
             <a href="/projects"{{ if eq category "projects" }} aria-current="page"{{ end }}>Projects</a>
-            <a href="/static/daniel-waters-resume.pdf">Resume</a>
+            <a href="/static/daniel-waters-resume.pdf" data-umami-event="resume-click" data-umami-event-location="header">Resume</a>
             <a href="/#contact">Contact</a>
         </nav>
         <details class="nav-menu nc-menu">
@@ -33,7 +33,7 @@
             <nav class="nc-menu__panel" aria-label="Main navigation">
                 <a href="/"{{ if eq category "home" }} aria-current="page"{{ end }}>Home</a>
                 <a href="/projects"{{ if eq category "projects" }} aria-current="page"{{ end }}>Projects</a>
-                <a href="/static/daniel-waters-resume.pdf">Resume</a>
+                <a href="/static/daniel-waters-resume.pdf" data-umami-event="resume-click" data-umami-event-location="menu">Resume</a>
                 <a href="/#contact">Contact</a>
             </nav>
         </details>
@@ -47,7 +47,7 @@
     <div class="nc-footer nc-footer--home">
         <div>
             <p class="nc-footer__hello">Say hello.</p>
-            <a class="nc-footer__email nc-footer__email--large" href="mailto:daniel@bitofbytes.io">daniel@bitofbytes.io</a>
+            <a class="nc-footer__email nc-footer__email--large" href="mailto:daniel@bitofbytes.io" data-umami-event="email-click" data-umami-event-location="footer">daniel@bitofbytes.io</a>
         </div>
         <div class="nc-footer__links">
             <a href="https://github.com/bitofbytes-io">GitHub</a>
@@ -59,7 +59,7 @@
 {{ else }}
 <footer class="nc-wrap">
     <div class="nc-footer">
-        <a class="nc-footer__email" href="mailto:daniel@bitofbytes.io">daniel@bitofbytes.io</a>
+        <a class="nc-footer__email" href="mailto:daniel@bitofbytes.io" data-umami-event="email-click" data-umami-event-location="footer">daniel@bitofbytes.io</a>
         <div class="nc-footer__links">
             <a href="https://github.com/bitofbytes-io">GitHub</a>
             <a href="https://www.linkedin.com/in/daniel-waters/">LinkedIn</a>
