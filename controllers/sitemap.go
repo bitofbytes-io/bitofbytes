@@ -26,8 +26,9 @@ type sitemapURL struct {
 }
 
 // Sitemap serves sitemap.xml: the home page, the project index and every
-// project page. A project's lastmod is its last update; the two list pages
-// take the newest one.
+// project page. A project's lastmod is its last update and the project index
+// takes the newest one. The home page has no lastmod: it shows content that
+// carries no date, so any date would be a guess.
 func (p Portfolio) Sitemap(w http.ResponseWriter, r *http.Request) {
 	var newest time.Time
 	for _, project := range p.Projects {
@@ -38,7 +39,7 @@ func (p Portfolio) Sitemap(w http.ResponseWriter, r *http.Request) {
 
 	set := sitemapURLSet{XMLNS: sitemapNamespace}
 	set.URLs = append(set.URLs,
-		sitemapEntry("/", newest),
+		sitemapEntry("/", time.Time{}),
 		sitemapEntry("/projects", newest),
 	)
 	for _, project := range models.SortByLastUpdate(p.Projects) {

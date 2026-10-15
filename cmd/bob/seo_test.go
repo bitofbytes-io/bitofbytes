@@ -217,6 +217,12 @@ func TestSitemapListsEveryPage(t *testing.T) {
 			t.Errorf("sitemap lists %s twice", u.Loc)
 		}
 		lastMods[u.Loc] = u.LastMod
+		if u.Loc == "https://bitofbytes.io/" {
+			if u.LastMod != "" {
+				t.Errorf("home lastmod = %q, want none", u.LastMod)
+			}
+			continue
+		}
 		if _, err := time.Parse("2006-01-02", u.LastMod); err != nil {
 			t.Errorf("%s lastmod %q is not a date", u.Loc, u.LastMod)
 		}
