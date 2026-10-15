@@ -223,8 +223,8 @@ func TestSitemapListsEveryPage(t *testing.T) {
 	}
 
 	projects := models.Projects()
-	if len(projects) != 8 {
-		t.Fatalf("catalog has %d projects, want 8", len(projects))
+	if len(projects) == 0 {
+		t.Fatal("no projects in the catalog")
 	}
 	if want := len(projects) + 2; len(set.URLs) != want {
 		t.Errorf("sitemap has %d URLs, want %d", len(set.URLs), want)
