@@ -71,6 +71,20 @@ go test ./...
 
 Portfolio content is maintained in `models/project.go`; templates and static assets live under `templates/` and `static/`.
 
+## Analytics events
+
+Umami page views load through `static/umami-loader.js` on `bitofbytes.io` only. Outbound intent is recorded with Umami's `data-umami-event` attributes on the links themselves, so no inline JavaScript is needed and the CSP is unchanged. There is no new configuration; the attributes are inert wherever the Umami script does not load.
+
+| Event | Link | Properties |
+| --- | --- | --- |
+| `live-click` | Open live site on a project page | `project` (slug) |
+| `repo-click` | View on GitHub on a project page | `project` (slug) |
+| `screenshot-click` | Screenshot on a project page | `project` (slug) |
+| `resume-click` | Resume PDF links | `location` (`header`, `menu`, `home-hero`) |
+| `email-click` | `mailto:` link in the footer | `location` (`footer`) |
+
+Add the same attributes to new outbound links to track them.
+
 ## License
 
 BitOfBytes is available under the [MIT License](LICENSE).

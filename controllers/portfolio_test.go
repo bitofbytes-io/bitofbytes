@@ -331,7 +331,7 @@ func TestProjectDetailWithoutScreenshotsUsesSoloHero(t *testing.T) {
 	body := rr.Body.String()
 	for _, want := range []string{
 		`nc-detail-hero nc-detail-hero--solo`,
-		`<a class="nc-btn nc-btn--primary" href="https://github.com/bitofbytes-io/bare">View on GitHub</a>`,
+		`<a class="nc-btn nc-btn--primary" href="https://github.com/bitofbytes-io/bare" data-umami-event="repo-click" data-umami-event-project="bare">View on GitHub</a>`,
 		`Shipped the first version.`,
 		`Sep 1, 2026`,
 	} {
