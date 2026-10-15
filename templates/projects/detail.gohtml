@@ -16,11 +16,11 @@
                 <p class="nc-tagline">{{ .Project.Tagline }}</p>
                 <div class="nc-actions">
                     {{ if .Project.LiveURL }}
-                    <a class="nc-btn nc-btn--primary" href="{{ .Project.LiveURL }}">Open live site
+                    <a class="nc-btn nc-btn--primary" href="{{ .Project.LiveURL }}" data-umami-event="live-click" data-umami-event-project="{{ .Project.Slug }}">Open live site
                         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M14 4h6v6M20 4l-9 9M18 14v5a1 1 0 0 1-1 1H5a1 1 0 0 1-1-1V7a1 1 0 0 1 1-1h5"></path></svg></a>
-                    <a class="nc-btn nc-btn--secondary" href="{{ .Project.RepoURL }}">View on GitHub</a>
+                    <a class="nc-btn nc-btn--secondary" href="{{ .Project.RepoURL }}" data-umami-event="repo-click" data-umami-event-project="{{ .Project.Slug }}">View on GitHub</a>
                     {{ else }}
-                    <a class="nc-btn nc-btn--primary" href="{{ .Project.RepoURL }}">View on GitHub</a>
+                    <a class="nc-btn nc-btn--primary" href="{{ .Project.RepoURL }}" data-umami-event="repo-click" data-umami-event-project="{{ .Project.Slug }}">View on GitHub</a>
                     {{ end }}
                 </div>
                 <dl class="nc-meta nc-meta--row">
@@ -72,7 +72,7 @@
                 {{ range .Project.Screenshots }}
                 <figure class="nc-shot">
                     {{ if .Path }}
-                    <a href="{{ .Path }}"><img src="{{ .Path }}" alt="{{ .Alt }}" loading="lazy"></a>
+                    <a href="{{ .Path }}" data-umami-event="screenshot-click" data-umami-event-project="{{ $.Project.Slug }}"><img src="{{ .Path }}" alt="{{ .Alt }}" loading="lazy"></a>
                     {{ else }}
                     <div class="nc-shot__pending">Capture pending</div>
                     {{ end }}

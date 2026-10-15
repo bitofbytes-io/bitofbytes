@@ -217,6 +217,59 @@ func TestPortfolioPreservesProjectContentAndScreenshots(t *testing.T) {
 	}
 }
 
+func TestOutboundLinksCarryUmamiEvents(t *testing.T) {
+	t.Parallel()
+	handler := newTestHandler()
+	get := func(path string) string {
+		t.Helper()
+		rr := httptest.NewRecorder()
+		handler.ServeHTTP(rr, httptest.NewRequest(http.MethodGet, path, nil))
+		if rr.Code != http.StatusOK {
+			t.Fatalf("%s status = %d, want %d", path, rr.Code, http.StatusOK)
+		}
+		return rr.Body.String()
+	}
+
+	home := get("/")
+	for _, want := range []string{
+		`data-umami-event="resume-click" data-umami-event-location="home-hero"`,
+		`data-umami-event="resume-click" data-umami-event-location="header"`,
+		`data-umami-event="resume-click" data-umami-event-location="menu"`,
+		`href="mailto:daniel@bitofbytes.io" data-umami-event="email-click" data-umami-event-location="footer"`,
+	} {
+		if !strings.Contains(home, want) {
+			t.Errorf("home missing %q", want)
+		}
+	}
+
+	var sawLive, sawShot bool
+	for _, project := range models.Projects() {
+		body := get("/projects/" + project.Slug)
+		prop := `data-umami-event-project="` + project.Slug + `"`
+		if want := `data-umami-event="repo-click" ` + prop; !strings.Contains(body, want) {
+			t.Errorf("%s missing %q", project.Slug, want)
+		}
+		if project.LiveURL != "" {
+			sawLive = true
+			if want := `data-umami-event="live-click" ` + prop; !strings.Contains(body, want) {
+				t.Errorf("%s missing %q", project.Slug, want)
+			}
+		}
+		for _, shot := range project.Screenshots {
+			if shot.Path == "" {
+				continue
+			}
+			sawShot = true
+			if want := `href="` + shot.Path + `" data-umami-event="screenshot-click" ` + prop; !strings.Contains(body, want) {
+				t.Errorf("%s missing %q", project.Slug, want)
+			}
+		}
+	}
+	if !sawLive || !sawShot {
+		t.Errorf("portfolio has no live URL (%v) or screenshot (%v) to check", sawLive, sawShot)
+	}
+}
+
 func TestHomepageKeyboardAndContact(t *testing.T) {
 	t.Parallel()
 	handler := newTestHandler()
