@@ -42,6 +42,7 @@ type BlackKey struct {
 }
 
 type HomeData struct {
+	views.Meta
 	// Featured is the most recently updated project with a screenshot, other
 	// than this site itself; HasFeatured is false when there is none.
 	Featured    ProjectView
@@ -61,11 +62,13 @@ type HomeData struct {
 }
 
 type ProjectsIndexData struct {
+	views.Meta
 	Projects []ProjectView
 	Sort     string
 }
 
 type ProjectDetailData struct {
+	views.Meta
 	Project ProjectView
 }
 
@@ -116,6 +119,7 @@ func (p Portfolio) Home(w http.ResponseWriter, r *http.Request) {
 	featured, hasFeatured, updates := latestUpdates(byUpdate)
 
 	p.Templates.Home.Execute(w, r, HomeData{
+		Meta:        homeMeta(),
 		Featured:    featured,
 		HasFeatured: hasFeatured,
 		Updates:     updates,
@@ -168,6 +172,7 @@ func (p Portfolio) ProjectsIndex(w http.ResponseWriter, r *http.Request) {
 	}
 
 	p.Templates.ProjectsIndex.Execute(w, r, ProjectsIndexData{
+		Meta:     projectsMeta(),
 		Projects: p.views(projects),
 		Sort:     sort,
 	})
@@ -181,6 +186,7 @@ func (p Portfolio) ProjectDetail(w http.ResponseWriter, r *http.Request) {
 	}
 
 	p.Templates.ProjectDetail.Execute(w, r, ProjectDetailData{
+		Meta:    projectMeta(project),
 		Project: p.view(project),
 	})
 }

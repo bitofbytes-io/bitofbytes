@@ -119,6 +119,8 @@ func newHandler(cfg models.Config, logger *slog.Logger, staticDir string, assetV
 	// Support browser default icon discovery paths in addition to the template's
 	// explicit /static/... icon links.
 	r.Handle("GET /favicon.ico", cacheStatic(assetVersion, serveStaticFile(staticDir, "favicon.ico")))
+	r.Handle("GET /robots.txt", cacheStatic(assetVersion, serveStaticFile(staticDir, "robots.txt")))
+	r.HandleFunc("GET /sitemap.xml", portfolio.Sitemap)
 	r.Handle("GET /apple-touch-icon.png", cacheStatic(assetVersion, serveStaticFile(staticDir, "apple-touch-icon.png")))
 	r.Handle("GET /apple-touch-icon-precomposed.png", cacheStatic(assetVersion, serveStaticFile(staticDir, "apple-touch-icon.png")))
 
