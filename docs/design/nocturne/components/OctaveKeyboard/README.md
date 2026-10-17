@@ -5,17 +5,17 @@ The signature component: the Home page's project index drawn as one octave of a 
 ## What the consumer provides
 
 - Exactly eight projects, ordered by `FirstCommitDate`, oldest first (left on desktop, top on phone). If the portfolio grows past eight, show the eight most recently updated in start order; the Latest updates section links to every project.
-- For each: the project name, the start label ("since 2024", "since Oct '25"), the link to its detail page, and whether it is lit (`LastUpdate` within 30 days of the build).
+- For each: the project name, the start label ("since 2024", "since Oct '25"), and the link to its detail page.
 
 ## Markup
 
 ```html
 <div class="nc-octave nc-octave--keys-8" data-nc-octave>
   <div class="nc-octave__keys">
-    <a class="nc-key nc-key--lit" href="/projects/bitofbytes" data-note="C4">
+    <a class="nc-key" href="/projects/bitofbytes" data-note="C4">
       <span class="nc-key__name">BitOfBytes</span><span class="nc-key__since">since 2024</span>
     </a>
-    <!-- … D4 E4 F4 G4 A4 B4 C5; drop nc-key--lit when not updated in 30 days -->
+    <!-- … D4 E4 F4 G4 A4 B4 C5 -->
   </div>
   <div class="nc-black nc-black--pos-1" aria-hidden="true"></div>
   <div class="nc-black nc-black--pos-2" aria-hidden="true"></div>
@@ -32,7 +32,7 @@ The signature component: the Home page's project index drawn as one octave of a 
 
 ## Caption and legend
 
-Under the keys, one row (`nc-octave__caption`): the legend on the left, the SoundToggle on the right. It stacks below 860px.
+Under the keys, one row (`nc-octave__caption`): the legend text on the left, the SoundToggle on the right. It stacks below 860px.
 
 ```html
 <section class="nc-wrap nc-octave-section" aria-label="Eight side projects, one octave">
@@ -40,8 +40,6 @@ Under the keys, one row (`nc-octave__caption`): the legend on the left, the Soun
   <div class="nc-octave__caption">
     <p class="nc-legend">
       <span>Eight side projects, one octave. <span class="nc-desktop-only">Left to right</span><span class="nc-phone-only">Top to bottom</span> in the order I started them.</span>
-      <span class="nc-legend__item"><span class="nc-legend__swatch nc-legend__swatch--lit" aria-hidden="true"></span>updated in the last 30 days</span>
-      <span class="nc-legend__item"><span class="nc-legend__swatch" aria-hidden="true"></span>resting</span>
     </p>
     <button type="button" class="nc-sound" data-nc-sound aria-pressed="true">
       <svg class="nc-sound__on" …></svg><svg class="nc-sound__off" …></svg>
@@ -51,15 +49,15 @@ Under the keys, one row (`nc-octave__caption`): the legend on the left, the Soun
 </section>
 ```
 
-- The legend is 15px `ink-subtle` (14px on phone). Each swatch is a 14px miniature key: `key-lit` with a 3px `accent` bottom edge, or `key-idle` with a `key-idle-edge` edge. On phone the edge moves to the left, like the sideways keys.
+- The legend is 15px `ink-subtle` (14px on phone). It is text only: no swatches, and no lit or resting distinction.
 - `static/nocturne.js` only rewrites the `[data-nc-sound-label]` text, so the "Hover to play ·" prefix sits outside it. The extra wrapping span keeps the prefix and the label together inside the button's flex gap.
 
 ## Look
 
-- Desktop: 1120 × 220px (`key-height`), white keys share the width with 4px gaps, rounded at the bottom (`radius-md`), with a 6px bottom edge (`accent` when lit, `key-idle-edge` otherwise). Name in Plex Sans 600 16px `key-ink`; start label in `chip` mono, `key-ink-lit` or `key-ink-idle`. Black keys 70 × 126px (`key-black-height`, half a key slot wide and 57% of the white key), `bg` with a `line-image` outline.
+- Desktop: 1120 × 220px (`key-height`), white keys share the width with 4px gaps, rounded at the bottom (`radius-md`), with a 6px `key-idle-edge` bottom edge. Name in Plex Sans 600 16px `key-ink`; start label in `chip` mono, `key-ink-idle`. Black keys 70 × 126px (`key-black-height`, half a key slot wide and 57% of the white key), `bg` with a `line-image` outline.
 - Phone (below 640px): the keyboard turns sideways. Keys stack as 60px rows (`key-row-height`) with the name and start label on one line, the edge moves to the left side, and black keys come in from the right as 130 × 36px bars.
-- Lit keys (`key-lit`) are visibly bluer than idle ones (`key-idle`) at a glance; the legend names both.
-- Pressed: lit keys go `key-lit-pressed`, idle keys `key-idle-pressed`, both dip slightly with `shadow-key-pressed`; Reduced motion keeps only the color change.
+- Every key looks the same (`key-idle`); recency of updates is not shown on the keyboard.
+- Pressed: keys go `key-idle-pressed` and dip slightly with `shadow-key-pressed`; Reduced motion keeps only the color change.
 
 ## Sound
 
