@@ -16,7 +16,7 @@ When the look changes, update `tokens.json` or `components/bundle.css` here firs
 
 ---
 
-Nocturne is the visual system for bitofbytes.io, the personal site and project portfolio of Daniel Waters. It is a midnight-navy page with one periwinkle accent, a serif display face with italic moments, and a piano keyboard that doubles as the project index. It should feel like a quiet late-night practice session: calm ground, a few lit keys, nothing shouting.
+Nocturne is the visual system for bitofbytes.io, the personal site and project portfolio of Daniel Waters. It is a midnight-navy page with one periwinkle accent, a serif display face with italic moments, and a piano keyboard that doubles as the project index. It should feel like a quiet late-night practice session: calm ground, quiet keys, nothing shouting.
 
 ## Content fundamentals
 
@@ -74,7 +74,7 @@ Nocturne is the visual system for bitofbytes.io, the personal site and project p
 - Inline SVG, 24×24 viewBox, `stroke="currentColor"`, stroke width 1.6 to 2, round caps and joins, no fills except the black keys in the piano glyph. Set icon color through `currentColor` so it follows the text or `accent`.
 - The set in use: arrow-right (`M5 12h14M13 6l6 6-6 6`), external link, piano (a rounded rectangle with three key lines and two filled black keys), code brackets with a slash, gamepad, speaker with waves (sound on), speaker with an × (sound off), two-line menu. Draw new icons in the same style; no icon font, no emoji.
 - There is no logo file. The brand mark is the `wordmark` style set in type: `bitofbytes` in Fraunces italic.
-- The site icon (`static/favicon.svg`, with PNG and ICO exports) is three white keys and two black keys on a `bg` tile, the middle key `key-lit` with an `accent` bottom edge: one lit key from the Octave keyboard. Re-export the PNGs and `favicon.ico` whenever the SVG changes, and bump the `?v=` query in `templates/base.gohtml`.
+- The site icon (`static/favicon.svg`, with PNG and ICO exports) is three white keys and two black keys on a `bg` tile, the middle key `key-lit` with an `accent` bottom edge. That tint belongs to the icon only; the Octave keyboard draws every key in `key-idle`. Re-export the PNGs and `favicon.ico` whenever the SVG changes, and bump the `?v=` query in `templates/base.gohtml`.
 
 ## Pages
 
