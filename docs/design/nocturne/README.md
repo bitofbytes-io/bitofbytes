@@ -34,7 +34,7 @@ Nocturne is the visual system for bitofbytes.io, the personal site and project p
 ### Color
 
 - Dark only. Paint every page `bg` with `ink` text. There is no light theme.
-- `accent` is the only hue. Spend it on: the primary button, the current nav item, links inside prose, the "Updated recently" badge, project names in the Update ledger, one italic word per heading, focus rings. Nothing else is blue.
+- `accent` is the only hue. Spend it on: the primary button, the current nav item, links inside prose, the "Updated recently" badge, project names in the Update ledger, one italic word per heading, focus rings. Nothing else in the page UI is blue. The only exceptions are the `key-lit` tint in the Cover illustration and the site icon.
 - Text hierarchy on `bg`, `bg-band` and `surface`: `ink` for headings and names, `ink-soft` for lead paragraphs, taglines and prose, `ink-muted` for secondary copy and nav links, `ink-subtle` for eyebrows, dates and captions, `ink-faint` only for uppercase labels on `bg`.
 - Text on an `accent` fill is `on-accent`.
 - Hairlines are `line`. Chip and rail borders are `line-strong`. Image borders are `line-image`. Any border that is the visible edge of a control (outline button, sound toggle, menu button) is `line-control`, which holds 3:1 on `bg`.
