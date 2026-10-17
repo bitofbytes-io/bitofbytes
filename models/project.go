@@ -335,7 +335,7 @@ func Projects() []Project {
 			Highlights: []string{
 				"Presents resume details, contact links, and selected personal projects in one focused site.",
 				"Gives each project room for screenshots, purpose, highlights, and links to the live app or code.",
-				"Lays the side projects out as one octave of piano keys: lit keys mark recent work and each key plays its note on hover.",
+				"Lays the side projects out as one octave of piano keys, one per project, and each key plays its note on hover.",
 			},
 			Paragraphs: []string{
 				"BitOfBytes is the portfolio site for presenting who Daniel is, how to get in touch, and what personal projects are worth looking at. The project pages are meant to give each app enough context that a visitor can understand its purpose before opening the repo.",

@@ -10,8 +10,8 @@ import (
 )
 
 // RecentWindow is how recently a project must have been updated to count as
-// recently updated: it lights its piano key and earns the "Updated recently"
-// badge. It is a rolling window, not a calendar month.
+// recently updated: it earns the "Updated recently" badge and counts toward the
+// home changelog total. It is a rolling window, not a calendar month.
 const RecentWindow = 30 * 24 * time.Hour
 
 const (
