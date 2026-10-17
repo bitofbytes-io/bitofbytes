@@ -16,7 +16,7 @@ When the look changes, update `tokens.json` or `components/bundle.css` here firs
 
 ---
 
-Nocturne is the visual system for bitofbytes.io, the personal site and project portfolio of Daniel Waters. It is a midnight-navy page with one periwinkle accent, a serif display face with italic moments, and a piano keyboard that doubles as the project index. It should feel like a quiet late-night practice session: calm ground, a few lit keys, nothing shouting.
+Nocturne is the visual system for bitofbytes.io, the personal site and project portfolio of Daniel Waters. It is a midnight-navy page with one periwinkle accent, a serif display face with italic moments, and a piano keyboard that doubles as the project index. It should feel like a quiet late-night practice session: calm ground, quiet keys, nothing shouting.
 
 ## Content fundamentals
 
@@ -34,11 +34,11 @@ Nocturne is the visual system for bitofbytes.io, the personal site and project p
 ### Color
 
 - Dark only. Paint every page `bg` with `ink` text. There is no light theme.
-- `accent` is the only hue. Spend it on: the primary button, the current nav item, links inside prose, the "Updated recently" badge, the lit-key edge and its legend swatch, one italic word per heading, focus rings. Nothing else is blue except the piano keys.
+- `accent` is the only hue. Spend it on: the primary button, the current nav item, links inside prose, the "Updated recently" badge, project names in the Update ledger, one italic word per heading, focus rings. Nothing else in the page UI is blue. The only exceptions are the `key-lit` tint in the Cover illustration and the site icon.
 - Text hierarchy on `bg`, `bg-band` and `surface`: `ink` for headings and names, `ink-soft` for lead paragraphs, taglines and prose, `ink-muted` for secondary copy and nav links, `ink-subtle` for eyebrows, dates and captions, `ink-faint` only for uppercase labels on `bg`.
 - Text on an `accent` fill is `on-accent`.
 - Hairlines are `line`. Chip and rail borders are `line-strong`. Image borders are `line-image`. Any border that is the visible edge of a control (outline button, sound toggle, menu button) is `line-control`, which holds 3:1 on `bg`.
-- Piano keys have their own tokens (`key-*`). A key is `key-lit` (a clear periwinkle tint, visibly bluer than idle at a glance) with an `accent` bottom edge when its project was updated in the last 30 days, otherwise `key-idle` (near white) with a `key-idle-edge` edge. The legend under the keyboard names both. Black keys are `bg` with a `line-image` outline.
+- Piano keys have their own tokens (`key-*`). Every key is `key-idle` (near white) with a `key-idle-edge` edge; the keyboard does not show how recently a project was updated. Black keys are `bg` with a `line-image` outline.
 
 ### Type
 
@@ -74,13 +74,13 @@ Nocturne is the visual system for bitofbytes.io, the personal site and project p
 - Inline SVG, 24×24 viewBox, `stroke="currentColor"`, stroke width 1.6 to 2, round caps and joins, no fills except the black keys in the piano glyph. Set icon color through `currentColor` so it follows the text or `accent`.
 - The set in use: arrow-right (`M5 12h14M13 6l6 6-6 6`), external link, piano (a rounded rectangle with three key lines and two filled black keys), code brackets with a slash, gamepad, speaker with waves (sound on), speaker with an × (sound off), two-line menu. Draw new icons in the same style; no icon font, no emoji.
 - There is no logo file. The brand mark is the `wordmark` style set in type: `bitofbytes` in Fraunces italic.
-- The site icon (`static/favicon.svg`, with PNG and ICO exports) is three white keys and two black keys on a `bg` tile, the middle key `key-lit` with an `accent` bottom edge: one lit key from the Octave keyboard. Re-export the PNGs and `favicon.ico` whenever the SVG changes, and bump the `?v=` query in `templates/base.gohtml`.
+- The site icon (`static/favicon.svg`, with PNG and ICO exports) is three white keys and two black keys on a `bg` tile, the middle key `key-lit` with an `accent` bottom edge. That tint belongs to the icon only; the Octave keyboard draws every key in `key-idle`. Re-export the PNGs and `favicon.ico` whenever the SVG changes, and bump the `?v=` query in `templates/base.gohtml`.
 
 ## Pages
 
 These three page types are the whole site. Build them from the components below.
 
-- **Home.** Header; a single-column statement hero (eyebrow "Daniel Waters · Senior Software Engineer · Raleigh, NC", `hero` heading "Real-time video at work. *Small apps* at home." with the italic phrase in `accent`, `lead` intro ending "Eight of them live below, one per key.", a primary "See the projects" and secondary "Resume (PDF)" button); the Octave keyboard immediately under it, with no heading, and its caption row (the legend: "Eight side projects, one octave…", a lit and a resting swatch, and the Sound toggle); Latest updates (eyebrow "Changelog · N updates in the last 30 days", `section` heading "Latest *updates.*", the Featured update with its live screenshot beside the Update ledger of the three newest other updates); the Now ledger band (`bg-band`, "Off the clock, *mostly keys.*": Programming, Piano, Videogames, each with what Daniel is doing now and a link to the project it inspired); the home footer ("Say hello.", email, GitHub, LinkedIn, location).
+- **Home.** Header; a single-column statement hero (eyebrow "Daniel Waters · Senior Software Engineer · Raleigh, NC", `hero` heading "Real-time video at work. *Small apps* at home." with the italic phrase in `accent`, `lead` intro ending "Eight of them live below, one per key.", a primary "See the projects" and secondary "Resume (PDF)" button); the Octave keyboard immediately under it, with no heading, and its caption row (the legend: "Eight side projects, one octave…", and the Sound toggle); Latest updates (eyebrow "Changelog · N updates in the last 30 days", `section` heading "Latest *updates.*", the Featured update with its live screenshot beside the Update ledger of the three newest other updates); the Now ledger band (`bg-band`, "Off the clock, *mostly keys.*": Programming, Piano, Videogames, each with what Daniel is doing now and a link to the project it inspired); the home footer ("Say hello.", email, GitHub, LinkedIn, location).
 - **Projects.** Header; eyebrow "Projects · N", `page-title` "Side *projects*", `intro`; the Sort toggle (Recently updated, Newest first); one Project row per project, sorted by last update, newest first; footer.
 - **Project detail.** Header; Breadcrumb; a two-column hero (accent eyebrow with an icon when the project ties to a hobby, `hero-project` name, italic `tagline`, "Open live site" primary and "View on GitHub" secondary buttons, a Started / Last update / Stack meta row) beside the hero screenshot; "What it does" `prose` paragraphs and roman-numeral Highlights beside an aside holding Stack chips and the Timeline; the Screenshots gallery; footer. There is no previous/next project navigation and no separate "latest update" box: the Timeline carries the latest update.
 
@@ -92,7 +92,7 @@ These three page types are the whole site. Build them from the components below.
 - **Sort toggle** (`nc-sort`): a segmented pair of options, as `aria-pressed` buttons or as links to `?sort=` with `aria-current="true"` on the current one (what the site uses).
 - **Featured update** (`nc-featured`): the newest project update with a screenshot (never this site itself): 4:3 screenshot, name and short date, italic tagline, note. See UpdateLedger.
 - **Update ledger** (`nc-ledger`): flat rows of short date, name and note for the three newest updates other than the featured one. The nav and the hero button already lead to the full projects page, so the ledger has no "see all" link. See UpdateLedger.
-- **Octave keyboard** (`nc-octave`): the signature. Eight white keys, one per project, left to right in the order the projects were started (first commit date, oldest first). A key is lit when that project's last update is within 30 days. White keys play C4 to C5; black keys (C#, D#, F#, G#, A#) are decorative, `aria-hidden` and silent, and let the pointer through to the white key beneath. Below 640px it turns sideways. A caption row under it (`nc-octave__caption`) holds the legend (`nc-legend`: what the keys are, plus a lit and a resting swatch) and the Sound toggle.
+- **Octave keyboard** (`nc-octave`): the signature. Eight white keys, one per project, left to right in the order the projects were started (first commit date, oldest first). All keys share one style. White keys play C4 to C5; black keys (C#, D#, F#, G#, A#) are decorative, `aria-hidden` and silent, and let the pointer through to the white key beneath. Below 640px it turns sideways. A caption row under it (`nc-octave__caption`) holds the legend (`nc-legend`: what the keys are) and the Sound toggle.
 - **Now ledger** (`nc-now`): three flat columns (Programming, Piano, Videogames) ruled by `line`, each a label, an optional italic "now" value and a line of copy. No cards, no icons.
 - **Project row** (`nc-row`): thumbnail, name with an optional "Updated recently" Badge, tagline, "Latest ·" note, Tech chips, and an Updated / Started meta column with a Details link.
 - **Tech chip** (`nc-chip`) and **Badge** (`nc-badge`).

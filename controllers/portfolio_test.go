@@ -177,7 +177,7 @@ func keyboardPortfolio(t *testing.T, projects []models.Project) Portfolio {
 	t.Helper()
 	fsys := fstest.MapFS{
 		"home/index.tmpl": {Data: []byte(
-			`{{ range .Keys }}[{{ .Slug }} {{ .Note }}{{ if .Recent }} lit{{ end }}]{{ end }}` +
+			`{{ range .Keys }}[{{ .Slug }} {{ .Note }}]{{ end }}` +
 				`|{{ range .BlackKeys }}{{ .Pos }}{{ end }}` +
 				`|{{ range .Updates }}{{ .Slug }} {{ end }}` +
 				`|{{ .KeyCount }} {{ .RecentCount }}`)},
@@ -201,12 +201,12 @@ var sampleProjects = []models.Project{
 	{Slug: "site", FirstCommitDate: "2024-06-29", LastUpdate: "September 14, 2026"},
 }
 
-func TestHomeKeyboardOrdersByStartAndLightsRecentWork(t *testing.T) {
+func TestHomeKeyboardOrdersByStart(t *testing.T) {
 	t.Parallel()
 	rr := httptest.NewRecorder()
 	keyboardPortfolio(t, sampleProjects).Home(rr, httptest.NewRequest(http.MethodGet, "/", nil))
 
-	want := "[site C4 lit][dined D4 lit][noted E4][carma F4]" +
+	want := "[site C4][dined D4][noted E4][carma F4]" +
 		"|12" +
 		"|site dined carma " +
 		"|Four 2"
