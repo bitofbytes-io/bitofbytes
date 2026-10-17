@@ -56,6 +56,23 @@ func TestRoutesRenderCurrentSiteSurface(t *testing.T) {
 	}
 }
 
+func TestHomeKeysShareOneStyleWithoutLegendSwatches(t *testing.T) {
+	t.Parallel()
+
+	rr := httptest.NewRecorder()
+	newTestHandler().ServeHTTP(rr, httptest.NewRequest(http.MethodGet, "/", nil))
+	body := rr.Body.String()
+
+	if !strings.Contains(body, `class="nc-key"`) {
+		t.Error("home page renders no plain nc-key links")
+	}
+	for _, removed := range []string{"nc-key--lit", "nc-legend__item", "nc-legend__swatch", "resting"} {
+		if strings.Contains(body, removed) {
+			t.Errorf("home page still renders %q", removed)
+		}
+	}
+}
+
 func TestHandlerRejectsCrossSitePost(t *testing.T) {
 	t.Parallel()
 
