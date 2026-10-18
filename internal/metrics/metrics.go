@@ -105,6 +105,8 @@ func (m *Metrics) Handler() http.Handler {
 // Middleware records http_requests_total and http_request_duration_seconds.
 // route is called after the handler returns and must give the matched route
 // pattern, or "" when nothing matched; it must never return the raw path.
+// A panicking handler is recorded as a 500 and the panic is re-raised, so the
+// server's own recovery still runs.
 func (m *Metrics) Middleware(route func(*http.Request) string) func(http.Handler) http.Handler {
 	return func(next http.Handler) http.Handler {
 		return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
@@ -115,21 +117,33 @@ func (m *Metrics) Middleware(route func(*http.Request) string) func(http.Handler
 
 			start := time.Now()
 			rec := &statusRecorder{ResponseWriter: w}
+			defer func() {
+				status := rec.Status()
+				p := recover()
+				if p != nil {
+					status = http.StatusInternalServerError
+				}
+				m.observe(r, route(r), status, time.Since(start))
+				if p != nil {
+					panic(p)
+				}
+			}()
 			next.ServeHTTP(rec, r)
-
-			pattern := route(r)
-			if pattern == "" {
-				pattern = UnmatchedRoute
-			}
-			labels := prometheus.Labels{
-				"method": methodLabel(r.Method),
-				"route":  pattern,
-				"status": strconv.Itoa(rec.Status()),
-			}
-			m.requests.With(labels).Inc()
-			m.duration.With(labels).Observe(time.Since(start).Seconds())
 		})
 	}
+}
+
+func (m *Metrics) observe(r *http.Request, pattern string, status int, elapsed time.Duration) {
+	if pattern == "" {
+		pattern = UnmatchedRoute
+	}
+	labels := prometheus.Labels{
+		"method": methodLabel(r.Method),
+		"route":  pattern,
+		"status": strconv.Itoa(status),
+	}
+	m.requests.With(labels).Inc()
+	m.duration.With(labels).Observe(elapsed.Seconds())
 }
 
 // ServeMuxRoute resolves the route label from an http.ServeMux: the

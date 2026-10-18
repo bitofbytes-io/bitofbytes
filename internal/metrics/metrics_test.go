@@ -77,6 +77,31 @@ func TestMiddlewareLabelsByRoutePattern(t *testing.T) {
 	}
 }
 
+func TestMiddlewareRecordsPanicsAsServerErrors(t *testing.T) {
+	t.Parallel()
+	m := New()
+
+	mux := http.NewServeMux()
+	mux.HandleFunc("GET /boom", func(w http.ResponseWriter, r *http.Request) {
+		panic("boom")
+	})
+	handler := m.Middleware(ServeMuxRoute(mux))(mux)
+
+	func() {
+		defer func() {
+			if p := recover(); p != "boom" {
+				t.Errorf("recovered %v, want the handler's panic re-raised", p)
+			}
+		}()
+		handler.ServeHTTP(httptest.NewRecorder(), httptest.NewRequest(http.MethodGet, "/boom", nil))
+	}()
+
+	want := `http_requests_total{method="GET",route="/boom",status="500"} 1`
+	if body := scrape(t, m); !strings.Contains(body, want) {
+		t.Errorf("metrics output missing %q", want)
+	}
+}
+
 func TestServeMuxRouteStripsMethod(t *testing.T) {
 	t.Parallel()
 	mux := http.NewServeMux()
