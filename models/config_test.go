@@ -67,3 +67,31 @@ func TestLoadEnvConfigRequiresEnv(t *testing.T) {
 		}
 	}))
 }
+
+func TestLoadEnvConfigMetricsAddress(t *testing.T) {
+	tests := []struct {
+		name string
+		env  string
+		want string
+	}{
+		{name: "defaults when unset", env: "", want: ":9464"},
+		{name: "uses the configured address", env: "127.0.0.1:9100", want: "127.0.0.1:9100"},
+		{name: "off disables the listener", env: "off", want: ""},
+		{name: "off is case insensitive", env: " OFF ", want: ""},
+	}
+	for _, tt := range tests {
+		t.Run(tt.name, withTempEnv(map[string]string{
+			"SERVER_ADDRESS": "127.0.0.1:8080",
+			"CSRF_SECURE":    "false",
+			"METRICS_ADDR":   tt.env,
+		}, func(t *testing.T) {
+			cfg, err := LoadEnvConfig()
+			if err != nil {
+				t.Fatalf("expected no error, got %v", err)
+			}
+			if cfg.Metrics.Address != tt.want {
+				t.Fatalf("metrics address = %q, want %q", cfg.Metrics.Address, tt.want)
+			}
+		}))
+	}
+}

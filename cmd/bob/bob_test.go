@@ -9,6 +9,7 @@ import (
 	"strings"
 	"testing"
 
+	"github.com/DryWaters/bitofbytes/internal/metrics"
 	"github.com/DryWaters/bitofbytes/models"
 )
 
@@ -18,7 +19,7 @@ func newTestHandler() http.Handler {
 
 	logger := slog.New(slog.NewTextHandler(io.Discard, nil))
 
-	return newHandler(cfg, logger, "../../static", testAssetVersion)
+	return newHandler(cfg, logger, metrics.New(), "../../static", testAssetVersion)
 }
 
 const testAssetVersion = "testrev"
