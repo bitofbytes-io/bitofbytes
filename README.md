@@ -43,7 +43,10 @@ docker run --rm --name bitofbytes \
   bitofbytes:local
 ```
 
-Open <http://localhost:3000>. The health endpoint is <http://localhost:3000/healthz>.
+Open <http://localhost:3000>. Two probe endpoints follow the shared health contract:
+
+- `/health` returns `200 ok` while the process is up. `/healthz` is the same handler and stays for the image's `HEALTHCHECK`.
+- `/ready` reports whether dependencies are up. BitOfBytes has no database or mount, so it always returns `200 {"status":"ok"}`.
 
 For production, terminate TLS at a reverse proxy, and set `CSRF_SECURE=true`.
 
