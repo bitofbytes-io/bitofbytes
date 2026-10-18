@@ -3,6 +3,7 @@ package main
 import (
 	"context"
 	"log/slog"
+	"net"
 	"net/http"
 	"os"
 	"os/signal"
@@ -66,6 +67,13 @@ func run(cfg models.Config, logger *slog.Logger) error {
 		MaxHeaderBytes:    1 << 20,
 	}
 
+	// Bind the public listener before the metrics one, so an address clash
+	// always fails the optional metrics listener rather than the site.
+	ln, err := net.Listen("tcp", server.Addr)
+	if err != nil {
+		return err
+	}
+
 	// The metrics listener is internal only and never fatal: it follows the
 	// public server's lifecycle and is shut down when serve returns.
 	metricsDone := make(chan struct{})
@@ -76,17 +84,17 @@ func run(cfg models.Config, logger *slog.Logger) error {
 
 	logger.Info("Starting the server", "address", cfg.Server.Address, "version", version, "revision", revision)
 
-	err := serve(ctx, server, logger)
+	err = serve(ctx, server, ln, logger)
 	stop()
 	<-metricsDone
 	return err
 }
 
-// serve runs server until it fails or ctx is done, then shuts it down
-// gracefully. A listener that cannot bind returns its error at once.
-func serve(ctx context.Context, server *http.Server, logger *slog.Logger) error {
+// serve runs server on ln until it fails or ctx is done, then shuts it down
+// gracefully.
+func serve(ctx context.Context, server *http.Server, ln net.Listener, logger *slog.Logger) error {
 	errs := make(chan error, 1)
-	go func() { errs <- server.ListenAndServe() }()
+	go func() { errs <- server.Serve(ln) }()
 
 	select {
 	case err := <-errs:

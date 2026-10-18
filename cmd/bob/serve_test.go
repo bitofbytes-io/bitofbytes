@@ -17,12 +17,11 @@ func TestServeShutsDownWhenContextIsDone(t *testing.T) {
 		t.Fatal(err)
 	}
 	addr := ln.Addr().String()
-	ln.Close()
 
 	ctx, cancel := context.WithCancel(context.Background())
-	server := &http.Server{Addr: addr, Handler: http.NotFoundHandler()}
+	server := &http.Server{Handler: http.NotFoundHandler()}
 	done := make(chan error, 1)
-	go func() { done <- serve(ctx, server, slog.New(slog.NewTextHandler(io.Discard, nil))) }()
+	go func() { done <- serve(ctx, server, ln, slog.New(slog.NewTextHandler(io.Discard, nil))) }()
 
 	// Wait until the server answers, then ask it to stop.
 	for start := time.Now(); ; {
@@ -47,17 +46,16 @@ func TestServeShutsDownWhenContextIsDone(t *testing.T) {
 	}
 }
 
-func TestServeReturnsListenError(t *testing.T) {
+func TestServeReturnsListenerError(t *testing.T) {
 	t.Parallel()
 	ln, err := net.Listen("tcp", "127.0.0.1:0")
 	if err != nil {
 		t.Fatal(err)
 	}
-	defer ln.Close()
+	ln.Close()
 
-	server := &http.Server{Addr: ln.Addr().String()}
-	err = serve(context.Background(), server, slog.New(slog.NewTextHandler(io.Discard, nil)))
+	err = serve(context.Background(), &http.Server{}, ln, slog.New(slog.NewTextHandler(io.Discard, nil)))
 	if err == nil {
-		t.Fatal("serve returned nil for an address already in use")
+		t.Fatal("serve returned nil for a listener that cannot accept")
 	}
 }
