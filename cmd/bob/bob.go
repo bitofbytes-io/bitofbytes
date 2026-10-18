@@ -112,10 +112,12 @@ func newHandler(cfg models.Config, logger *slog.Logger, staticDir string, assetV
 	r.HandleFunc("GET /{$}", portfolio.Home)
 	r.HandleFunc("GET /projects", portfolio.ProjectsIndex)
 	r.HandleFunc("GET /projects/{slug}", portfolio.ProjectDetail)
-	r.HandleFunc("GET /healthz", func(w http.ResponseWriter, r *http.Request) {
-		w.WriteHeader(http.StatusOK)
-		_, _ = w.Write([]byte("ok"))
-	})
+	// /health means the process is up and /ready means its dependencies are.
+	// bob has no database or mount, so /ready has nothing to check and always
+	// reports ok. /healthz stays for the image's HEALTHCHECK.
+	r.HandleFunc("GET /health", health)
+	r.HandleFunc("GET /healthz", health)
+	r.HandleFunc("GET /ready", ready)
 	// Support browser default icon discovery paths in addition to the template's
 	// explicit /static/... icon links.
 	r.Handle("GET /favicon.ico", cacheStatic(assetVersion, serveStaticFile(staticDir, "favicon.ico")))
@@ -133,6 +135,20 @@ func newHandler(cfg models.Config, logger *slog.Logger, staticDir string, assetV
 	handler = middleware.RequestLogger(logger)(handler)
 
 	return handler
+}
+
+func health(w http.ResponseWriter, r *http.Request) {
+	w.Header().Set("Content-Type", "text/plain; charset=utf-8")
+	w.Header().Set("Cache-Control", "no-store")
+	w.WriteHeader(http.StatusOK)
+	_, _ = w.Write([]byte("ok"))
+}
+
+func ready(w http.ResponseWriter, r *http.Request) {
+	w.Header().Set("Content-Type", "application/json")
+	w.Header().Set("Cache-Control", "no-store")
+	w.WriteHeader(http.StatusOK)
+	_, _ = w.Write([]byte(`{"status":"ok"}`))
 }
 
 func serveStaticFile(staticDir string, name string) http.HandlerFunc {

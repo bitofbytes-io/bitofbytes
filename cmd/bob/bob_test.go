@@ -89,6 +89,47 @@ func TestHandlerRejectsCrossSitePost(t *testing.T) {
 	}
 }
 
+// bob has no database or mount, so /ready has no failing dependency and
+// always reports ok. Probes pass through the CSRF middleware like any GET.
+func TestHealthAndReadyEndpoints(t *testing.T) {
+	t.Parallel()
+
+	handler := newTestHandler()
+
+	tests := []struct {
+		path            string
+		wantBody        string
+		wantContentType string
+	}{
+		{path: "/health", wantBody: "ok", wantContentType: "text/plain"},
+		{path: "/healthz", wantBody: "ok", wantContentType: "text/plain"},
+		{path: "/ready", wantBody: `{"status":"ok"}`, wantContentType: "application/json"},
+	}
+
+	for _, tt := range tests {
+		t.Run(tt.path, func(t *testing.T) {
+			req := httptest.NewRequest(http.MethodGet, tt.path, nil)
+			req.Header.Set("Sec-Fetch-Site", "cross-site")
+			rr := httptest.NewRecorder()
+
+			handler.ServeHTTP(rr, req)
+
+			if rr.Code != http.StatusOK {
+				t.Fatalf("status code = %d, want %d", rr.Code, http.StatusOK)
+			}
+			if got := rr.Body.String(); got != tt.wantBody {
+				t.Errorf("body = %q, want %q", got, tt.wantBody)
+			}
+			if got := rr.Header().Get("Content-Type"); !strings.HasPrefix(got, tt.wantContentType) {
+				t.Errorf("Content-Type = %q, want prefix %q", got, tt.wantContentType)
+			}
+			if got := rr.Header().Get("Cache-Control"); got != "no-store" {
+				t.Errorf("Cache-Control = %q, want no-store", got)
+			}
+		})
+	}
+}
+
 func TestProjectDetailTimelinesShowUpdatesWithoutFirstCommit(t *testing.T) {
 	t.Parallel()
 
