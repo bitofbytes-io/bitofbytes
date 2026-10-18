@@ -61,7 +61,7 @@ For production, terminate TLS at a reverse proxy, and set `CSRF_SECURE=true`.
 | `http_request_duration_seconds` | `method`, `route`, `status` | Latency histogram with the same labels |
 | `go_*`, `process_*` | | Go runtime and process collectors |
 
-`route` is the matched `http.ServeMux` pattern without its method (for example `/projects/{slug}`, `/static/`, or `/{$}` for the home page), and `unmatched` for 404s and 405s, so raw paths and query strings never become label values. BitOfBytes has no database, logins, OAuth, uploads, or background jobs, so it exports no DB pool or domain counters.
+`route` is the matched `http.ServeMux` pattern without its method (for example `/projects/{slug}`, `/static/`, or `/{$}` for the home page), and `unmatched` for 404s and 405s, so raw paths and query strings never become label values. `method` is the standard HTTP method, or `OTHER` for any extension method. BitOfBytes has no database, logins, OAuth, uploads, or background jobs, so it exports no DB pool or domain counters.
 
 ## Development
 

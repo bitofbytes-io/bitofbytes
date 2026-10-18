@@ -35,6 +35,29 @@ var skipPaths = map[string]bool{
 	"/metrics": true,
 }
 
+// OtherMethod is the method label for nonstandard methods, so clients cannot
+// mint label values with extension methods.
+const OtherMethod = "OTHER"
+
+var knownMethods = map[string]bool{
+	http.MethodGet:     true,
+	http.MethodHead:    true,
+	http.MethodPost:    true,
+	http.MethodPut:     true,
+	http.MethodPatch:   true,
+	http.MethodDelete:  true,
+	http.MethodConnect: true,
+	http.MethodOptions: true,
+	http.MethodTrace:   true,
+}
+
+func methodLabel(method string) string {
+	if knownMethods[method] {
+		return method
+	}
+	return OtherMethod
+}
+
 // Metrics owns a private registry (not the global default) with the Go
 // runtime and process collectors and the HTTP RED series.
 type Metrics struct {
@@ -99,7 +122,7 @@ func (m *Metrics) Middleware(route func(*http.Request) string) func(http.Handler
 				pattern = UnmatchedRoute
 			}
 			labels := prometheus.Labels{
-				"method": r.Method,
+				"method": methodLabel(r.Method),
 				"route":  pattern,
 				"status": strconv.Itoa(rec.Status()),
 			}

@@ -51,6 +51,9 @@ func TestMiddlewareLabelsByRoutePattern(t *testing.T) {
 		handler.ServeHTTP(httptest.NewRecorder(), httptest.NewRequest(http.MethodGet, target, nil))
 	}
 	handler.ServeHTTP(httptest.NewRecorder(), httptest.NewRequest(http.MethodPost, "/items/44", nil))
+	for _, method := range []string{"X0001", "X0002"} {
+		handler.ServeHTTP(httptest.NewRecorder(), httptest.NewRequest(method, "/items/45", nil))
+	}
 
 	body := scrape(t, m)
 	for _, want := range []string{
@@ -58,6 +61,7 @@ func TestMiddlewareLabelsByRoutePattern(t *testing.T) {
 		`http_requests_total{method="GET",route="/broken",status="500"} 1`,
 		`http_requests_total{method="GET",route="unmatched",status="404"} 1`,
 		`http_requests_total{method="POST",route="unmatched",status="405"} 1`,
+		`http_requests_total{method="OTHER",route="unmatched",status="405"} 2`,
 		`http_request_duration_seconds_count{method="GET",route="/items/{id}",status="200"} 2`,
 		`http_request_duration_seconds_bucket{method="GET",route="/items/{id}",status="200",le="+Inf"} 2`,
 		"go_goroutines ",
@@ -66,7 +70,7 @@ func TestMiddlewareLabelsByRoutePattern(t *testing.T) {
 			t.Errorf("metrics output missing %q", want)
 		}
 	}
-	for _, raw := range []string{"/items/42", "/items/43", "alice", "/no-such-page", `route="/health"`, `route="/ready"`, `route="/metrics"`} {
+	for _, raw := range []string{"/items/42", "/items/43", "alice", "X0001", "/no-such-page", `route="/health"`, `route="/ready"`, `route="/metrics"`} {
 		if strings.Contains(body, raw) {
 			t.Errorf("metrics output contains raw path or skipped route %q", raw)
 		}
