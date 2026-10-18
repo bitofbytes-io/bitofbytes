@@ -12,6 +12,7 @@ import (
 
 	"github.com/DryWaters/bitofbytes/controllers"
 	"github.com/DryWaters/bitofbytes/controllers/middleware"
+	"github.com/DryWaters/bitofbytes/internal/metrics"
 	"github.com/DryWaters/bitofbytes/models"
 	"github.com/DryWaters/bitofbytes/templates"
 	"github.com/DryWaters/bitofbytes/views"
@@ -54,9 +55,10 @@ func run(cfg models.Config, logger *slog.Logger) error {
 	ctx, stop := signal.NotifyContext(context.Background(), os.Interrupt, syscall.SIGTERM)
 	defer stop()
 
+	m := metrics.New()
 	server := &http.Server{
 		Addr:              cfg.Server.Address,
-		Handler:           newHandler(cfg, logger, "static", assetVersion()),
+		Handler:           newHandler(cfg, logger, m, "static", assetVersion()),
 		ReadTimeout:       5 * time.Second,
 		ReadHeaderTimeout: 2 * time.Second,
 		WriteTimeout:      10 * time.Second,
@@ -64,9 +66,20 @@ func run(cfg models.Config, logger *slog.Logger) error {
 		MaxHeaderBytes:    1 << 20,
 	}
 
+	// The metrics listener is internal only and never fatal: it follows the
+	// public server's lifecycle and is shut down when serve returns.
+	metricsDone := make(chan struct{})
+	go func() {
+		defer close(metricsDone)
+		m.Serve(ctx, cfg.Metrics.Address, logger)
+	}()
+
 	logger.Info("Starting the server", "address", cfg.Server.Address, "version", version, "revision", revision)
 
-	return serve(ctx, server, logger)
+	err := serve(ctx, server, logger)
+	stop()
+	<-metricsDone
+	return err
 }
 
 // serve runs server until it fails or ctx is done, then shuts it down
@@ -97,7 +110,7 @@ func assetVersion() string {
 	return revision
 }
 
-func newHandler(cfg models.Config, logger *slog.Logger, staticDir string, assetVersion string) http.Handler {
+func newHandler(cfg models.Config, logger *slog.Logger, m *metrics.Metrics, staticDir string, assetVersion string) http.Handler {
 	portfolio := controllers.Portfolio{
 		Projects:   models.Projects(),
 		Activities: models.CurrentActivities(),
@@ -133,6 +146,9 @@ func newHandler(cfg models.Config, logger *slog.Logger, staticDir string, assetV
 	handler = middleware.CSRF()(handler)
 	handler = middleware.SecureHeaders(cfg.CSRF.Secure)(handler)
 	handler = middleware.RequestLogger(logger)(handler)
+	// Outermost, so latency covers every middleware and CSRF rejections count.
+	// /metrics is not routed here; it is served only on the metrics listener.
+	handler = m.Middleware(metrics.ServeMuxRoute(r))(handler)
 
 	return handler
 }

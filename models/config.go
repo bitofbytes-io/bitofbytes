@@ -8,6 +8,7 @@ import (
 	"strconv"
 	"strings"
 
+	"github.com/DryWaters/bitofbytes/internal/metrics"
 	"github.com/joho/godotenv"
 )
 
@@ -16,6 +17,11 @@ type Config struct {
 		Secure bool
 	}
 	Server struct {
+		Address string
+	}
+	Metrics struct {
+		// Address is the internal metrics listener's address, or "" when
+		// METRICS_ADDR=off disables it.
 		Address string
 	}
 	Logging LoggingConfig
@@ -59,11 +65,26 @@ func LoadEnvConfig() (Config, error) {
 	}
 	cfg.CSRF.Secure = secure
 
+	cfg.Metrics.Address = metricsAddress(os.Getenv("METRICS_ADDR"))
+
 	if err := loadLoggingConfig(&cfg); err != nil {
 		return cfg, err
 	}
 
 	return cfg, nil
+}
+
+// metricsAddress defaults an unset METRICS_ADDR and maps "off" to "".
+func metricsAddress(env string) string {
+	addr := strings.TrimSpace(env)
+	switch {
+	case addr == "":
+		return metrics.DefaultAddr
+	case strings.EqualFold(addr, "off"):
+		return ""
+	default:
+		return addr
+	}
 }
 
 func loadLoggingConfig(cfg *Config) error {

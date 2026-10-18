@@ -33,6 +33,7 @@ Do not commit this file.
 | `CSRF_SECURE` | Yes | Set `false` for local HTTP and `true` behind production HTTPS |
 | `LOG_LEVEL` | No | `debug`, `info`, `warn`, or `error` |
 | `LOG_FORMAT` | No | `text` or `json`; defaults to `text` |
+| `METRICS_ADDR` | No | Internal Prometheus listener address; defaults to `:9464`, `off` disables it |
 
 ## Run with Docker
 
@@ -49,6 +50,18 @@ Open <http://localhost:3000>. Two probe endpoints follow the shared health contr
 - `/ready` reports whether dependencies are up. BitOfBytes has no database or mount, so it always returns `200 {"status":"ok"}`.
 
 For production, terminate TLS at a reverse proxy, and set `CSRF_SECURE=true`.
+
+### Prometheus metrics
+
+`GET /metrics` is served on a separate internal listener at `METRICS_ADDR` (default `:9464`), never on the public `SERVER_ADDRESS` listener, so public proxy routes cannot reach it. The image does not `EXPOSE` the port; scrape it over the internal network. A failure to bind is logged and the site keeps running; `METRICS_ADDR=off` turns the listener off. The code lives in `internal/metrics` and uses its own registry, not the global default.
+
+| Series | Labels | Notes |
+| --- | --- | --- |
+| `http_requests_total` | `method`, `route`, `status` | Counter for every public request except `/health`, `/healthz`, `/ready` and `/metrics` |
+| `http_request_duration_seconds` | `method`, `route`, `status` | Latency histogram with the same labels |
+| `go_*`, `process_*` | | Go runtime and process collectors |
+
+`route` is the matched `http.ServeMux` pattern without its method (for example `/projects/{slug}`, `/static/`, or `/{$}` for the home page), and `unmatched` for 404s and 405s, so raw paths and query strings never become label values. BitOfBytes has no database, logins, OAuth, uploads, or background jobs, so it exports no DB pool or domain counters.
 
 ## Development
 
