@@ -92,6 +92,7 @@ func TestCanonicalURLsUseApexHostWithoutQuery(t *testing.T) {
 		"/projects":             "https://bitofbytes.io/projects",
 		"/projects?sort=newest": "https://bitofbytes.io/projects",
 		"/projects/carma":       "https://bitofbytes.io/projects/carma",
+		"/updates":              "https://bitofbytes.io/updates",
 	}
 	for page, want := range tests {
 		body := get(t, page).Body.String()
@@ -232,10 +233,10 @@ func TestSitemapListsEveryPage(t *testing.T) {
 	if len(projects) == 0 {
 		t.Fatal("no projects in the catalog")
 	}
-	if want := len(projects) + 2; len(set.URLs) != want {
+	if want := len(projects) + 3; len(set.URLs) != want {
 		t.Errorf("sitemap has %d URLs, want %d", len(set.URLs), want)
 	}
-	for _, loc := range []string{"https://bitofbytes.io/", "https://bitofbytes.io/projects"} {
+	for _, loc := range []string{"https://bitofbytes.io/", "https://bitofbytes.io/projects", "https://bitofbytes.io/updates"} {
 		if _, ok := lastMods[loc]; !ok {
 			t.Errorf("sitemap missing %s", loc)
 		}

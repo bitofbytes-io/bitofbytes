@@ -42,7 +42,7 @@
 .nc-breadcrumb [aria-current="page"] { color: var(--ink); }
 
 .nc-footer { display: flex; align-items: center; justify-content: space-between; gap: 24px; padding-block: var(--space-8); border-top: 1px solid var(--line); font-size: 15px; color: var(--ink-subtle); }
-.nc-footer__links { display: flex; gap: 28px; }
+.nc-footer__links { display: flex; flex-wrap: wrap; gap: 12px 28px; }
 .nc-footer__links a { color: var(--ink-muted); }
 .nc-footer__email { color: var(--accent); }
 .nc-footer__email--large { font-size: 20px; }
@@ -92,6 +92,7 @@
 .nc-ledger__name { font-size: 17px; font-weight: 600; line-height: 1.4; color: var(--accent); }
 .nc-ledger__note { font-size: 15px; line-height: 1.5; color: var(--ink-muted); }
 .nc-ledger__row:hover .nc-ledger__name { text-decoration: underline; text-underline-offset: 3px; }
+.nc-ledger__all { align-self: flex-start; padding-top: var(--space-2); }
 
 /* ---------- now ledger (the band on Home) ---------- */
 .nc-band { background: var(--bg-band); border-block: 1px solid var(--line); padding-block: var(--space-11); }
@@ -138,6 +139,11 @@
 .nc-timeline__date { font-family: var(--font-mono); font-size: 13px; color: var(--ink-subtle); }
 .nc-timeline__date b { font-weight: 400; color: var(--accent); }
 .nc-timeline__text { font-size: 16px; line-height: 1.5; color: var(--ink); }
+/* the /updates page: a full-width timeline whose items link to their project */
+.nc-timeline--page { max-width: 720px; gap: var(--space-6); }
+.nc-timeline__entry { display: flex; flex-direction: column; gap: 4px; }
+.nc-timeline__name { font-size: 17px; font-weight: 600; line-height: 1.4; color: var(--accent); }
+.nc-timeline__entry:hover .nc-timeline__name { text-decoration: underline; text-underline-offset: 3px; }
 
 .nc-highlights { margin: 0; padding: 0; list-style: none; }
 .nc-highlights li { display: grid; grid-template-columns: 48px minmax(0, 1fr); gap: 16px; padding: 18px 0; border-top: 1px solid var(--line); font-size: 17px; line-height: 1.6; color: var(--ink-soft); }
@@ -200,6 +206,7 @@
 .nc-page-head { display: flex; align-items: flex-end; justify-content: space-between; gap: var(--space-8); padding-block: var(--space-11) var(--space-8); }
 .nc-page-head__titles { display: flex; flex-direction: column; gap: 20px; }
 .nc-projects { padding-bottom: var(--space-11); }
+.nc-updates { padding-block: var(--space-3) var(--space-11); }
 
 .nc-detail-crumb { padding-top: var(--space-7); }
 .nc-detail-hero { display: grid; grid-template-columns: minmax(0, 1fr) 460px; gap: 72px; align-items: center; padding-block: var(--space-7) var(--space-11); }
@@ -289,6 +296,8 @@
   .nc-ledger__date { grid-area: date; font-size: 12px; line-height: 1.5; }
   .nc-ledger__name { grid-area: name; font-size: 16px; }
   .nc-ledger__note { grid-area: note; font-size: 14px; }
+  /* the link follows the last row, so it carries the closing rule */
+  .nc-ledger__all { align-self: stretch; padding-top: 4px; border-top: 1px solid var(--line); }
   .nc-band__inner { gap: 28px; }
   .nc-now__item { gap: 10px; }
   .nc-now__value { font-size: 26px; }
@@ -298,6 +307,8 @@
   .nc-sort { display: flex; }
   .nc-sort a { flex: 1 1 0; }
   .nc-projects { padding-bottom: 40px; }
+  .nc-updates { padding-block: 4px 56px; }
+  .nc-timeline--page { gap: var(--space-5); }
   .nc-detail-crumb { padding-top: 28px; }
   .nc-detail-hero, .nc-detail-hero--solo { grid-template-columns: minmax(0, 1fr); gap: 40px; padding-block: 18px 48px; }
   .nc-detail-hero__intro { gap: 18px; }
