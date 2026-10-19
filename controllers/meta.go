@@ -41,6 +41,14 @@ func projectsMeta() views.Meta {
 	}
 }
 
+func updatesMeta() views.Meta {
+	return views.Meta{
+		Title:       "Updates | " + siteName,
+		Description: "Every update to Daniel Waters's side projects, newest first, also available as an Atom feed.",
+		Path:        "/updates",
+	}
+}
+
 func projectMeta(project models.Project) views.Meta {
 	image := project.Thumbnail().Path
 	jsonld := map[string]any{

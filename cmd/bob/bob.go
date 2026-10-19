@@ -122,10 +122,12 @@ func newHandler(cfg models.Config, logger *slog.Logger, m *metrics.Metrics, stat
 	portfolio := controllers.Portfolio{
 		Projects:   models.Projects(),
 		Activities: models.CurrentActivities(),
+		Updates:    models.AllUpdates(),
 		Templates: controllers.PortfolioTemplates{
 			Home:          views.Must(views.ParseFS(assetVersion, templates.FS, "home/index.gohtml", "base.gohtml")),
 			ProjectsIndex: views.Must(views.ParseFS(assetVersion, templates.FS, "projects/index.gohtml", "base.gohtml")),
 			ProjectDetail: views.Must(views.ParseFS(assetVersion, templates.FS, "projects/detail.gohtml", "base.gohtml")),
+			UpdatesIndex:  views.Must(views.ParseFS(assetVersion, templates.FS, "updates/index.gohtml", "base.gohtml")),
 		},
 	}
 
@@ -133,6 +135,8 @@ func newHandler(cfg models.Config, logger *slog.Logger, m *metrics.Metrics, stat
 	r.HandleFunc("GET /{$}", portfolio.Home)
 	r.HandleFunc("GET /projects", portfolio.ProjectsIndex)
 	r.HandleFunc("GET /projects/{slug}", portfolio.ProjectDetail)
+	r.HandleFunc("GET /updates", portfolio.UpdatesIndex)
+	r.HandleFunc("GET /feed.xml", portfolio.Feed)
 	// /health means the process is up and /ready means its dependencies are.
 	// bob has no database or mount, so /ready has nothing to check and always
 	// reports ok. /healthz stays for the image's HEALTHCHECK.

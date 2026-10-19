@@ -13,7 +13,10 @@ import (
 type Portfolio struct {
 	Projects   []models.Project
 	Activities models.Activities
-	Templates  PortfolioTemplates
+	// Updates are every project update, newest first, for /updates and the
+	// Atom feed.
+	Updates   []models.FeedEntry
+	Templates PortfolioTemplates
 	// Now returns the current time; nil means time.Now. Tests pin it.
 	Now func() time.Time
 }
@@ -22,6 +25,7 @@ type PortfolioTemplates struct {
 	Home          views.Page
 	ProjectsIndex views.Page
 	ProjectDetail views.Page
+	UpdatesIndex  views.Page
 }
 
 // ProjectView is a project plus what depends on the current date.
@@ -70,6 +74,11 @@ type ProjectsIndexData struct {
 type ProjectDetailData struct {
 	views.Meta
 	Project ProjectView
+}
+
+type UpdatesIndexData struct {
+	views.Meta
+	Updates []models.FeedEntry
 }
 
 const (

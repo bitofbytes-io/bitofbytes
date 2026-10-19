@@ -1,0 +1,25 @@
+{{ template "header" . }}
+<main class="nc-wrap">
+    <section class="nc-page-head">
+        <div class="nc-page-head__titles">
+            <p class="nc-eyebrow">Changelog · {{ len .Updates }} updates</p>
+            <h1 class="nc-heading nc-heading--page">All <span class="nc-em">updates</span></h1>
+            <p class="nc-intro">What changed in each side project, newest first. Follow along with the <a class="nc-prose-link" href="/feed.xml" type="application/atom+xml">Atom feed</a>.</p>
+        </div>
+    </section>
+
+    <section class="nc-updates" aria-label="All project updates">
+        <ol class="nc-timeline nc-timeline--page">
+            {{ range $i, $update := .Updates }}
+            <li class="nc-timeline__item{{ if eq $i 0 }} nc-timeline__item--latest{{ end }}">
+                <a class="nc-timeline__entry" href="/projects/{{ $update.Slug }}">
+                    <span class="nc-timeline__date">{{ $update.DateLong }}{{ if eq $i 0 }} · <b>latest</b>{{ end }}</span>
+                    <span class="nc-timeline__name">{{ $update.Name }}</span>
+                    <span class="nc-timeline__text">{{ $update.Note }}</span>
+                </a>
+            </li>
+            {{ end }}
+        </ol>
+    </section>
+</main>
+{{ template "footer" }}
