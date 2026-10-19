@@ -78,11 +78,12 @@ Nocturne is the visual system for bitofbytes.io, the personal site and project p
 
 ## Pages
 
-These three page types are the whole site. Build them from the components below.
+These four page types are the whole site. Build them from the components below.
 
 - **Home.** Header; a single-column statement hero (eyebrow "Daniel Waters · Senior Software Engineer · Raleigh, NC", `hero` heading "Real-time video at work. *Small apps* at home." with the italic phrase in `accent`, `lead` intro ending "Eight of them live below, one per key.", a primary "See the projects" and secondary "Resume (PDF)" button); the Octave keyboard immediately under it, with no heading, and its caption row (the legend: "Eight side projects, one octave…", and the Sound toggle); Latest updates (eyebrow "Changelog · N updates in the last 30 days", `section` heading "Latest *updates.*", the Featured update with its live screenshot beside the Update ledger of the three newest other updates); the Now ledger band (`bg-band`, "Off the clock, *mostly keys.*": Programming, Piano, Videogames, each with what Daniel is doing now and a link to the project it inspired); the home footer ("Say hello.", email, GitHub, LinkedIn, location).
 - **Projects.** Header; eyebrow "Projects · N", `page-title` "Side *projects*", `intro`; the Sort toggle (Recently updated, Newest first); one Project row per project, sorted by last update, newest first; footer.
 - **Project detail.** Header; Breadcrumb; a two-column hero (accent eyebrow with an icon when the project ties to a hobby, `hero-project` name, italic `tagline`, "Open live site" primary and "View on GitHub" secondary buttons, a Started / Last update / Stack meta row) beside the hero screenshot; "What it does" `prose` paragraphs and roman-numeral Highlights beside an aside holding Stack chips and the Timeline; the Screenshots gallery; footer. There is no previous/next project navigation and no separate "latest update" box: the Timeline carries the latest update.
+- **Updates.** Header; eyebrow "Changelog · N updates", `page-title` "All *updates*", `intro` linking the Atom feed (`/feed.xml`); one page-width Timeline (`nc-timeline--page`) of every project update, newest first, each item linking to its project; footer.
 
 ## Components
 
@@ -91,14 +92,14 @@ These three page types are the whole site. Build them from the components below.
 - **Sound toggle** (`nc-sound`): an `aria-pressed` button that switches keyboard audio.
 - **Sort toggle** (`nc-sort`): a segmented pair of options, as `aria-pressed` buttons or as links to `?sort=` with `aria-current="true"` on the current one (what the site uses).
 - **Featured update** (`nc-featured`): the newest project update with a screenshot (never this site itself): 4:3 screenshot, name and short date, italic tagline, note. See UpdateLedger.
-- **Update ledger** (`nc-ledger`): flat rows of short date, name and note for the three newest updates other than the featured one. The nav and the hero button already lead to the full projects page, so the ledger has no "see all" link. See UpdateLedger.
+- **Update ledger** (`nc-ledger`): flat rows of short date, name and note for the three newest updates other than the featured one, then a small "See all updates" arrow link to `/updates`. See UpdateLedger.
 - **Octave keyboard** (`nc-octave`): the signature. Eight white keys, one per project, left to right in the order the projects were started (first commit date, oldest first). All keys share one style. White keys play C4 to C5; black keys (C#, D#, F#, G#, A#) are decorative, `aria-hidden` and silent, and let the pointer through to the white key beneath. Below 640px it turns sideways. A caption row under it (`nc-octave__caption`) holds the legend (`nc-legend`: what the keys are) and the Sound toggle.
 - **Now ledger** (`nc-now`): three flat columns (Programming, Piano, Videogames) ruled by `line`, each a label, an optional italic "now" value and a line of copy. No cards, no icons.
 - **Project row** (`nc-row`): thumbnail, name with an optional "Updated recently" Badge, tagline, "Latest ·" note, Tech chips, and an Updated / Started meta column with a Details link.
 - **Tech chip** (`nc-chip`) and **Badge** (`nc-badge`).
-- **Timeline** (`nc-timeline`): up to three dated updates, newest first; the newest item has a filled `accent` dot and a "latest" tag.
+- **Timeline** (`nc-timeline`): up to three dated updates, newest first; the newest item has a filled `accent` dot and a "latest" tag. The Updates page uses it at page width for every update.
 - **Screenshot** (`nc-shot`, `nc-hero-shot`).
-- **Footer** (`nc-footer`, `nc-footer--home`).
+- **Footer** (`nc-footer`, `nc-footer--home`), with a small "Subscribe" link to the Atom feed.
 
 ## Building bitofbytes with Nocturne
 

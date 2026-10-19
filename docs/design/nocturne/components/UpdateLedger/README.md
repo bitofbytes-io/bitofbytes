@@ -32,6 +32,7 @@ The Home page's "Latest updates" section: one Featured update with a live screen
         <span class="nc-ledger__body"><span class="nc-ledger__name">BitOfBytes</span><span class="nc-ledger__note">…</span></span>
       </a>
       <!-- two more rows -->
+      <a class="nc-link-arrow nc-ledger__all" href="/updates">See all updates <svg>…</svg></a>
     </div>
   </div>
 </section>
@@ -41,6 +42,6 @@ The Home page's "Latest updates" section: one Featured update with a live screen
 
 - Two equal columns (`nc-latest`, 80px gap, 48px below 1024px), one column below 860px with the feature first. With no featured project the ledger spans the full width.
 - Featured: a 4:3 screenshot cropped from the top, `radius-lg`, `line-image` border on a `surface` fill; name in Fraunces 600 28px with the short date in `meta` mono at the right; italic Fraunces tagline 20px `ink-soft`; note 15px `ink-muted`. Hovering turns the name `accent`.
-- Ledger: flat, no card. Each row is one link: an 88px mono date column (13px `ink-subtle`), then the name (Plex Sans 600 17px `accent`, the same for every row) over the note (15px `ink-muted`), divided by `line` rules. Hovering underlines the name. There is no "see all" link: the nav and the hero button already lead to the projects page.
-- Phone (below 640px): name 24px, tagline 18px, note 14px on the feature; ledger rows stack with the name and date on one line and the note underneath, ruled top and bottom.
+- Ledger: flat, no card. Each row is one link: an 88px mono date column (13px `ink-subtle`), then the name (Plex Sans 600 17px `accent`, the same for every row) over the note (15px `ink-muted`), divided by `line` rules. Hovering underlines the name. After the rows, one small `nc-link-arrow` "See all updates" leads to the full changelog at `/updates`.
+- Phone (below 640px): name 24px, tagline 18px, note 14px on the feature; ledger rows stack with the name and date on one line and the note underneath, ruled top and bottom (the "See all updates" link carries the closing rule).
 - Don't: put the ledger in a card, add a live dot, or show more than one screenshot.

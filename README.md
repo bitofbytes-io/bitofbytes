@@ -91,6 +91,15 @@ Portfolio content is maintained in `models/project.go`; templates and static ass
 
 Each page renders its own title, description, canonical URL, Open Graph and Twitter tags, and a JSON-LD block from `views.Meta`, which the page data in `controllers/portfolio.go` embeds. Project pages take their metadata from `models.Project`. `/robots.txt` is `static/robots.txt`, and `/sitemap.xml` is generated from `models.Projects()` with each project's last update as `<lastmod>`. The canonical host is hardcoded to `https://bitofbytes.io` (`views.SiteURL`); no configuration is needed.
 
+### Updates and Atom feed
+
+Each project's `LastUpdate`/`Notes` and `PreviousUpdates` form a dated changelog. `models.AllUpdates()` flattens them across projects, newest first, and two routes render it:
+
+- `/updates` is the HTML changelog, linked from "See all updates" on the home page.
+- `/feed.xml` is the same list as an Atom feed (`application/atom+xml`, cached for an hour). Each entry's ID is `tag:bitofbytes.io,<YYYY-MM-DD>:<slug>`, so keep at most one update per project per day. Every page advertises it with `<link rel="alternate">` and a footer "Subscribe" link.
+
+Adding an update in `models/project.go` updates both on the next deploy; there is no configuration.
+
 ## Analytics events
 
 Umami page views load through `static/umami-loader.js` on `bitofbytes.io` only. Outbound intent is recorded with Umami's `data-umami-event` attributes on the links themselves, so no inline JavaScript is needed and the CSP is unchanged. There is no new configuration; the attributes are inert wherever the Umami script does not load.
