@@ -1,0 +1,17 @@
+{{ template "header" . }}
+<main class="nc-wrap">
+    <section class="nc-page-head">
+        <div class="nc-page-head__titles">
+            <h1 class="nc-heading nc-heading--page">Project <span class="nc-em">status</span></h1>
+        </div>
+    </section>
+    <dl class="nc-status" aria-label="Project status">
+        {{ range .Projects }}
+        <div class="nc-status__row">
+            <dt>{{ .Name }}</dt>
+            <dd>{{ if .Up }}Up{{ else }}Down{{ end }}</dd>
+        </div>
+        {{ end }}
+    </dl>
+</main>
+{{ template "footer" }}

@@ -288,6 +288,13 @@ body { margin: 0; min-width: 320px; }
   .nc-page-head { display: flex; align-items: flex-end; justify-content: space-between; gap: var(--space-8); padding-block: var(--space-11) var(--space-8); }
   .nc-page-head__titles { display: flex; flex-direction: column; gap: 20px; }
   .nc-projects { padding-bottom: var(--space-11); }
+  /* Project status is a plain, flat list: availability is conveyed by words. */
+  .nc-status { max-width: 680px; padding-bottom: var(--space-9); }
+  .nc-status__row { display: flex; align-items: baseline; justify-content: space-between; gap: var(--space-5); padding-block: var(--space-4); border-bottom: 1px solid var(--line); }
+  .nc-status__row:first-child { border-top: 1px solid var(--line); }
+  .nc-status dt { font-family: var(--font-display); font-size: 24px; color: var(--ink); }
+  .nc-status dd { font-size: 16px; color: var(--ink-soft); }
+
   .nc-updates { padding-block: var(--space-3) var(--space-11); }
 
   .nc-detail-crumb { padding-top: var(--space-7); }

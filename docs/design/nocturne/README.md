@@ -78,16 +78,18 @@ Nocturne is the visual system for bitofbytes.io, the personal site and project p
 
 ## Pages
 
-These four page types are the whole site. Build them from the components below.
+These five page types are the whole site. Build them from the components below.
 
 - **Home.** Header; a single-column statement hero (eyebrow "Daniel Waters · Senior Software Engineer · Raleigh, NC", `hero` heading "Real-time video at work. *Small apps* at home." with the italic phrase in `accent`, `lead` intro ending "Eight of them live below, one per key.", a primary "See the projects" and secondary "Resume (PDF)" button); the Octave keyboard immediately under it, with no heading, and its caption row (the legend: "Eight side projects, one octave…", and the Sound toggle); Latest updates (eyebrow "Changelog · N updates in the last 30 days", `section` heading "Latest *updates.*", the Featured update with its live screenshot beside the Update ledger of the three newest other updates); the Now ledger band (`bg-band`, "Off the clock, *mostly keys.*": Programming, Piano, Videogames, each with what Daniel is doing now and a link to the project it inspired); the home footer ("Say hello.", email, GitHub, LinkedIn, location).
 - **Projects.** Header; eyebrow "Projects · N", `page-title` "Side *projects*", `intro`; the Sort toggle (Recently updated, Newest first); one Project row per project, sorted by last update, newest first; footer.
 - **Project detail.** Header; Breadcrumb; a two-column hero (accent eyebrow with an icon when the project ties to a hobby, `hero-project` name, italic `tagline`, "Open live site" primary and "View on GitHub" secondary buttons, a Started / Last update / Stack meta row) beside the hero screenshot; "What it does" `prose` paragraphs and roman-numeral Highlights beside an aside holding Stack chips and the Timeline; the Screenshots gallery; footer. There is no previous/next project navigation and no separate "latest update" box: the Timeline carries the latest update.
 - **Updates.** Header; eyebrow "Changelog · N updates", `page-title` "All *updates*", `intro` linking the Atom feed (`/feed.xml`); one page-width Timeline (`nc-timeline--page`) of every project update, newest first, each item linking to its project; footer.
 
+- **Status.** Header; `page-title` "Project *status*"; a flat list of all project names with plain "Up" or "Down" text; footer. No status dots, diagnostic details, or per-project indicators elsewhere.
+
 ## Components
 
-- **Site header** (`nc-header`): wordmark left, nav right (Home, Projects, Resume, Contact) with `aria-current="page"` on the current item. Below 640px the nav collapses into a 44px round menu button that opens a `<details>` drop-down.
+- **Site header** (`nc-header`): wordmark left, nav right (Home, Projects, Status, Resume, Contact) with `aria-current="page"` on the current item. Below 640px the nav collapses into a 44px round menu button that opens a `<details>` drop-down.
 - **Button** (`nc-btn--primary`, `nc-btn--secondary`): pills, 52px tall. One primary per view.
 - **Sound toggle** (`nc-sound`): an `aria-pressed` button that switches keyboard audio.
 - **Sort toggle** (`nc-sort`): a segmented pair of options, as `aria-pressed` buttons or as links to `?sort=` with `aria-current="true"` on the current one (what the site uses).
