@@ -2,22 +2,30 @@ name: PR checks
 on:
   pull_request:
     branches: [ main ]
+  workflow_call:
 
 permissions:
   contents: read
 
 concurrency:
-  group: pr-checks-${{ github.event.pull_request.number }}
-  cancel-in-progress: true
+  group: pr-checks-${{ github.event.pull_request.number || github.run_id }}
+  cancel-in-progress: ${{ github.event_name == 'pull_request' }}
 
 jobs:
   checks:
     runs-on: ubuntu-24.04
+    timeout-minutes: 15
     steps:
-      - uses: actions/checkout@v6
-      - uses: actions/setup-go@v6
+      - uses: actions/checkout@d23441a48e516b6c34aea4fa41551a30e30af803 # v6.1.0
+        with:
+          persist-credentials: false
+      - uses: actions/setup-go@924ae3a1cded613372ab5595356fb5720e22ba16 # v6.5.0
         with:
           go-version-file: go.mod
+      - name: go mod tidy
+        run: |
+          go mod tidy
+          git diff --exit-code -- go.mod go.sum
       - name: gofmt
         run: |
           unformatted="$(gofmt -l .)"
@@ -28,7 +36,54 @@ jobs:
           fi
       - name: go vet
         run: go vet ./...
+      - name: golangci-lint
+        uses: golangci/golangci-lint-action@ba0d7d2ec06a0ea1cb5fa41b2e4a3ab91d21278a # v9.3.0
+        with:
+          version: v2.15.0
       - name: go test -race
         run: go test -race ./...
       - name: go build
         run: go build ./cmd/bob
+
+  docker:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@d23441a48e516b6c34aea4fa41551a30e30af803 # v6.1.0
+        with:
+          persist-credentials: false
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@f87e5991a6d7451dcb8d9637bfbc97413f497069 # v4.4.1
+      - name: Build image without pushing
+        uses: docker/build-push-action@c3c9e263c25d99ce0380d002d59b67737d91b0dc # v7.4.0
+        with:
+          context: .
+          file: Docker/Dockerfile
+          push: false
+          load: true
+          tags: bob:ci
+          cache-from: type=gha,scope=bob-ci
+          cache-to: type=gha,scope=bob-ci,mode=max
+      - name: Smoke test container
+        run: |
+          set -euo pipefail
+          container=bob-ci-smoke
+          trap 'timeout 10s docker logs "$container" || true; timeout 10s docker rm -f "$container"' EXIT
+          timeout 30s docker run --name "$container" -d -p 127.0.0.1::3000 bob:ci
+          for attempt in {1..60}; do
+            health="$(docker inspect --format '{{.State.Health.Status}}' "$container")"
+            if [[ "$health" == healthy ]]; then
+              port="$(docker port "$container" 3000/tcp | cut -d: -f2)"
+              for route in /health /healthz /ready / /projects /projects/bitofbytes /static/styles.css; do
+                curl --fail --silent --show-error --max-time 5 "http://127.0.0.1:${port}${route}" -o /dev/null
+              done
+              exit 0
+            fi
+            if [[ "$health" == unhealthy ]] || [[ "$(docker inspect --format '{{.State.Running}}' "$container")" != true ]]; then
+              break
+            fi
+            sleep 2
+          done
+          docker inspect --format '{{json .State}}' "$container"
+          echo "Container did not become healthy within 120 seconds" >&2
+          exit 1
