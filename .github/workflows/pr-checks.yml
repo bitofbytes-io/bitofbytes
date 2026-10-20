@@ -70,7 +70,7 @@ jobs:
           container=bob-ci-smoke
           trap 'timeout 10s docker logs "$container" || true; timeout 10s docker rm -f "$container"' EXIT
           timeout 30s docker run --name "$container" -d -p 127.0.0.1::3000 bob:ci
-          for attempt in {1..60}; do
+          for _ in {1..60}; do
             health="$(docker inspect --format '{{.State.Health.Status}}' "$container")"
             if [[ "$health" == healthy ]]; then
               port="$(docker port "$container" 3000/tcp | cut -d: -f2)"
