@@ -218,7 +218,7 @@ func TestSitemapListsEveryPage(t *testing.T) {
 			t.Errorf("sitemap lists %s twice", u.Loc)
 		}
 		lastMods[u.Loc] = u.LastMod
-		if u.Loc == "https://bitofbytes.io/" {
+		if u.Loc == "https://bitofbytes.io/" || u.Loc == "https://bitofbytes.io/status" {
 			if u.LastMod != "" {
 				t.Errorf("home lastmod = %q, want none", u.LastMod)
 			}
@@ -233,10 +233,10 @@ func TestSitemapListsEveryPage(t *testing.T) {
 	if len(projects) == 0 {
 		t.Fatal("no projects in the catalog")
 	}
-	if want := len(projects) + 3; len(set.URLs) != want {
+	if want := len(projects) + 4; len(set.URLs) != want {
 		t.Errorf("sitemap has %d URLs, want %d", len(set.URLs), want)
 	}
-	for _, loc := range []string{"https://bitofbytes.io/", "https://bitofbytes.io/projects", "https://bitofbytes.io/updates"} {
+	for _, loc := range []string{"https://bitofbytes.io/", "https://bitofbytes.io/projects", "https://bitofbytes.io/updates", "https://bitofbytes.io/status"} {
 		if _, ok := lastMods[loc]; !ok {
 			t.Errorf("sitemap missing %s", loc)
 		}

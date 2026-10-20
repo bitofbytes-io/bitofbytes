@@ -42,6 +42,7 @@ func (p Portfolio) Sitemap(w http.ResponseWriter, r *http.Request) {
 		sitemapEntry("/", time.Time{}),
 		sitemapEntry("/projects", newest),
 		sitemapEntry("/updates", newest),
+		sitemapEntry("/status", time.Time{}),
 	)
 	for _, project := range models.SortByLastUpdate(p.Projects) {
 		set.URLs = append(set.URLs, sitemapEntry("/projects/"+project.Slug, project.UpdatedOn()))

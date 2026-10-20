@@ -10,6 +10,7 @@ import (
 	"testing"
 
 	"github.com/DryWaters/bitofbytes/internal/metrics"
+	"github.com/DryWaters/bitofbytes/internal/status"
 	"github.com/DryWaters/bitofbytes/models"
 )
 
@@ -94,7 +95,7 @@ func TestStaticCacheControl(t *testing.T) {
 func TestDevelopmentAssetsAreNotVersioned(t *testing.T) {
 	t.Parallel()
 	var cfg models.Config
-	handler := newHandler(cfg, slog.New(slog.NewTextHandler(io.Discard, nil)), metrics.New(), "../../static", "")
+	handler := newHandler(cfg, slog.New(slog.NewTextHandler(io.Discard, nil)), metrics.New(), "../../static", "", status.New())
 
 	rr := httptest.NewRecorder()
 	handler.ServeHTTP(rr, httptest.NewRequest(http.MethodGet, "/", nil))

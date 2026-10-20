@@ -14,6 +14,7 @@ import (
 	"github.com/DryWaters/bitofbytes/controllers"
 	"github.com/DryWaters/bitofbytes/controllers/middleware"
 	"github.com/DryWaters/bitofbytes/internal/metrics"
+	"github.com/DryWaters/bitofbytes/internal/status"
 	"github.com/DryWaters/bitofbytes/models"
 	"github.com/DryWaters/bitofbytes/templates"
 	"github.com/DryWaters/bitofbytes/views"
@@ -57,9 +58,10 @@ func run(cfg models.Config, logger *slog.Logger) error {
 	defer stop()
 
 	m := metrics.New()
+	projectStatus := status.New()
 	server := &http.Server{
 		Addr:              cfg.Server.Address,
-		Handler:           newHandler(cfg, logger, m, "static", assetVersion()),
+		Handler:           newHandler(cfg, logger, m, "static", assetVersion(), projectStatus),
 		ReadTimeout:       5 * time.Second,
 		ReadHeaderTimeout: 2 * time.Second,
 		WriteTimeout:      10 * time.Second,
@@ -74,6 +76,12 @@ func run(cfg models.Config, logger *slog.Logger) error {
 		return err
 	}
 
+	statusDone := make(chan struct{})
+	go func() {
+		defer close(statusDone)
+		projectStatus.Run(ctx)
+	}()
+
 	// The metrics listener is internal only and never fatal: it follows the
 	// public server's lifecycle and is shut down when serve returns.
 	metricsDone := make(chan struct{})
@@ -87,6 +95,7 @@ func run(cfg models.Config, logger *slog.Logger) error {
 	err = serve(ctx, server, ln, logger)
 	stop()
 	<-metricsDone
+	<-statusDone
 	return err
 }
 
@@ -118,7 +127,7 @@ func assetVersion() string {
 	return revision
 }
 
-func newHandler(cfg models.Config, logger *slog.Logger, m *metrics.Metrics, staticDir string, assetVersion string) http.Handler {
+func newHandler(cfg models.Config, logger *slog.Logger, m *metrics.Metrics, staticDir string, assetVersion string, projectStatus *status.Checker) http.Handler {
 	portfolio := controllers.Portfolio{
 		Projects:   models.Projects(),
 		Activities: models.CurrentActivities(),
@@ -136,6 +145,7 @@ func newHandler(cfg models.Config, logger *slog.Logger, m *metrics.Metrics, stat
 	r.HandleFunc("GET /projects", portfolio.ProjectsIndex)
 	r.HandleFunc("GET /projects/{slug}", portfolio.ProjectDetail)
 	r.HandleFunc("GET /updates", portfolio.UpdatesIndex)
+	r.Handle("GET /status", controllers.Status{Snapshot: projectStatus.Snapshot, Page: views.Must(views.ParseFS(assetVersion, templates.FS, "status/index.gohtml", "base.gohtml"))})
 	r.HandleFunc("GET /feed.xml", portfolio.Feed)
 	// /health means the process is up and /ready means its dependencies are.
 	// bob has no database or mount, so /ready has nothing to check and always

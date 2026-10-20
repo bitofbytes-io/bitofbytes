@@ -74,7 +74,7 @@ jobs:
             health="$(docker inspect --format '{{.State.Health.Status}}' "$container")"
             if [[ "$health" == healthy ]]; then
               port="$(docker port "$container" 3000/tcp | cut -d: -f2)"
-              for route in /health /healthz /ready / /projects /projects/bitofbytes /static/styles.css; do
+              for route in /health /healthz /ready / /status /projects /projects/bitofbytes /static/styles.css; do
                 curl --fail --silent --show-error --max-time 5 "http://127.0.0.1:${port}${route}" -o /dev/null
               done
               exit 0
