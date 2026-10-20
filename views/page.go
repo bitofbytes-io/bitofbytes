@@ -27,7 +27,11 @@ func (p Page) Execute(w http.ResponseWriter, r *http.Request, data any) {
 		return
 	}
 
-	io.Copy(w, &buf)
+	if _, err := io.Copy(w, &buf); err != nil {
+		// The response may already be committed, so log the write failure
+		// without trying to append an error page.
+		slog.Error("writing template response", "error", err)
+	}
 }
 
 func Must(p Page, err error) Page {

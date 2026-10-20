@@ -1,7 +1,8 @@
 {
   "$schema": "https://docs.renovatebot.com/renovate-schema.json",
   "description": "Weekly dependency updates for Go modules, GitHub Actions and the Dockerfile base images. Replaces Dependabot.",
-  "extends": ["config:recommended"],
+  "extends": ["config:recommended", "helpers:pinGitHubActionDigests"],
+  "postUpdateOptions": ["gomodTidy"],
   "schedule": ["* * * * 4"],
   "packageRules": [
     {

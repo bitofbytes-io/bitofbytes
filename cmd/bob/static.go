@@ -1,6 +1,7 @@
 package main
 
 import (
+	"errors"
 	"io/fs"
 	"net/http"
 )
@@ -18,12 +19,10 @@ func (fsys noDirFS) Open(name string) (http.File, error) {
 	}
 	info, err := f.Stat()
 	if err != nil {
-		f.Close()
-		return nil, err
+		return nil, errors.Join(err, f.Close())
 	}
 	if info.IsDir() {
-		f.Close()
-		return nil, fs.ErrNotExist
+		return nil, errors.Join(fs.ErrNotExist, f.Close())
 	}
 	return f, nil
 }

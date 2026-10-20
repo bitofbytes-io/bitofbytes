@@ -19,14 +19,17 @@ func TestServeShutsDownWhenContextIsDone(t *testing.T) {
 	addr := ln.Addr().String()
 
 	ctx, cancel := context.WithCancel(context.Background())
-	server := &http.Server{Handler: http.NotFoundHandler()}
+	defer cancel()
+	server := &http.Server{Handler: http.NotFoundHandler(), ReadHeaderTimeout: time.Second}
 	done := make(chan error, 1)
 	go func() { done <- serve(ctx, server, ln, slog.New(slog.NewTextHandler(io.Discard, nil))) }()
 
 	// Wait until the server answers, then ask it to stop.
 	for start := time.Now(); ; {
 		if resp, err := http.Get("http://" + addr + "/"); err == nil {
-			resp.Body.Close()
+			if err := resp.Body.Close(); err != nil {
+				t.Fatal(err)
+			}
 			break
 		}
 		if time.Since(start) > 5*time.Second {
@@ -52,9 +55,11 @@ func TestServeReturnsListenerError(t *testing.T) {
 	if err != nil {
 		t.Fatal(err)
 	}
-	ln.Close()
+	if err := ln.Close(); err != nil {
+		t.Fatal(err)
+	}
 
-	err = serve(context.Background(), &http.Server{}, ln, slog.New(slog.NewTextHandler(io.Discard, nil)))
+	err = serve(context.Background(), &http.Server{ReadHeaderTimeout: time.Second}, ln, slog.New(slog.NewTextHandler(io.Discard, nil)))
 	if err == nil {
 		t.Fatal("serve returned nil for a listener that cannot accept")
 	}

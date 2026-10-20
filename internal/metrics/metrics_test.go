@@ -128,7 +128,9 @@ func freeAddr(t *testing.T) string {
 		t.Fatal(err)
 	}
 	addr := ln.Addr().String()
-	ln.Close()
+	if err := ln.Close(); err != nil {
+		t.Fatal(err)
+	}
 	return addr
 }
 
@@ -138,6 +140,7 @@ func TestServeExposesMetricsUntilContextIsDone(t *testing.T) {
 	addr := freeAddr(t)
 
 	ctx, cancel := context.WithCancel(context.Background())
+	defer cancel()
 	done := make(chan struct{})
 	go func() {
 		defer close(done)
@@ -155,8 +158,13 @@ func TestServeExposesMetricsUntilContextIsDone(t *testing.T) {
 		}
 		time.Sleep(10 * time.Millisecond)
 	}
-	body, _ := io.ReadAll(resp.Body)
-	resp.Body.Close()
+	body, readErr := io.ReadAll(resp.Body)
+	if err := resp.Body.Close(); err != nil {
+		t.Fatal(err)
+	}
+	if readErr != nil {
+		t.Fatal(readErr)
+	}
 	if resp.StatusCode != http.StatusOK || !bytes.Contains(body, []byte("go_goroutines")) {
 		t.Fatalf("GET /metrics = %d, body missing go_goroutines", resp.StatusCode)
 	}
@@ -175,7 +183,11 @@ func TestServeLogsBindFailureWithoutBlocking(t *testing.T) {
 	if err != nil {
 		t.Fatal(err)
 	}
-	defer ln.Close()
+	t.Cleanup(func() {
+		if err := ln.Close(); err != nil {
+			t.Error(err)
+		}
+	})
 
 	var logs bytes.Buffer
 	done := make(chan struct{})

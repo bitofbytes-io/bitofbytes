@@ -1,33 +1,15 @@
 package models
 
 import (
-	"os"
 	"testing"
 )
 
 func withTempEnv(env map[string]string, fn func(t *testing.T)) func(t *testing.T) {
 	return func(t *testing.T) {
 		t.Helper()
-		original := make(map[string]string, len(env))
-		for k := range env {
-			original[k] = os.Getenv(k)
-		}
 		for k, v := range env {
-			if v == "" {
-				os.Unsetenv(k)
-				continue
-			}
-			os.Setenv(k, v)
+			t.Setenv(k, v)
 		}
-		t.Cleanup(func() {
-			for k, v := range original {
-				if v == "" {
-					os.Unsetenv(k)
-					continue
-				}
-				os.Setenv(k, v)
-			}
-		})
 		fn(t)
 	}
 }
