@@ -163,7 +163,8 @@ func ServeMuxRoute(mux *http.ServeMux) func(*http.Request) string {
 // down gracefully. A listener that cannot bind is logged and Serve returns at
 // once, leaving the app running without metrics. An empty addr disables it.
 func (m *Metrics) Serve(ctx context.Context, addr string, logger *slog.Logger) {
-	if addr == "" {
+	addr = strings.TrimSpace(addr)
+	if addr == "" || strings.EqualFold(addr, "off") {
 		logger.Info("Metrics listener disabled")
 		return
 	}
