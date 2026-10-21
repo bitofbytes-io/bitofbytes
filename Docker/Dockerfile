@@ -1,4 +1,4 @@
-FROM golang:1.26.6-alpine3.23 AS builder
+FROM golang:1.26.10-alpine3.23 AS builder
 ARG VERSION=dev
 ARG REVISION=unknown
 WORKDIR /app

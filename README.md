@@ -53,6 +53,8 @@ For production, terminate TLS at a reverse proxy, and set `CSRF_SECURE=true`.
 
 ### Prometheus metrics
 
+`METRICS_ADDR` is trimmed and `off` is case-insensitive. Other values must be a valid IP address or hostname plus a numeric port from 0 to 65535 (IPv6 addresses need brackets). Invalid syntax stops startup; validation does not resolve hostnames. Keep the metrics port private and never publish it through Docker or the public proxy.
+
 `GET /metrics` is served on a separate internal listener at `METRICS_ADDR` (default `:9464`), never on the public `SERVER_ADDRESS` listener, so public proxy routes cannot reach it. The image does not `EXPOSE` the port; scrape it over the internal network. A failure to bind is logged and the site keeps running; `METRICS_ADDR=off` turns the listener off. The code lives in `internal/metrics` and uses its own registry, not the global default.
 
 | Series | Labels | Notes |

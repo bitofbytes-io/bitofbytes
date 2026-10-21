@@ -66,6 +66,11 @@ func LoadEnvConfig() (Config, error) {
 	cfg.CSRF.Secure = secure
 
 	cfg.Metrics.Address = metricsAddress(os.Getenv("METRICS_ADDR"))
+	if cfg.Metrics.Address != "" {
+		if cfg.Metrics.Address, err = validateMetricsAddr(cfg.Metrics.Address); err != nil {
+			return cfg, err
+		}
+	}
 
 	if err := loadLoggingConfig(&cfg); err != nil {
 		return cfg, err
