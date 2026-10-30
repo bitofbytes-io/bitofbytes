@@ -42,12 +42,12 @@ func Projects() []Project {
 			Tagline:         "A shared household garage for maintenance history and what needs attention next.",
 			RepoURL:         "https://github.com/bitofbytes-io/carma",
 			LiveURL:         "https://carma.bitofbytes.io",
-			LastUpdate:      "October 15, 2026",
+			LastUpdate:      "October 29, 2026",
 			FirstCommitDate: "2026-07-31",
-			Notes:           "Most recent work added VIN decoding with safety recall tracking and an opt-in weekly email listing upcoming maintenance and new recalls.",
+			Notes:           "Most recent work lets you download service history as an Excel spreadsheet, with one sheet per vehicle and the same filters as the list on screen. The printable history for selling a vehicle now includes open recalls, and you can hide the prices.",
 			PreviousUpdates: []ProjectUpdate{
+				{Date: "October 15, 2026", Note: "Most recent work added VIN decoding with safety recall tracking and an opt-in weekly email listing upcoming maintenance and new recalls."},
 				{Date: "October 14, 2026", Note: "Most recent work added quick odometer check-ins, projected due dates for mileage reminders, starter reminder presets for new vehicles, a printable service history for selling a vehicle, and spend totals by service type."},
-				{Date: "October 4, 2026", Note: "Most recent work preserved vehicle photos during overlapping edits and secured sign-in cookies on HTTPS."},
 			},
 			Tech: []string{
 				"Go",
@@ -182,12 +182,12 @@ func Projects() []Project {
 			Tagline:         "Your permit pal: less yelling, more tracking.",
 			RepoURL:         "https://github.com/bitofbytes-io/permitpal",
 			LiveURL:         "https://permitpal.bitofbytes.io",
-			LastUpdate:      "October 21, 2026",
+			LastUpdate:      "October 27, 2026",
 			FirstCommitDate: "2026-05-01",
-			Notes:           "Most recent work counts at most 10 hours of credit per week when you update your totals, shows the hours that counted, and says when that weekly cap is holding the ready date back.",
+			Notes:           "Most recent work adds a road-test readiness card, a chart of weekly credited hours, a count of days since the last drive, and the date each skill was mastered. The card lists the hours and skills still left and says Ready when both are met, the chart marks weeks over the weekly cap, and a gap longer than a week is highlighted.",
 			PreviousUpdates: []ProjectUpdate{
+				{Date: "October 21, 2026", Note: "Most recent work counts at most 10 hours of credit per week when you update your totals, shows the hours that counted, and says when that weekly cap is holding the ready date back."},
 				{Date: "October 18, 2026", Note: "Most recent work added a What's left card that counts down to the end of the nine-month permit hold and lists the road-test steps that hours and ratings do not cover. The ready estimate will not land before that hold ends, and it says so when the hold is the reason."},
-				{Date: "October 10, 2026", Note: "Most recent work made the dashboard explain rejected saves, keep entered values for correction, and stop overlapping saves from showing outdated messages."},
 			},
 			Tech: []string{
 				"Go",
