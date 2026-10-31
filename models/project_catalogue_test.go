@@ -6,8 +6,6 @@ import (
 	"net/url"
 	"os"
 	"path"
-	"path/filepath"
-	"runtime"
 	"strings"
 	"testing"
 	"testing/fstest"
@@ -204,13 +202,12 @@ func screenshotRel(webPath string) (string, bool) {
 	return name, true
 }
 
+// catalogueStaticFiles is the repo static/ directory. go test runs the test
+// binary from this package's directory, so ../static is stable under -trimpath,
+// which strips the source path runtime.Caller would return.
 func catalogueStaticFiles(t *testing.T) fs.FS {
 	t.Helper()
-	_, file, _, ok := runtime.Caller(0)
-	if !ok {
-		t.Fatal("could not locate the catalogue test file")
-	}
-	dir := filepath.Join(filepath.Dir(file), "..", "static")
+	const dir = "../static"
 	info, err := os.Stat(dir)
 	if err != nil {
 		t.Fatalf("static directory: %v", err)
