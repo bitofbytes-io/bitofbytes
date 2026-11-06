@@ -89,6 +89,8 @@ make check
 
 That runs `go vet`, gofmt + golangci-lint, `go test -race`, and `go build ./cmd/bob`. Individual targets: `make vet`, `make lint`, and `make test`.
 
+CI also scans for reachable vulnerabilities with a pinned `govulncheck` (`GOVULNCHECK_VERSION` in the `Makefile`). Run the same check locally with `make vuln` (needs network access to fetch the tool and the vulnerability database).
+
 Portfolio content is maintained in `models/project.go`; templates and static assets live under `templates/` and `static/`.
 
 ### SEO metadata

@@ -1,7 +1,9 @@
-.PHONY: configure-image ensure-image-tag local build docker-build docker-push build-github vet lint test check
+.PHONY: configure-image ensure-image-tag local build docker-build docker-push build-github vet lint test check vuln
 
 # Keep in sync with .github/workflows/pr-checks.yml (golangci/golangci-lint-action version).
 GOLANGCI_LINT_VERSION ?= v2.15.0
+# Pinned to match the sibling repos (dined, noted); never @latest.
+GOVULNCHECK_VERSION ?= v1.7.0
 
 configure-image:
 	$(eval REGISTRY ?= registry.tail209cfc.ts.net)
@@ -52,6 +54,11 @@ lint:
 test:
 	go test -race ./...
 
+# Fails on reachable vulnerabilities. Needs network access for the vulnerability database.
+vuln:
+	go run golang.org/x/vuln/cmd/govulncheck@$(GOVULNCHECK_VERSION) ./...
+
 # Mirrors the PR checks job (vet, lint/gofmt+golangci-lint, race tests, build).
+# `make vuln` is a separate PR check step and is not part of this target.
 check: vet lint test
 	go build ./cmd/bob
