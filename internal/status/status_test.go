@@ -214,14 +214,47 @@ func TestSnapshotLatencyAndLastDownUseInjectedClock(t *testing.T) {
 
 func TestCanceledCheckIsNotRecordedAsLastDown(t *testing.T) {
 	c := newChecker([]target{{"Example", "https://example.test/health"}})
+	now := time.Date(2026, 10, 20, 0, 0, 0, 0, time.UTC)
+	c.now = func() time.Time { return now }
+	// Prior failure must survive a mid-check shutdown cancellation.
+	priorDown := now.Add(-time.Minute)
+	c.results[0] = result{up: false, checked: priorDown, lastDown: priorDown}
+
+	started := make(chan struct{})
+	release := make(chan struct{})
 	c.client.Transport = roundTripFunc(func(r *http.Request) (*http.Response, error) {
+		close(started)
+		<-release
 		return nil, r.Context().Err()
 	})
 	ctx, cancel := context.WithCancel(context.Background())
+	done := make(chan struct{})
+	go func() {
+		defer close(done)
+		c.poll(ctx)
+	}()
+	select {
+	case <-started:
+	case <-time.After(time.Second):
+		t.Fatal("check did not start")
+	}
 	cancel()
-	c.poll(ctx)
-	if c.Snapshot()[0].HasLastDown {
-		t.Fatal("shutdown was recorded as an outage")
+	close(release)
+	select {
+	case <-done:
+	case <-time.After(time.Second):
+		t.Fatal("poll did not finish after cancel")
+	}
+
+	c.mu.RLock()
+	got := c.results[0]
+	c.mu.RUnlock()
+	if got.lastDown != priorDown {
+		t.Fatalf("lastDown=%v want prior %v; shutdown must not record a new outage", got.lastDown, priorDown)
+	}
+	e := c.Snapshot()[0]
+	if !e.HasLastDown || e.LastDownAgo != now.Sub(priorDown) {
+		t.Fatalf("prior last-down should survive cancel: %+v", e)
 	}
 }
 
