@@ -3,11 +3,13 @@ package models
 import "slices"
 
 type Project struct {
-	Slug            string
-	Name            string
-	Tagline         string
-	RepoURL         string
-	LiveURL         string
+	Slug    string
+	Name    string
+	Tagline string
+	RepoURL string
+	LiveURL string
+	// HealthURL is the public endpoint the /status page polls.
+	HealthURL       string
 	LastUpdate      string
 	FirstCommitDate string
 	Notes           string
@@ -42,6 +44,7 @@ func Projects() []Project {
 			Tagline:         "A shared household garage for maintenance history and what needs attention next.",
 			RepoURL:         "https://github.com/bitofbytes-io/carma",
 			LiveURL:         "https://carma.bitofbytes.io",
+			HealthURL:       "https://carma.bitofbytes.io/health",
 			LastUpdate:      "October 29, 2026",
 			FirstCommitDate: "2026-07-31",
 			Notes:           "Most recent work lets you download service history as an Excel spreadsheet, with one sheet per vehicle and the same filters as the list on screen. The printable history for selling a vehicle now includes open recalls, and you can hide the prices.",
@@ -88,6 +91,7 @@ func Projects() []Project {
 			Tagline:         "A private digital binder for finding and reading sheet music without breaking the flow.",
 			RepoURL:         "https://github.com/bitofbytes-io/noted",
 			LiveURL:         "https://noted.bitofbytes.io",
+			HealthURL:       "https://noted.bitofbytes.io/api/health",
 			LastUpdate:      "October 23, 2026",
 			FirstCommitDate: "2026-07-13",
 			Notes:           "Most recent work keeps you signed in longer, and coming back from a piece keeps your search, filter, and sort without pulling that piece out of title order. Musical keys and opus numbers match more precisely, and a piece can store its opus and key.",
@@ -136,6 +140,7 @@ func Projects() []Project {
 			Tagline:         "Proof that nobody actually agreed on dinner.",
 			RepoURL:         "https://github.com/bitofbytes-io/dined",
 			LiveURL:         "https://dined.bitofbytes.io",
+			HealthURL:       "https://dined.bitofbytes.io/health",
 			LastUpdate:      "October 23, 2026",
 			FirstCommitDate: "2026-05-10",
 			Notes:           "Most recent work turns the logged-out home arrow into a Log In sign that starts Google sign-in, and shows the home arrow signs on phones.",
@@ -182,6 +187,7 @@ func Projects() []Project {
 			Tagline:         "Your permit pal: less yelling, more tracking.",
 			RepoURL:         "https://github.com/bitofbytes-io/permitpal",
 			LiveURL:         "https://permitpal.bitofbytes.io",
+			HealthURL:       "https://permitpal.bitofbytes.io/health",
 			LastUpdate:      "October 27, 2026",
 			FirstCommitDate: "2026-05-01",
 			Notes:           "Most recent work adds a road-test readiness card, a chart of weekly credited hours, a count of days since the last drive, and the date each skill was mastered. The card lists the hours and skills still left and says Ready when both are met, the chart marks weeks over the weekly cap, and a gap longer than a week is highlighted.",
@@ -228,6 +234,7 @@ func Projects() []Project {
 			Tagline:         "A personal learning journal for capturing and reviewing resources.",
 			RepoURL:         "https://github.com/bitofbytes-io/learnd",
 			LiveURL:         "https://learnd.bitofbytes.io",
+			HealthURL:       "https://learnd.bitofbytes.io/health",
 			LastUpdate:      "October 18, 2026",
 			FirstCommitDate: "2026-01-02",
 			Notes:           "Most recent work added dashboard search with tag and type filters, tag suggestions as you type, and a desktop bookmarklet that opens capture with the page you are on already filled in. Sharing a link into the app fills in the address, and reports show a weekly time chart and how many days you learned this month.",
@@ -274,6 +281,7 @@ func Projects() []Project {
 			Tagline:         "A family movie-night tracker for remembering picks, groups, and stats.",
 			RepoURL:         "https://github.com/bitofbytes-io/dejaview",
 			LiveURL:         "https://dejaview.bitofbytes.io",
+			HealthURL:       "https://dejaview.bitofbytes.io/health",
 			LastUpdate:      "October 21, 2026",
 			FirstCommitDate: "2026-01-04",
 			Notes:           "Most recent work keeps group numbers in sequence when the last movie leaves a group, and hides the Trophy Room link from public visitors.",
@@ -319,6 +327,7 @@ func Projects() []Project {
 			Tagline:         "The personal landing page and project portfolio for Daniel Waters.",
 			RepoURL:         "https://github.com/bitofbytes-io/bitofbytes",
 			LiveURL:         "https://www.bitofbytes.io",
+			HealthURL:       "https://bitofbytes.io/health",
 			LastUpdate:      "October 20, 2026",
 			FirstCommitDate: "2024-06-29",
 			Notes:           "Most recent work added a status page that shows whether each project is up or down, and an updates page with a subscribe feed that lists every project change.",
@@ -362,6 +371,7 @@ func Projects() []Project {
 			Tagline:         "A two-tier catalogue for personal books, games, movies, and music.",
 			RepoURL:         "https://github.com/bitofbytes-io/anthology",
 			LiveURL:         "https://anthology.bitofbytes.io",
+			HealthURL:       "https://anthology.bitofbytes.io/api/health",
 			LastUpdate:      "October 8, 2026",
 			FirstCommitDate: "2025-10-30",
 			Notes:           "Most recent work added a CSV import preview with duplicate checks and explicit save, and improved book lookup using either ISBN format.",
