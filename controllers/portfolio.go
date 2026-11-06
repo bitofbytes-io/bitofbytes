@@ -2,8 +2,10 @@ package controllers
 
 import (
 	"net/http"
+	"net/url"
 	"slices"
 	"strconv"
+	"strings"
 	"time"
 
 	"github.com/DryWaters/bitofbytes/models"
@@ -68,7 +70,22 @@ type HomeData struct {
 type ProjectsIndexData struct {
 	views.Meta
 	Projects []ProjectView
-	Sort     string
+	// Total is the number of projects before the technology filter.
+	Total int
+	Sort  string
+	// Tech is the active technology filter, spelled as the catalogue spells
+	// it when any project uses it; empty means no filter.
+	Tech string
+	// UpdatedHref and NewestHref are the sort links, which keep the
+	// technology filter; ClearHref drops the filter and keeps the sort.
+	UpdatedHref string
+	NewestHref  string
+	ClearHref   string
+}
+
+// TechHref links to the projects that use tech, keeping the current sort.
+func (d ProjectsIndexData) TechHref(tech string) string {
+	return projectsHref(d.Sort, tech)
 }
 
 type ProjectDetailData struct {
@@ -180,11 +197,60 @@ func (p Portfolio) ProjectsIndex(w http.ResponseWriter, r *http.Request) {
 		slices.Reverse(projects)
 	}
 
+	tech := strings.TrimSpace(r.URL.Query().Get("tech"))
+	if tech != "" {
+		tech = canonicalTech(p.Projects, tech)
+		projects = slices.DeleteFunc(projects, func(project models.Project) bool {
+			return !usesTech(project, tech)
+		})
+	}
+
 	p.Templates.ProjectsIndex.Execute(w, r, ProjectsIndexData{
-		Meta:     projectsMeta(),
-		Projects: p.views(projects),
-		Sort:     sort,
+		Meta:        projectsMeta(),
+		Projects:    p.views(projects),
+		Total:       len(p.Projects),
+		Sort:        sort,
+		Tech:        tech,
+		UpdatedHref: projectsHref(sortUpdated, tech),
+		NewestHref:  projectsHref(sortNewest, tech),
+		ClearHref:   projectsHref(sort, ""),
 	})
+}
+
+// projectsHref is the /projects URL for a sort and technology filter; the
+// default sort and an empty tech add no parameter.
+func projectsHref(sort, tech string) string {
+	query := url.Values{}
+	if tech != "" {
+		query.Set("tech", tech)
+	}
+	if sort == sortNewest {
+		query.Set("sort", sort)
+	}
+	if len(query) == 0 {
+		return "/projects"
+	}
+	return "/projects?" + query.Encode()
+}
+
+// usesTech reports whether the project lists tech, ignoring case.
+func usesTech(project models.Project, tech string) bool {
+	return slices.ContainsFunc(project.Tech, func(t string) bool {
+		return strings.EqualFold(t, tech)
+	})
+}
+
+// canonicalTech is tech spelled as the first project that lists it spells it,
+// or tech itself when no project does.
+func canonicalTech(projects []models.Project, tech string) string {
+	for _, project := range projects {
+		for _, t := range project.Tech {
+			if strings.EqualFold(t, tech) {
+				return t
+			}
+		}
+	}
+	return tech
 }
 
 func (p Portfolio) ProjectDetail(w http.ResponseWriter, r *http.Request) {

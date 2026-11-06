@@ -190,6 +190,14 @@ body { margin: 0; min-width: 320px; }
   /* ---------- chips / badge / meta ---------- */
   .nc-chips { margin: 0; padding: 0; list-style: none; display: flex; flex-wrap: wrap; gap: 8px; }
   .nc-chip { padding: 4px 10px; border: 1px solid var(--line-strong); border-radius: var(--radius-sm); font-family: var(--font-mono); font-size: 12px; color: var(--ink-muted); }
+  a.nc-chip { display: inline-flex; align-items: center; min-height: var(--control-height-sm); box-sizing: border-box; text-decoration: none; }
+  a.nc-chip:hover { border-color: var(--accent); color: var(--accent); }
+  .nc-filter { display: flex; flex-wrap: wrap; align-items: center; gap: 4px var(--space-4); padding-bottom: var(--space-5); }
+  .nc-filter__text { margin: 0; max-width: 100%; overflow-wrap: anywhere; padding: 8px 16px; border: 1px solid var(--line-strong); border-radius: var(--radius-pill); background: var(--surface); font: 400 14px var(--font-sans); color: var(--ink-muted); }
+  .nc-filter__text b { font-family: var(--font-mono); font-weight: 500; color: var(--ink); }
+  .nc-filter__clear { display: inline-flex; align-items: center; min-height: var(--control-height-sm); font: 500 14px var(--font-sans); color: var(--accent); }
+  .nc-empty { margin: 0; overflow-wrap: anywhere; padding-block: var(--space-6); border-top: 1px solid var(--line); font-size: 17px; line-height: 1.6; color: var(--ink-soft); }
+  .nc-empty a { color: var(--accent); text-decoration: underline; text-underline-offset: 3px; }
   .nc-badge { display: inline-flex; align-items: center; gap: 6px; height: 24px; padding: 0 10px; border-radius: var(--radius-pill); background: var(--surface-accent); font-family: var(--font-sans); font-size: 12px; font-weight: 500; color: var(--accent); white-space: nowrap; }
   .nc-badge::before { content: ""; width: 6px; height: 6px; border-radius: 3px; background: var(--accent); }
   .nc-meta { margin: 0; display: flex; flex-direction: column; gap: 12px; }

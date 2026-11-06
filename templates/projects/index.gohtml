@@ -2,17 +2,27 @@
 <main class="nc-wrap">
     <section class="nc-page-head">
         <div class="nc-page-head__titles">
-            <p class="nc-eyebrow">Projects · {{ len .Projects }}</p>
+            <p class="nc-eyebrow">Projects · {{ if .Tech }}{{ len .Projects }} of {{ .Total }}{{ else }}{{ len .Projects }}{{ end }}</p>
             <h1 class="nc-heading nc-heading--page">Side <span class="nc-em">projects</span></h1>
             <p class="nc-intro">Small, private apps for everyday life, plus this site. Each one has its own page with screenshots and what changed most recently.</p>
         </div>
         <nav class="nc-sort" aria-label="Sort projects">
-            <a href="/projects"{{ if eq .Sort "updated" }} aria-current="true"{{ end }}>Recently updated</a>
-            <a href="/projects?sort=newest"{{ if eq .Sort "newest" }} aria-current="true"{{ end }}>Newest first</a>
+            <a href="{{ .UpdatedHref }}"{{ if eq .Sort "updated" }} aria-current="true"{{ end }}>Recently updated</a>
+            <a href="{{ .NewestHref }}"{{ if eq .Sort "newest" }} aria-current="true"{{ end }}>Newest first</a>
         </nav>
     </section>
 
-    <section class="nc-projects" aria-label="All projects">
+    {{ if .Tech }}
+    <div class="nc-filter">
+        <p class="nc-filter__text">Technology <b>{{ .Tech }}</b></p>
+        <a class="nc-filter__clear" href="{{ .ClearHref }}" aria-label="Clear the {{ .Tech }} filter">Clear</a>
+    </div>
+    {{ end }}
+
+    <section class="nc-projects" aria-label="{{ if .Tech }}Projects using {{ .Tech }}{{ else }}All projects{{ end }}">
+        {{ if not .Projects }}
+        <p class="nc-empty">No projects use {{ .Tech }} yet. <a href="{{ .ClearHref }}">See all projects</a>.</p>
+        {{ end }}
         {{ range .Projects }}
         <article class="nc-row">
             {{ if .Thumbnail.Path }}
@@ -25,7 +35,7 @@
                 <p class="nc-row__tagline">{{ .Tagline }}</p>
                 <p class="nc-row__latest"><b>Latest ·</b> {{ .LatestNote }}</p>
                 <ul class="nc-chips" aria-label="{{ .Name }} technology">
-                    {{ range .TechPreview }}<li class="nc-chip">{{ . }}</li>{{ end }}
+                    {{ range .TechPreview }}<li><a class="nc-chip" href="{{ $.TechHref . }}">{{ . }}</a></li>{{ end }}
                 </ul>
             </div>
             <div class="nc-row__side">
