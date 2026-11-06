@@ -81,19 +81,10 @@ type Checker struct {
 }
 
 func projectTargets() []target {
-	endpoints := map[string]string{
-		"carma":      "https://carma.bitofbytes.io/health",
-		"noted":      "https://noted.bitofbytes.io/api/health",
-		"dined":      "https://dined.bitofbytes.io/health",
-		"permitpal":  "https://permitpal.bitofbytes.io/health",
-		"learnd":     "https://learnd.bitofbytes.io/health",
-		"dejaview":   "https://dejaview.bitofbytes.io/health",
-		"bitofbytes": "https://bitofbytes.io/health",
-		"anthology":  "https://anthology.bitofbytes.io/api/health",
-	}
-	targets := make([]target, 0, len(endpoints))
-	for _, project := range models.Projects() {
-		targets = append(targets, target{name: project.Name, url: endpoints[project.Slug]})
+	projects := models.Projects()
+	targets := make([]target, 0, len(projects))
+	for _, project := range projects {
+		targets = append(targets, target{name: project.Name, url: project.HealthURL})
 	}
 	return targets
 }

@@ -77,6 +77,8 @@ func TestProjectCatalogueRejectsViolations(t *testing.T) {
 		{name: "unparseable update date", count: 1, edit: func(p *Project) { p.PreviousUpdates[0].Date = "Oct 15, 2026" }, want: "PreviousUpdates[0].Date"},
 		{name: "http repo url", count: 1, edit: func(p *Project) { p.RepoURL = "http://github.com/bitofbytes-io/ok" }, want: "RepoURL"},
 		{name: "relative live url", count: 1, edit: func(p *Project) { p.LiveURL = "ok.bitofbytes.io" }, want: "LiveURL"},
+		{name: "missing health url", count: 1, edit: func(p *Project) { p.HealthURL = "" }, want: "HealthURL"},
+		{name: "http health url", count: 1, edit: func(p *Project) { p.HealthURL = "http://ok.bitofbytes.io/health" }, want: "HealthURL"},
 		{name: "unknown hobby", count: 1, edit: func(p *Project) { p.Hobby = "chess" }, want: "Hobby"},
 		{name: "missing screenshot", count: 1, edit: func(p *Project) { p.Screenshots[0].Path = "/static/projects/ok/missing.webp" }, want: "Screenshots[0].Path"},
 		{name: "screenshot outside static", count: 1, edit: func(p *Project) { p.Screenshots[0].Path = "/static/../secret.webp" }, want: "not a file under /static/"},
@@ -100,6 +102,7 @@ func validCatalogueProject() Project {
 		Slug:            "ok",
 		RepoURL:         "https://github.com/bitofbytes-io/ok",
 		LiveURL:         "https://ok.bitofbytes.io",
+		HealthURL:       "https://ok.bitofbytes.io/health",
 		LastUpdate:      "October 29, 2026",
 		FirstCommitDate: "2026-07-31",
 		Hobby:           "piano",
@@ -139,6 +142,9 @@ func projectCatalogueProblems(project Project, slugCount int, files fs.FS) []str
 	}
 	if err := absoluteHTTPSError(project.LiveURL); err != nil {
 		problems = append(problems, "LiveURL: "+err.Error())
+	}
+	if err := absoluteHTTPSError(project.HealthURL); err != nil {
+		problems = append(problems, "HealthURL: "+err.Error())
 	}
 	if _, ok := allowedHobbies[project.Hobby]; !ok {
 		problems = append(problems, fmt.Sprintf("Hobby %q is not allowed", project.Hobby))
