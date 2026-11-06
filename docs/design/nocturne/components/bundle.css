@@ -216,10 +216,11 @@ a.nc-chip:hover { border-color: var(--accent); color: var(--accent); }
 .nc-projects { padding-bottom: var(--space-11); }
 /* Project status is a plain, flat list: availability is conveyed by words. */
 .nc-status { max-width: 680px; padding-bottom: var(--space-9); }
-.nc-status__row { display: flex; align-items: baseline; justify-content: space-between; gap: var(--space-5); padding-block: var(--space-4); border-bottom: 1px solid var(--line); }
+.nc-status__row { display: flex; flex-wrap: wrap; align-items: baseline; justify-content: space-between; gap: var(--space-1) var(--space-5); padding-block: var(--space-4); border-bottom: 1px solid var(--line); }
 .nc-status__row:first-child { border-top: 1px solid var(--line); }
 .nc-status dt { font-family: var(--font-display); font-size: 24px; color: var(--ink); }
 .nc-status dd { font-size: 16px; color: var(--ink-soft); }
+.nc-status dd.nc-status__meta { flex-basis: 100%; order: 1; font-family: var(--font-mono); font-size: 13px; color: var(--ink-subtle); }
 
 .nc-updates { padding-block: var(--space-3) var(--space-11); }
 

@@ -164,6 +164,123 @@ func TestSnapshotUnknownStaleAndRecovery(t *testing.T) {
 	}
 }
 
+func TestSnapshotLatencyAndLastDownUseInjectedClock(t *testing.T) {
+	c := newChecker([]target{{"Example", "https://example.test/health"}})
+	now := time.Date(2026, 10, 20, 0, 0, 0, 0, time.UTC)
+	c.now = func() time.Time { return now }
+	code, took := 200, 142*time.Millisecond
+	c.client.Transport = roundTripFunc(func(*http.Request) (*http.Response, error) {
+		now = now.Add(took) // the request takes `took` on the injected clock
+		return &http.Response{StatusCode: code, Body: io.NopCloser(strings.NewReader("ok"))}, nil
+	})
+
+	if e := c.Snapshot()[0]; e.HasLastDown || e.LatencyText() != "" || e.LastDownText() != "" {
+		t.Fatalf("unknown target has details: %+v", e)
+	}
+	c.poll(context.Background())
+	e := c.Snapshot()[0]
+	if !e.Up || e.Latency != 142*time.Millisecond || e.LatencyText() != "142 ms" || e.HasLastDown || e.LastDownText() != "" {
+		t.Fatalf("healthy check: %+v", e)
+	}
+
+	code, took = 503, 30*time.Millisecond
+	c.poll(context.Background())
+	failedAt := now
+	e = c.Snapshot()[0]
+	if e.Up || e.Latency != 0 || e.LatencyText() != "" || !e.HasLastDown || e.LastDownText() != "Last down just now" {
+		t.Fatalf("failed check: %+v", e)
+	}
+
+	// Recovery keeps the failure time and reports the new latency.
+	code, took = 200, 7*time.Millisecond
+	c.poll(context.Background())
+	now = now.Add(5 * time.Minute)
+	c.results[0].checked = now // keep the result fresh across the clock jump
+	e = c.Snapshot()[0]
+	if !e.Up || e.Latency != 7*time.Millisecond || e.LatencyText() != "7 ms" {
+		t.Fatalf("recovered check: %+v", e)
+	}
+	if want := now.Sub(failedAt); e.LastDownAgo != want || e.LastDownText() != "Last down 5 min ago" {
+		t.Fatalf("last down ago=%v text=%q", e.LastDownAgo, e.LastDownText())
+	}
+
+	// A stale result is down, so it shows no latency but keeps the last failure.
+	now = now.Add(staleAfter)
+	e = c.Snapshot()[0]
+	if e.Up || e.Latency != 0 || !e.HasLastDown {
+		t.Fatalf("stale check: %+v", e)
+	}
+}
+
+func TestCanceledCheckIsNotRecordedAsLastDown(t *testing.T) {
+	c := newChecker([]target{{"Example", "https://example.test/health"}})
+	now := time.Date(2026, 10, 20, 0, 0, 0, 0, time.UTC)
+	c.now = func() time.Time { return now }
+	// Prior failure must survive a mid-check shutdown cancellation.
+	priorDown := now.Add(-time.Minute)
+	c.results[0] = result{up: false, checked: priorDown, lastDown: priorDown}
+
+	started := make(chan struct{})
+	release := make(chan struct{})
+	c.client.Transport = roundTripFunc(func(r *http.Request) (*http.Response, error) {
+		close(started)
+		<-release
+		return nil, r.Context().Err()
+	})
+	ctx, cancel := context.WithCancel(context.Background())
+	done := make(chan struct{})
+	go func() {
+		defer close(done)
+		c.poll(ctx)
+	}()
+	select {
+	case <-started:
+	case <-time.After(time.Second):
+		t.Fatal("check did not start")
+	}
+	cancel()
+	close(release)
+	select {
+	case <-done:
+	case <-time.After(time.Second):
+		t.Fatal("poll did not finish after cancel")
+	}
+
+	c.mu.RLock()
+	got := c.results[0]
+	c.mu.RUnlock()
+	if got.lastDown != priorDown {
+		t.Fatalf("lastDown=%v want prior %v; shutdown must not record a new outage", got.lastDown, priorDown)
+	}
+	e := c.Snapshot()[0]
+	if !e.HasLastDown || e.LastDownAgo != now.Sub(priorDown) {
+		t.Fatalf("prior last-down should survive cancel: %+v", e)
+	}
+}
+
+func TestEntryText(t *testing.T) {
+	for _, tt := range []struct {
+		ago  time.Duration
+		want string
+	}{
+		{0, "Last down just now"},
+		{59 * time.Second, "Last down just now"},
+		{time.Minute, "Last down 1 min ago"},
+		{59*time.Minute + 59*time.Second, "Last down 59 min ago"},
+		{time.Hour, "Last down 1 hr ago"},
+		{23 * time.Hour, "Last down 23 hr ago"},
+		{24 * time.Hour, "Last down 1 d ago"},
+		{50 * time.Hour, "Last down 2 d ago"},
+	} {
+		if got := (Entry{HasLastDown: true, LastDownAgo: tt.ago}).LastDownText(); got != tt.want {
+			t.Errorf("%v: %q want %q", tt.ago, got, tt.want)
+		}
+	}
+	if got := (Entry{Up: true, Latency: 400 * time.Microsecond}).LatencyText(); got != "<1 ms" {
+		t.Errorf("sub-millisecond latency: %q", got)
+	}
+}
+
 func TestSnapshotDoesNotMarkConcurrentSuccessDown(t *testing.T) {
 	c := newChecker([]target{{"Example", "https://example.test/health"}})
 	now := time.Date(2026, 10, 20, 0, 0, 0, 0, time.UTC)

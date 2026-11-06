@@ -1,11 +1,13 @@
 // Package status polls the fixed public project health endpoints. It exposes
-// only names and binary availability to the web layer.
+// only names, availability, response time and the age of the last failure to
+// the web layer.
 package status
 
 import (
 	"context"
 	"io"
 	"net/http"
+	"strconv"
 	"sync"
 	"time"
 
@@ -21,15 +23,51 @@ const (
 )
 
 // Entry is the complete public status view. Diagnostic details never enter it.
+// Latency is the round trip of the latest check and is set only while the
+// target is up. HasLastDown reports whether any failed check has been seen
+// since start, and LastDownAgo is the age of the most recent one.
 type Entry struct {
-	Name string
-	Up   bool
+	Name        string
+	Up          bool
+	Latency     time.Duration
+	HasLastDown bool
+	LastDownAgo time.Duration
+}
+
+// LatencyText is the response time in milliseconds, or "" when the target is down.
+func (e Entry) LatencyText() string {
+	if !e.Up {
+		return ""
+	}
+	if ms := e.Latency.Milliseconds(); ms > 0 {
+		return strconv.FormatInt(ms, 10) + " ms"
+	}
+	return "<1 ms"
+}
+
+// LastDownText is the age of the most recent failed check, or "" if none was seen.
+func (e Entry) LastDownText() string {
+	if !e.HasLastDown {
+		return ""
+	}
+	switch ago := e.LastDownAgo; {
+	case ago < time.Minute:
+		return "Last down just now"
+	case ago < time.Hour:
+		return "Last down " + strconv.Itoa(int(ago/time.Minute)) + " min ago"
+	case ago < 24*time.Hour:
+		return "Last down " + strconv.Itoa(int(ago/time.Hour)) + " hr ago"
+	default:
+		return "Last down " + strconv.Itoa(int(ago/(24*time.Hour))) + " d ago"
+	}
 }
 
 type target struct{ name, url string }
 type result struct {
-	up      bool
-	checked time.Time
+	up       bool
+	checked  time.Time
+	latency  time.Duration
+	lastDown time.Time // most recent failed check; zero until one is seen
 }
 
 // Checker keeps a small in-memory snapshot; constructing it performs no I/O.
@@ -103,10 +141,16 @@ func (c *Checker) poll(ctx context.Context) {
 	for range min(concurrency, len(c.targets)) {
 		workers.Go(func() {
 			for i := range jobs {
+				started := c.now()
 				up := c.check(ctx, c.targets[i].url)
 				checked := c.now()
 				c.mu.Lock()
-				c.results[i] = result{up: up, checked: checked}
+				r := result{up: up, checked: checked, latency: checked.Sub(started), lastDown: c.results[i].lastDown}
+				// A check cut short by shutdown is not an outage.
+				if !up && ctx.Err() == nil {
+					r.lastDown = checked
+				}
+				c.results[i] = r
 				c.mu.Unlock()
 			}
 		})
@@ -140,7 +184,8 @@ func (c *Checker) check(ctx context.Context, endpoint string) bool {
 	return ctx.Err() == nil && resp.StatusCode >= 200 && resp.StatusCode < 300 && n <= maxBody && readErr == nil && closeErr == nil
 }
 
-// Snapshot never performs network I/O. Unknown and stale results are down.
+// Snapshot never performs network I/O. Unknown and stale results are down and
+// report no latency, since it would describe an old check.
 func (c *Checker) Snapshot() []Entry {
 	c.mu.RLock()
 	defer c.mu.RUnlock()
@@ -149,7 +194,16 @@ func (c *Checker) Snapshot() []Entry {
 	for i, target := range c.targets {
 		result := c.results[i]
 		age := now.Sub(result.checked)
-		entries[i] = Entry{Name: target.name, Up: result.up && !result.checked.IsZero() && age >= 0 && age < staleAfter}
+		up := result.up && !result.checked.IsZero() && age >= 0 && age < staleAfter
+		entry := Entry{Name: target.name, Up: up}
+		if up {
+			entry.Latency = result.latency
+		}
+		if !result.lastDown.IsZero() {
+			entry.HasLastDown = true
+			entry.LastDownAgo = max(now.Sub(result.lastDown), 0)
+		}
+		entries[i] = entry
 	}
 	return entries
 }

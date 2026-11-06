@@ -10,6 +10,9 @@
         <div class="nc-status__row">
             <dt>{{ .Name }}</dt>
             <dd>{{ if .Up }}Up{{ else }}Down{{ end }}</dd>
+            {{- if or .Up .HasLastDown }}
+            <dd class="nc-status__meta">{{ if .Up }}{{ .LatencyText }}{{ end }}{{ if and .Up .HasLastDown }} · {{ end }}{{ if .HasLastDown }}{{ .LastDownText }}{{ end }}</dd>
+            {{- end }}
         </div>
         {{ end }}
     </dl>
