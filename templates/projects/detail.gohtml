@@ -48,7 +48,7 @@
                 <section class="nc-aside-block">
                     <h2 class="nc-card__title">Stack</h2>
                     <ul class="nc-chips nc-chips--roomy" aria-label="{{ .Project.Name }} technology">
-                        {{ range .Project.Tech }}<li class="nc-chip">{{ . }}</li>{{ end }}
+                        {{ range .Project.Tech }}<li><a class="nc-chip" href="/projects?tech={{ . }}">{{ . }}</a></li>{{ end }}
                     </ul>
                 </section>
                 <section class="nc-aside-block">
