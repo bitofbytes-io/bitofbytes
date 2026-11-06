@@ -2,6 +2,8 @@
 
 # Keep in sync with .github/workflows/pr-checks.yml (golangci/golangci-lint-action version).
 GOLANGCI_LINT_VERSION ?= v2.15.0
+# Pinned to match the sibling repos (dined, noted); never @latest.
+GOVULNCHECK_VERSION ?= v1.7.0
 
 configure-image:
 	$(eval REGISTRY ?= registry.tail209cfc.ts.net)
@@ -60,7 +62,3 @@ vuln:
 # `make vuln` is a separate PR check step and is not part of this target.
 check: vet lint test
 	go build ./cmd/bob
-
-# Pinned govulncheck; keep in sync with .github/workflows/pr-checks.yml.
-vuln:
-	go run golang.org/x/vuln/cmd/govulncheck@v1.7.0 ./...

@@ -35,8 +35,6 @@ jobs:
         run: make check
       - name: govulncheck
         run: make vuln
-      - name: make vuln
-        run: make vuln
 
   docker:
     runs-on: ubuntu-24.04
