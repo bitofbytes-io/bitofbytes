@@ -45,12 +45,12 @@ func Projects() []Project {
 			RepoURL:         "https://github.com/bitofbytes-io/carma",
 			LiveURL:         "https://carma.bitofbytes.io",
 			HealthURL:       "https://carma.bitofbytes.io/health",
-			LastUpdate:      "October 29, 2026",
+			LastUpdate:      "November 5, 2026",
 			FirstCommitDate: "2026-07-31",
-			Notes:           "Most recent work lets you download service history as an Excel spreadsheet, with one sheet per vehicle and the same filters as the list on screen. The printable history for selling a vehicle now includes open recalls, and you can hide the prices.",
+			Notes:           "Most recent work lets you add a warranty date, a mileage limit, or both to a service record. While the warranty is active, the vehicle and the record say so, and it shows in the history list, the printable history, and the spreadsheet and CSV downloads.",
 			PreviousUpdates: []ProjectUpdate{
-				{Date: "October 15, 2026", Note: "Most recent work added VIN decoding with safety recall tracking and an opt-in weekly email listing upcoming maintenance and new recalls."},
-				{Date: "October 14, 2026", Note: "Most recent work added quick odometer check-ins, projected due dates for mileage reminders, starter reminder presets for new vehicles, a printable service history for selling a vehicle, and spend totals by service type."},
+				{Date: "October 30, 2026", Note: "Most recent work lets you snooze a due reminder until a date, a mileage, or both, and log a service again from an older record with the shop, cost, and notes filled in. The record form suggests shops you have used before."},
+				{Date: "October 29, 2026", Note: "Most recent work lets you download service history as an Excel spreadsheet, with one sheet per vehicle and the same filters as the list on screen. The printable history for selling a vehicle now includes open recalls, and you can hide the prices."},
 			},
 			Tech: []string{
 				"Go",
@@ -328,12 +328,12 @@ func Projects() []Project {
 			RepoURL:         "https://github.com/bitofbytes-io/bitofbytes",
 			LiveURL:         "https://www.bitofbytes.io",
 			HealthURL:       "https://bitofbytes.io/health",
-			LastUpdate:      "October 20, 2026",
+			LastUpdate:      "November 6, 2026",
 			FirstCommitDate: "2024-06-29",
-			Notes:           "Most recent work added a status page that shows whether each project is up or down, and an updates page with a subscribe feed that lists every project change.",
+			Notes:           "Most recent work lets you filter the project list by a technology. The status page shows how quickly each project responded and when it was last down.",
 			PreviousUpdates: []ProjectUpdate{
+				{Date: "October 20, 2026", Note: "Most recent work added a status page that shows whether each project is up or down, and an updates page with a subscribe feed that lists every project change."},
 				{Date: "October 17, 2026", Note: "Most recent work gave the homepage piano keys one shared look, and made every title in the changelog the same colour."},
-				{Date: "October 15, 2026", Note: "Most recent work gave every page its own title, description, and link preview, and added a sitemap so the site is easier to find in search."},
 			},
 			Tech: []string{
 				"Go",
