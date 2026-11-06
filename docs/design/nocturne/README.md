@@ -85,7 +85,7 @@ These five page types are the whole site. Build them from the components below.
 - **Project detail.** Header; Breadcrumb; a two-column hero (accent eyebrow with an icon when the project ties to a hobby, `hero-project` name, italic `tagline`, "Open live site" primary and "View on GitHub" secondary buttons, a Started / Last update / Stack meta row) beside the hero screenshot; "What it does" `prose` paragraphs and roman-numeral Highlights beside an aside holding Stack chips and the Timeline; the Screenshots gallery; footer. There is no previous/next project navigation and no separate "latest update" box: the Timeline carries the latest update.
 - **Updates.** Header; eyebrow "Changelog · N updates", `page-title` "All *updates*", `intro` linking the Atom feed (`/feed.xml`); one page-width Timeline (`nc-timeline--page`) of every project update, newest first, each item linking to its project; footer.
 
-- **Status.** Header; `page-title` "Project *status*"; a flat list of all project names with plain "Up" or "Down" text; footer. No status dots, diagnostic details, or per-project indicators elsewhere.
+- **Status.** Header; `page-title` "Project *status*"; a flat list of all project names with plain "Up" or "Down" text; footer. An up project adds a `meta` line under its name with the last response time ("142 ms"), and any project that has failed a check since the site started adds "Last down 5 min ago" (the one place relative times are used). No status dots, diagnostic details, or per-project indicators elsewhere.
 
 ## Components
 
