@@ -81,11 +81,13 @@ For live reload, install `air`, then run:
 make local
 ```
 
-Run the test suite with:
+Run the same checks as CI with (requires `golangci-lint` `v2.15.0` on `PATH`):
 
 ```bash
-go test ./...
+make check
 ```
+
+That runs `go vet`, gofmt + golangci-lint, `go test -race`, and `go build ./cmd/bob`. Individual targets: `make vet`, `make lint`, and `make test`.
 
 Portfolio content is maintained in `models/project.go`; templates and static assets live under `templates/` and `static/`.
 

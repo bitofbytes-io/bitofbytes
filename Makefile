@@ -1,4 +1,7 @@
-.PHONY: configure-image ensure-image-tag local build docker-build docker-push build-github
+.PHONY: configure-image ensure-image-tag local build docker-build docker-push build-github vet lint test check
+
+# Keep in sync with .github/workflows/pr-checks.yml (golangci/golangci-lint-action version).
+GOLANGCI_LINT_VERSION ?= v2.15.0
 
 configure-image:
 	$(eval REGISTRY ?= registry.tail209cfc.ts.net)
@@ -34,3 +37,21 @@ build-github: configure-image
 	echo ">> Building and pushing $(IMAGE)"
 	-docker buildx inspect >/dev/null 2>&1 || docker buildx create --use
 	docker buildx build $(DOCKER_BUILD_ARGS) --platform=linux/arm64/v8 $(if $(METADATA_FILE),--metadata-file "$(METADATA_FILE)") --push .
+
+vet:
+	go vet ./...
+
+lint:
+	@unformatted="$$(gofmt -l .)" || exit $$?; \
+	if [ -n "$$unformatted" ]; then \
+		printf 'Run gofmt on:\n%s\n' "$$unformatted" >&2; \
+		exit 1; \
+	fi
+	golangci-lint run
+
+test:
+	go test -race ./...
+
+# Mirrors the PR checks job (vet, lint/gofmt+golangci-lint, race tests, build).
+check: vet lint test
+	go build ./cmd/bob
