@@ -33,7 +33,7 @@ func TestPagesLinkOnlyToServedStaticFiles(t *testing.T) {
 			refs[strings.ReplaceAll(m[1], "&amp;", "&")] = page
 		}
 	}
-	for _, want := range []string{"/static/daniel-waters-resume.pdf", "/static/styles.css?v=" + testAssetVersion, "/static/nocturne.js?v=" + testAssetVersion} {
+	for _, want := range []string{"/static/daniel-waters-resume.pdf", "/static/styles.css?v=" + testAssetVersion, "/static/nocturne.js?v=" + testAssetVersion, "/static/screenshot-viewer.js?v=" + testAssetVersion} {
 		if _, ok := refs[want]; !ok {
 			t.Errorf("no page links to %s", want)
 		}

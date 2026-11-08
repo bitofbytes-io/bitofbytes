@@ -87,6 +87,7 @@
 {{ end }}
 <script defer src="/static/nav-menu.js{{ with assetVersion }}?v={{ . }}{{ end }}"></script>
 {{ if eq category "home" }}<script defer src="/static/nocturne.js{{ with assetVersion }}?v={{ . }}{{ end }}"></script>{{ end }}
+{{ if eq category "projects" }}<script defer src="/static/screenshot-viewer.js{{ with assetVersion }}?v={{ . }}{{ end }}"></script>{{ end }}
 <script defer src="/static/umami-loader.js{{ with assetVersion }}?v={{ . }}{{ end }}"></script>
 </body>
 </html>
