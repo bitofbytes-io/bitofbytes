@@ -308,6 +308,46 @@ func TestProjectsIndexNewestFirstIgnoresDeclarationOrder(t *testing.T) {
 	}
 }
 
+// Each screenshot is a plain link to the full-size image, so it works without
+// JavaScript; the viewer script enhances these links into a dialog.
+func TestProjectDetailScreenshotsLinkToFullSizeImages(t *testing.T) {
+	t.Parallel()
+	page := views.Must(views.ParseFS("", templates.FS, "projects/detail.gohtml", "base.gohtml"))
+	portfolio := Portfolio{
+		Projects: []models.Project{{
+			Slug:            "shots",
+			Name:            "Shots",
+			RepoURL:         "https://github.com/bitofbytes-io/shots",
+			Notes:           "Most recent work added screenshots.",
+			LastUpdate:      "September 6, 2026",
+			FirstCommitDate: "2026-09-01",
+			Screenshots: []models.ProjectScreenshot{
+				{Title: "Dashboard", Path: "/static/projects/shots/dashboard.webp", Alt: "The dashboard.", Note: "Sample data."},
+				{Title: "Settings", Path: "/static/projects/shots/settings.webp", Alt: "The settings page.", Note: "Defaults."},
+			},
+		}},
+		Templates: PortfolioTemplates{ProjectDetail: page},
+		Now:       fixedNow,
+	}
+	req := httptest.NewRequest(http.MethodGet, "/projects/shots", nil)
+	req.SetPathValue("slug", "shots")
+	rr := httptest.NewRecorder()
+	portfolio.ProjectDetail(rr, req)
+
+	body := rr.Body.String()
+	for _, want := range []string{
+		`<div class="nc-shots" data-nc-shots>`,
+		`<a href="/static/projects/shots/dashboard.webp" data-umami-event="screenshot-click" data-umami-event-project="shots"><img src="/static/projects/shots/dashboard.webp" alt="The dashboard." loading="lazy"></a>`,
+		`<a href="/static/projects/shots/settings.webp" data-umami-event="screenshot-click" data-umami-event-project="shots"><img src="/static/projects/shots/settings.webp" alt="The settings page." loading="lazy"></a>`,
+		`<figcaption><b>Dashboard</b><span>Sample data.</span></figcaption>`,
+		`<script defer src="/static/screenshot-viewer.js"></script>`,
+	} {
+		if !strings.Contains(body, want) {
+			t.Errorf("missing %q", want)
+		}
+	}
+}
+
 func TestProjectDetailWithoutScreenshotsUsesSoloHero(t *testing.T) {
 	t.Parallel()
 	page := views.Must(views.ParseFS("", templates.FS, "projects/detail.gohtml", "base.gohtml"))

@@ -68,7 +68,7 @@
         {{ if .Project.Screenshots }}
         <section class="nc-shots-section" aria-labelledby="screenshots-title">
             <h2 class="nc-heading nc-heading--sub" id="screenshots-title">Screenshots</h2>
-            <div class="nc-shots">
+            <div class="nc-shots" data-nc-shots>
                 {{ range .Project.Screenshots }}
                 <figure class="nc-shot">
                     {{ if .Path }}
