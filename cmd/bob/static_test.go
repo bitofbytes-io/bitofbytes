@@ -6,6 +6,7 @@ import (
 	"net/http"
 	"net/http/httptest"
 	"os"
+	"path/filepath"
 	"regexp"
 	"strings"
 	"testing"
@@ -103,7 +104,7 @@ var (
 func TestLightSchemeOverridesEveryColourToken(t *testing.T) {
 	t.Parallel()
 	for _, path := range []string{"../../static/styles.css", "../../docs/design/nocturne/tokens.css"} {
-		css, err := os.ReadFile(path)
+		css, err := os.ReadFile(filepath.Clean(path))
 		if err != nil {
 			t.Fatal(err)
 		}
