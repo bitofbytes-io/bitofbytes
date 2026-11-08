@@ -65,7 +65,8 @@ jobs:
           # Poll the served routes directly instead of waiting on the image
           # HEALTHCHECK, whose first probe only runs after its 30s interval.
           ready=false
-          for _ in {1..20}; do
+          deadline=$((SECONDS + 20))
+          while (( SECONDS < deadline )); do
             if curl --fail --silent --max-time 2 "http://127.0.0.1:${port}/ready" -o /dev/null \
               && curl --fail --silent --max-time 2 "http://127.0.0.1:${port}/" -o /dev/null; then
               ready=true
