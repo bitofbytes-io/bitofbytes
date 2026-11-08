@@ -54,7 +54,7 @@ Under the keys, one row (`nc-octave__caption`): the legend text on the left, the
 
 ## Look
 
-- Desktop: 1120 × 220px (`key-height`), white keys share the width with 4px gaps, rounded at the bottom (`radius-md`), with a 6px `key-idle-edge` bottom edge. Name in Plex Sans 600 16px `key-ink`; start label in `chip` mono, `key-ink-idle`. Black keys 70 × 126px (`key-black-height`, half a key slot wide and 57% of the white key), `bg` with a `line-image` outline.
+- Desktop: 1120 × 220px (`key-height`), white keys share the width with 4px gaps, rounded at the bottom (`radius-md`), with a 6px `key-idle-edge` bottom edge. Name in Plex Sans 600 16px `key-ink`; start label in `chip` mono, `key-ink-idle`. Black keys 70 × 126px (`key-black-height`, half a key slot wide and 57% of the white key), `key-black` with a `key-black-edge` outline. White keys also carry a 1px `key-outline` ring (transparent in Night) so they hold against the Day page.
 - Phone (below 640px): the keyboard turns sideways. Keys stack as 60px rows (`key-row-height`) with the name and start label on one line, the edge moves to the left side, and black keys come in from the right as 130 × 36px bars.
 - Every key looks the same (`key-idle`); recency of updates is not shown on the keyboard.
 - Pressed: keys go `key-idle-pressed` and dip slightly with `shadow-key-pressed`; Reduced motion keeps only the color change.
