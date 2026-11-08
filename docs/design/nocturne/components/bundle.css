@@ -170,8 +170,8 @@ a.nc-chip:hover { border-color: var(--accent); color: var(--accent); }
 /* ---------- the octave keyboard ---------- */
 .nc-octave { position: relative; width: 100%; height: var(--key-height); }
 .nc-octave__keys { display: flex; gap: var(--space-1); height: 100%; }
-.nc-key { flex: 1 1 0; display: flex; flex-direction: column; justify-content: flex-end; gap: 4px; padding: 0 14px 16px; border-radius: 0 0 var(--radius-md) var(--radius-md); background: var(--key-idle); border-bottom: 6px solid var(--key-idle-edge); color: var(--key-ink); transform-origin: top; transition: background 90ms, transform 90ms, box-shadow 90ms; }
-.nc-key.is-pressed { background: var(--key-idle-pressed); transform: scaleY(0.985); box-shadow: var(--shadow-key-pressed); }
+.nc-key { flex: 1 1 0; display: flex; flex-direction: column; justify-content: flex-end; gap: 4px; padding: 0 14px 16px; border-radius: 0 0 var(--radius-md) var(--radius-md); background: var(--key-idle); border-bottom: 6px solid var(--key-idle-edge); color: var(--key-ink); box-shadow: 0 0 0 1px var(--key-outline); transform-origin: top; transition: background 90ms, transform 90ms, box-shadow 90ms; }
+.nc-key.is-pressed { background: var(--key-idle-pressed); transform: scaleY(0.985); box-shadow: var(--shadow-key-pressed), 0 0 0 1px var(--key-outline); }
 .nc-key__name { font-weight: 600; font-size: 16px; line-height: 1.3; color: var(--key-ink); }
 .nc-key__since { font-family: var(--font-mono); font-size: 12px; color: var(--key-ink-idle); }
 /* --keys = white keys rendered (set on .nc-octave by an nc-octave--keys-N class, default 8).
@@ -179,7 +179,7 @@ a.nc-chip:hover { border-color: var(--accent); color: var(--accent); }
    Modifier classes rather than style attributes keep inline styles out of the CSP.
    A black key is half a white-key slot wide, which is key-black-width (70px) at 1120px.
    Black keys are decorative: the pointer passes through to the white key underneath. */
-.nc-black { --slot: calc((100% + var(--space-1)) / var(--keys, 8)); position: absolute; top: 0; left: calc(var(--pos) * var(--slot) - 2px - var(--slot) / 4); width: calc(var(--slot) / 2); height: var(--key-black-height); box-sizing: border-box; background: var(--bg); border: 1px solid var(--line-image); border-top: 0; border-radius: 0 0 8px 8px; pointer-events: none; }
+.nc-black { --slot: calc((100% + var(--space-1)) / var(--keys, 8)); position: absolute; top: 0; left: calc(var(--pos) * var(--slot) - 2px - var(--slot) / 4); width: calc(var(--slot) / 2); height: var(--key-black-height); box-sizing: border-box; background: var(--key-black); border: 1px solid var(--key-black-edge); border-top: 0; border-radius: 0 0 8px 8px; pointer-events: none; }
 .nc-octave--keys-1 { --keys: 1; }
 .nc-octave--keys-2 { --keys: 2; }
 .nc-octave--keys-3 { --keys: 3; }
@@ -364,5 +364,5 @@ a.nc-chip:hover { border-color: var(--accent); color: var(--accent); }
   .nc-key { flex: 0 0 var(--key-row-height); flex-direction: row; align-items: center; justify-content: flex-start; gap: 10px; padding: 0 16px 0 14px; border-radius: var(--radius-md) 0 0 var(--radius-md); border-bottom: 0; border-left: 6px solid var(--key-idle-edge); transform-origin: left; }
   .nc-key.is-pressed { transform: scaleX(0.99); }
   .nc-key__since { font-size: 11px; }
-  .nc-black { --slot: auto; left: auto; right: 0; top: calc(var(--pos) * (var(--key-row-height) + 3px) - 1.5px - 18px); width: 130px; height: 36px; border: 1px solid var(--line-image); border-right: 0; border-radius: 8px 0 0 8px; }
+  .nc-black { --slot: auto; left: auto; right: 0; top: calc(var(--pos) * (var(--key-row-height) + 3px) - 1.5px - 18px); width: 130px; height: 36px; border: 1px solid var(--key-black-edge); border-right: 0; border-radius: 8px 0 0 8px; }
 }

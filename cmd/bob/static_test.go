@@ -5,6 +5,7 @@ import (
 	"log/slog"
 	"net/http"
 	"net/http/httptest"
+	"os"
 	"regexp"
 	"strings"
 	"testing"
@@ -86,6 +87,60 @@ func TestStaticCacheControl(t *testing.T) {
 		}
 		if got := rr.Header().Get("Cache-Control"); got != tt.want {
 			t.Errorf("%s Cache-Control = %q, want %q", tt.path, got, tt.want)
+		}
+	}
+}
+
+var (
+	rootBlock  = regexp.MustCompile(`(?s)\n:root \{(.*?)\n\}`)
+	lightBlock = regexp.MustCompile(`(?s)@media \(prefers-color-scheme: light\) \{\s*:root \{(.*?)\n  \}`)
+	colorToken = regexp.MustCompile(`(?m)^\s*(--[\w-]+):\s*(#[0-9A-Fa-f]{3,8}|transparent)\s*;`)
+)
+
+// The light scheme overrides every colour token of the default (dark) one, so
+// no role keeps a colour picked for the other background, and the design-system
+// copy of the tokens matches what is served.
+func TestLightSchemeOverridesEveryColourToken(t *testing.T) {
+	t.Parallel()
+	for _, path := range []string{"../../static/styles.css", "../../docs/design/nocturne/tokens.css"} {
+		css, err := os.ReadFile(path)
+		if err != nil {
+			t.Fatal(err)
+		}
+		root, light := rootBlock.FindSubmatch(css), lightBlock.FindSubmatch(css)
+		if root == nil || light == nil {
+			t.Fatalf("%s: missing :root block or prefers-color-scheme: light block", path)
+		}
+		overridden := map[string]bool{}
+		for _, m := range colorToken.FindAllSubmatch(light[1], -1) {
+			overridden[string(m[1])] = true
+		}
+		tokens := colorToken.FindAllSubmatch(root[1], -1)
+		if len(tokens) == 0 {
+			t.Fatalf("%s: no colour tokens in :root", path)
+		}
+		for _, m := range tokens {
+			if !overridden[string(m[1])] {
+				t.Errorf("%s: %s has no prefers-color-scheme: light override", path, m[1])
+			}
+		}
+		if !strings.Contains(string(light[1]), "color-scheme: light;") {
+			t.Errorf("%s: light block does not set color-scheme: light", path)
+		}
+	}
+}
+
+func TestPagesDeclareThemeColorPerScheme(t *testing.T) {
+	t.Parallel()
+	rr := httptest.NewRecorder()
+	newTestHandler().ServeHTTP(rr, httptest.NewRequest(http.MethodGet, "/", nil))
+	body := rr.Body.String()
+	for _, want := range []string{
+		`<meta name="theme-color" content="#0A1224" media="(prefers-color-scheme: dark)">`,
+		`<meta name="theme-color" content="#F6F8FC" media="(prefers-color-scheme: light)">`,
+	} {
+		if !strings.Contains(body, want) {
+			t.Errorf("home page is missing %s", want)
 		}
 	}
 }
