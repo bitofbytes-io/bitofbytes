@@ -22,6 +22,9 @@
   --key-idle-edge: #C8D0DF;
   --key-ink: #0A1224;
   --key-ink-idle: #4A5672;
+  --key-black: #0A1224;
+  --key-black-edge: #2A3B5E;
+  --key-outline: transparent;
   --font-display: "Fraunces", Georgia, "Times New Roman", serif;
   --font-sans: "IBM Plex Sans", system-ui, -apple-system, "Segoe UI", sans-serif;
   --font-mono: "IBM Plex Mono", ui-monospace, "SF Mono", Menlo, monospace;
@@ -54,4 +57,37 @@
   --key-black-width: 70px;
   --key-row-height: 60px;
   --thumb-width: 240px;
+}
+
+/* Day: the same roles for visitors whose OS asks for a light scheme. Dark stays the default. */
+@media (prefers-color-scheme: light) {
+  :root {
+    color-scheme: light;
+    --bg: #F6F8FC;
+    --bg-band: #ECF0F8;
+    --surface: #E6ECF6;
+    --surface-accent: #DCE6FB;
+    --line: #D3DBEA;
+    --line-strong: #BFCBE0;
+    --line-image: #B4C1D9;
+    --line-control: #6B7FA3;
+    --ink: #0A1224;
+    --ink-soft: #26344F;
+    --ink-muted: #34435F;
+    --ink-subtle: #47587A;
+    --ink-faint: #566888;
+    --accent: #1D4ED8;
+    --on-accent: #FFFFFF;
+    --key-lit: #B9CBFA;
+    --key-idle: #FFFFFF;
+    --key-idle-pressed: #E1E7F2;
+    --key-idle-edge: #B4C1D9;
+    --key-ink: #0A1224;
+    --key-ink-idle: #4A5672;
+    --key-black: #0A1224;
+    --key-black-edge: #0A1224;
+    --key-outline: #AEBBD3;
+    --shadow-lift: 0 30px 80px rgba(10, 18, 36, 0.18);
+    --shadow-key-pressed: inset 0 -12px 18px rgba(10, 18, 36, 0.12);
+  }
 }

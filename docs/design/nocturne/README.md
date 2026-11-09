@@ -33,12 +33,12 @@ Nocturne is the visual system for bitofbytes.io, the personal site and project p
 
 ### Color
 
-- Dark only. Paint every page `bg` with `ink` text. There is no light theme.
+- Dark first. Paint every page `bg` with `ink` text. Night (the `value` column in `tokens.json`) is the default. Day (the `light` column) replaces the same tokens inside `@media (prefers-color-scheme: light)` in `tokens.css`, so the page follows the visitor's OS with no script and no flash. Components never branch on the scheme; they only read tokens. The `Cover` illustration and the favicon stay Night.
 - `accent` is the only hue. Spend it on: the primary button, the current nav item, links inside prose, the "Updated recently" badge, project names in the Update ledger, one italic word per heading, focus rings. Nothing else in the page UI is blue. The only exceptions are the `key-lit` tint in the Cover illustration and the site icon.
 - Text hierarchy on `bg`, `bg-band` and `surface`: `ink` for headings and names, `ink-soft` for lead paragraphs, taglines and prose, `ink-muted` for secondary copy and nav links, `ink-subtle` for eyebrows, dates and captions, `ink-faint` only for uppercase labels on `bg`.
 - Text on an `accent` fill is `on-accent`.
 - Hairlines are `line`. Chip and rail borders are `line-strong`. Image borders are `line-image`. Any border that is the visible edge of a control (outline button, sound toggle, menu button) is `line-control`, which holds 3:1 on `bg`.
-- Piano keys have their own tokens (`key-*`). Every key is `key-idle` (near white) with a `key-idle-edge` edge; the keyboard does not show how recently a project was updated. Black keys are `bg` with a `line-image` outline.
+- Piano keys have their own tokens (`key-*`). Every key is `key-idle` (near white) with a `key-idle-edge` edge; the keyboard does not show how recently a project was updated. Black keys are `key-black` with a `key-black-edge` outline, and white keys carry a `key-outline` ring (invisible in Night) so they hold against the Day page.
 
 ### Type
 
