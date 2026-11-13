@@ -12,8 +12,8 @@ type Activities struct {
 // CurrentActivities is what Daniel is building, practicing and playing now.
 func CurrentActivities() Activities {
 	return Activities{
-		Building:   "This redesign",
-		Practicing: "Allegro from Six Light Keyboard Pieces, Op. 52, No. 2",
-		Playing:    "007 First Light on PS5",
+		Building:   "Trailmix, a new hiking app",
+		Practicing: "Sonatina in E-flat Major, Op. 37, No. 1, first movement, by Muzio Clementi",
+		Playing:    "Final Fantasy Resonance on Switch",
 	}
 }
