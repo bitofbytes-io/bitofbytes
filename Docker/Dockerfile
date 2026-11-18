@@ -1,4 +1,4 @@
-FROM golang:1.26.11-alpine3.23 AS builder
+FROM golang:1.26.11-alpine3.23@sha256:23f198931d4bd83b4f5a613bd75656257ae8bf832dcbc2db80e1050b5219ca2a AS builder
 ARG VERSION=dev
 ARG REVISION=unknown
 WORKDIR /app
@@ -7,7 +7,7 @@ RUN go mod download
 COPY . .
 RUN go build -ldflags "-X main.version=${VERSION} -X main.revision=${REVISION}" -v -o ./bob ./cmd/bob/
 
-FROM alpine:3.23.4
+FROM alpine:3.23.4@sha256:5b10f432ef3da1b8d4c7eb6c487f2f5a8f096bc91145e68878dd4a5019afde11
 ARG LOG_LEVEL=warn
 ARG VERSION=dev
 ARG REVISION=unknown
