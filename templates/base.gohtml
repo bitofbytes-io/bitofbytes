@@ -8,13 +8,13 @@
     <meta name="theme-color" content="#F6F8FC" media="(prefers-color-scheme: light)">
     <title>{{ .Meta.Title }}</title>
     <meta name="description" content="{{ .Meta.Description }}">
-    <link rel="canonical" href="{{ .Meta.Canonical }}">
+    {{ if .Meta.NoIndex }}<meta name="robots" content="noindex">{{ else }}<link rel="canonical" href="{{ .Meta.Canonical }}">{{ end }}
     <link rel="alternate" type="application/atom+xml" title="BitOfBytes project updates" href="/feed.xml">
     <meta property="og:site_name" content="BitOfBytes">
     <meta property="og:type" content="website">
     <meta property="og:title" content="{{ .Meta.Title }}">
     <meta property="og:description" content="{{ .Meta.Description }}">
-    <meta property="og:url" content="{{ .Meta.Canonical }}">
+    {{ if not .Meta.NoIndex }}<meta property="og:url" content="{{ .Meta.Canonical }}">{{ end }}
     <meta property="og:image" content="{{ .Meta.ImageURL }}">
     <meta name="twitter:card" content="{{ .Meta.TwitterCard }}">
     <meta name="twitter:title" content="{{ .Meta.Title }}">

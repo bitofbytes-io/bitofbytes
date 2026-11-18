@@ -230,17 +230,69 @@ func TestIconRoutesServeStaticFiles(t *testing.T) {
 	}
 }
 
-func TestUnknownProjectReturnsNotFound(t *testing.T) {
+// Unknown project slugs and unmatched paths both get the styled 404 page:
+// the 404 status, site navigation, links home, to projects and to updates,
+// and noindex without a canonical URL.
+func TestUnknownRoutesRenderBrandedNotFound(t *testing.T) {
 	t.Parallel()
 
 	handler := newTestHandler()
-	req := httptest.NewRequest(http.MethodGet, "/projects/not-real", nil)
-	rr := httptest.NewRecorder()
+	for _, path := range []string{"/projects/nope", "/projects/not-real", "/does-not-exist", "/projects/nope/extra"} {
+		t.Run(path, func(t *testing.T) {
+			t.Parallel()
+			rr := httptest.NewRecorder()
+			handler.ServeHTTP(rr, httptest.NewRequest(http.MethodGet, path, nil))
 
-	handler.ServeHTTP(rr, req)
+			if rr.Code != http.StatusNotFound {
+				t.Fatalf("status code = %d, want %d", rr.Code, http.StatusNotFound)
+			}
+			if got := rr.Header().Get("Content-Type"); !strings.HasPrefix(got, "text/html") {
+				t.Errorf("Content-Type = %q, want text/html", got)
+			}
+			if got := rr.Header().Get("X-Robots-Tag"); got != "noindex" {
+				t.Errorf("X-Robots-Tag = %q, want noindex", got)
+			}
+			body := rr.Body.String()
+			for _, want := range []string{
+				"<title>Page not found | BitOfBytes</title>",
+				`<meta name="robots" content="noindex">`,
+				`class="nc-wordmark"`,
+				"Page not <span",
+				`<a class="nc-btn nc-btn--primary" href="/">Home</a>`,
+				`href="/projects">Projects</a>`,
+				`href="/updates">Updates</a>`,
+				"/static/styles.css?v=" + testAssetVersion,
+			} {
+				if !strings.Contains(body, want) {
+					t.Errorf("404 page missing %q", want)
+				}
+			}
+			for _, bad := range []string{`rel="canonical"`, `og:url`, "404 page not found"} {
+				if strings.Contains(body, bad) {
+					t.Errorf("404 page contains %q", bad)
+				}
+			}
+		})
+	}
+}
 
+// Real pages stay indexable and HEAD on an unknown path is a 404 too.
+func TestRealPagesAreIndexable(t *testing.T) {
+	t.Parallel()
+
+	handler := newTestHandler()
+	rr := get(t, "/projects/carma")
+	if strings.Contains(rr.Body.String(), "noindex") {
+		t.Error("project page is noindex")
+	}
+	if !strings.Contains(rr.Body.String(), `rel="canonical"`) {
+		t.Error("project page has no canonical link")
+	}
+
+	rr = httptest.NewRecorder()
+	handler.ServeHTTP(rr, httptest.NewRequest(http.MethodHead, "/does-not-exist", nil))
 	if rr.Code != http.StatusNotFound {
-		t.Fatalf("unknown project status code = %d, want %d", rr.Code, http.StatusNotFound)
+		t.Errorf("HEAD unknown path status = %d, want %d", rr.Code, http.StatusNotFound)
 	}
 }
 

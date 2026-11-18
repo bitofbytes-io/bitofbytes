@@ -18,6 +18,12 @@ type Page struct {
 }
 
 func (p Page) Execute(w http.ResponseWriter, r *http.Request, data any) {
+	p.ExecuteStatus(w, r, http.StatusOK, data)
+}
+
+// ExecuteStatus renders the page with the given status code. A template
+// error still replies 500 instead of status.
+func (p Page) ExecuteStatus(w http.ResponseWriter, r *http.Request, status int, data any) {
 	w.Header().Set("Content-Type", "text/html")
 	var buf bytes.Buffer
 	err := p.htmlTpl.Execute(&buf, data)
@@ -27,6 +33,7 @@ func (p Page) Execute(w http.ResponseWriter, r *http.Request, data any) {
 		return
 	}
 
+	w.WriteHeader(status)
 	if _, err := io.Copy(w, &buf); err != nil {
 		// The response may already be committed, so log the write failure
 		// without trying to append an error page.
