@@ -259,8 +259,8 @@ func TestUnknownRoutesRenderBrandedNotFound(t *testing.T) {
 				`class="nc-wordmark"`,
 				"Page not <span",
 				`<a class="nc-btn nc-btn--primary" href="/">Home</a>`,
-				`href="/projects">Projects</a>`,
-				`href="/updates">Updates</a>`,
+				`<a class="nc-btn nc-btn--secondary" href="/projects">Projects</a>`,
+				`<a class="nc-btn nc-btn--secondary" href="/updates">Updates</a>`,
 				"/static/styles.css?v=" + testAssetVersion,
 			} {
 				if !strings.Contains(body, want) {
