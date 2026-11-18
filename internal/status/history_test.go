@@ -154,8 +154,22 @@ func TestCanceledCheckIsNotRecordedAsSample(t *testing.T) {
 	}
 }
 
-func TestHistoryCapacityCoversWindow(t *testing.T) {
-	if historyCapacity != 1440 {
-		t.Fatalf("capacity=%d want one sample per minute for 24 h", historyCapacity)
+func TestHistoryKeepsEverySampleInWindowWithJitter(t *testing.T) {
+	now := time.Date(2026, 10, 20, 12, 0, 0, 0, time.UTC)
+	r := newRing(historyCapacity)
+	// An early failure, then a full day of polls whose completions drift a few
+	// seconds earlier than one per minute, so 1441 samples fall in the window.
+	start := now.Add(-uptimeWindow + 4*time.Second)
+	r.add(start, false)
+	const polls = 1440
+	for i := 1; i <= polls; i++ {
+		r.add(start.Add(time.Duration(i)*(uptimeWindow-4*time.Second)/polls), true)
+	}
+	up, total := r.count(now, uptimeWindow)
+	if total != polls+1 || up != polls {
+		t.Fatalf("up=%d total=%d want %d of %d: the early failure was dropped", up, total, polls, polls+1)
+	}
+	if permille, ok := uptimePermille(up, total); !ok || permille != 999 {
+		t.Fatalf("permille=%d ok=%v want 999", permille, ok)
 	}
 }

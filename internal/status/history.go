@@ -8,9 +8,11 @@ const (
 	// minUptimeSamples is how many polls in the window are needed before a
 	// percentage is shown; fewer would let one failed poll read as 0%.
 	minUptimeSamples = 10
-	// historyCapacity holds one sample per poll over the window. Polls are
-	// never closer together than pollInterval.
-	historyCapacity = int(uptimeWindow / pollInterval)
+	// historyCapacity holds one sample per poll over the window, plus an hour
+	// of headroom. Polls start every pollInterval but samples are stamped when
+	// a check finishes, so completions can fall closer together than that, and
+	// a full ring must never drop a sample that is still inside the window.
+	historyCapacity = int(uptimeWindow/pollInterval) + 60
 )
 
 type sample struct {
