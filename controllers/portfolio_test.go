@@ -27,6 +27,9 @@ func newTestPortfolio(t *testing.T) Portfolio {
 		"projects/detail.tmpl": {
 			Data: []byte(`Detail: {{ .Project.Name }} {{ .Project.Tagline }}`),
 		},
+		"errors/404.tmpl": {
+			Data: []byte(`Not found: {{ .Title }}`),
+		},
 	}
 
 	home, err := views.ParseFS("", fsys, "home/index.tmpl")
@@ -40,6 +43,11 @@ func newTestPortfolio(t *testing.T) Portfolio {
 	detail, err := views.ParseFS("", fsys, "projects/detail.tmpl")
 	if err != nil {
 		t.Fatalf("parse detail template: %v", err)
+	}
+
+	notFound, err := views.ParseFS("", fsys, "errors/404.tmpl")
+	if err != nil {
+		t.Fatalf("parse not found template: %v", err)
 	}
 
 	return Portfolio{
@@ -59,6 +67,7 @@ func newTestPortfolio(t *testing.T) Portfolio {
 			Home:          home,
 			ProjectsIndex: index,
 			ProjectDetail: detail,
+			NotFound:      notFound,
 		},
 	}
 }
@@ -135,6 +144,9 @@ func TestPortfolioProjectDetailReturnsNotFoundForUnknownSlug(t *testing.T) {
 
 	if rr.Code != http.StatusNotFound {
 		t.Fatalf("ProjectDetail status code = %d, want %d", rr.Code, http.StatusNotFound)
+	}
+	if body := rr.Body.String(); !strings.Contains(body, "Not found: Page not found") {
+		t.Fatalf("ProjectDetail body = %q, want the not found page", body)
 	}
 }
 

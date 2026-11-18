@@ -19,6 +19,9 @@ type Meta struct {
 	// JSONLD is a schema.org object rendered as a JSON-LD data block, or nil
 	// for none.
 	JSONLD any
+	// NoIndex asks search engines to skip the page, which then has no
+	// canonical URL: error pages set it.
+	NoIndex bool
 }
 
 // Canonical is the page's absolute canonical URL.

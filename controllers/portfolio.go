@@ -28,6 +28,7 @@ type PortfolioTemplates struct {
 	ProjectsIndex views.Page
 	ProjectDetail views.Page
 	UpdatesIndex  views.Page
+	NotFound      views.Page
 }
 
 // ProjectView is a project plus what depends on the current date.
@@ -96,6 +97,10 @@ type ProjectDetailData struct {
 type UpdatesIndexData struct {
 	views.Meta
 	Updates []models.FeedEntry
+}
+
+type NotFoundData struct {
+	views.Meta
 }
 
 const (
@@ -256,13 +261,26 @@ func canonicalTech(projects []models.Project, tech string) string {
 func (p Portfolio) ProjectDetail(w http.ResponseWriter, r *http.Request) {
 	project, ok := p.findProject(r.PathValue("slug"))
 	if !ok {
-		http.NotFound(w, r)
+		p.NotFound(w, r)
 		return
 	}
 
 	p.Templates.ProjectDetail.Execute(w, r, ProjectDetailData{
 		Meta:    projectMeta(project),
 		Project: p.view(project),
+	})
+}
+
+// NotFound renders the branded 404 page. It is the catch-all for unmatched
+// routes and for unknown project slugs; the page is noindex.
+func (p Portfolio) NotFound(w http.ResponseWriter, r *http.Request) {
+	w.Header().Set("X-Robots-Tag", "noindex")
+	p.Templates.NotFound.ExecuteStatus(w, r, http.StatusNotFound, NotFoundData{
+		Meta: views.Meta{
+			Title:       "Page not found | " + siteName,
+			Description: "That page does not exist.",
+			NoIndex:     true,
+		},
 	})
 }
 

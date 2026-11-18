@@ -137,6 +137,7 @@ func newHandler(cfg models.Config, logger *slog.Logger, m *metrics.Metrics, stat
 			ProjectsIndex: views.Must(views.ParseFS(assetVersion, templates.FS, "projects/index.gohtml", "base.gohtml")),
 			ProjectDetail: views.Must(views.ParseFS(assetVersion, templates.FS, "projects/detail.gohtml", "base.gohtml")),
 			UpdatesIndex:  views.Must(views.ParseFS(assetVersion, templates.FS, "updates/index.gohtml", "base.gohtml")),
+			NotFound:      views.Must(views.ParseFS(assetVersion, templates.FS, "errors/404.gohtml", "base.gohtml")),
 		},
 	}
 
@@ -163,6 +164,8 @@ func newHandler(cfg models.Config, logger *slog.Logger, m *metrics.Metrics, stat
 
 	staticHandler := http.FileServer(noDirFS{http.Dir(staticDir)})
 	r.Handle("GET /static/", cacheStatic(assetVersion, http.StripPrefix("/static/", staticHandler)))
+	// Catch-all for paths no route above matches: the branded 404 page.
+	r.HandleFunc("GET /", portfolio.NotFound)
 
 	var handler http.Handler = r
 	handler = middleware.CSRF()(handler)
@@ -170,9 +173,22 @@ func newHandler(cfg models.Config, logger *slog.Logger, m *metrics.Metrics, stat
 	handler = middleware.RequestLogger(logger)(handler)
 	// Outermost, so latency covers every middleware and CSRF rejections count.
 	// /metrics is not routed here; it is served only on the metrics listener.
-	handler = m.Middleware(metrics.ServeMuxRoute(r))(handler)
+	handler = m.Middleware(metricsRoute(r))(handler)
 
 	return handler
+}
+
+// metricsRoute labels requests by matched route. The "GET /" 404 catch-all
+// counts as unmatched, as it did before the branded page, so unknown paths
+// stay one label.
+func metricsRoute(mux *http.ServeMux) func(*http.Request) string {
+	route := metrics.ServeMuxRoute(mux)
+	return func(r *http.Request) string {
+		if p := route(r); p != "/" {
+			return p
+		}
+		return ""
+	}
 }
 
 func health(w http.ResponseWriter, r *http.Request) {

@@ -87,6 +87,8 @@ These five page types are the whole site. Build them from the components below.
 
 - **Status.** Header; `page-title` "Project *status*"; a flat list of all project names with plain "Up" or "Down" text; footer. An up project adds a `meta` line under its name with the last response time ("142 ms"), and any project that has failed a check since the site started adds "Last down 5 min ago" (the one place relative times are used). No status dots, diagnostic details, or per-project indicators elsewhere.
 
+- **Not found.** Not a sixth page type: it reuses the Status layout. Header; eyebrow "404 · Not found", `page-title` "Page not *found*", `intro`, and a button row (primary "Home", secondary "Projects" and "Updates"); footer. It is served with a 404 status for unknown project slugs and every unmatched path, and is `noindex` with no canonical URL.
+
 ## Components
 
 - **Site header** (`nc-header`): wordmark left, nav right (Home, Projects, Status, Resume, Contact) with `aria-current="page"` on the current item. Below 640px the nav collapses into a 44px round menu button that opens a `<details>` drop-down.
