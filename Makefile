@@ -58,7 +58,10 @@ test:
 vuln:
 	go run golang.org/x/vuln/cmd/govulncheck@$(GOVULNCHECK_VERSION) ./...
 
-# Syntax-checks every script under static/ with `node --check` (needs Node on PATH).
+# Syntax-checks every script under static/ (needs Node on PATH). `node --check`
+# catches syntax errors, and scripts/check-classic-script.js compiles each file as a
+# classic browser script (no top-level `return`, `import`, or `export`), which
+# `node --check` accepts as CommonJS. Neither executes the script.
 # The static JavaScript ships as-is, so this is its only build-time gate.
 # A separate PR check step, like `make vuln`; not part of `make check`.
 js-check:
@@ -66,6 +69,7 @@ js-check:
 		echo "node --check $$f"; \
 		node --check "$$f"; \
 	done
+	node scripts/check-classic-script.js static/*.js
 
 # Mirrors the PR checks job (vet, lint/gofmt+golangci-lint, race tests, build).
 # `make vuln` is a separate PR check step and is not part of this target.
