@@ -111,9 +111,8 @@ type UpdatesIndexData struct {
 
 // UpdateFilter is one project chip on the updates page.
 type UpdateFilter struct {
-	Slug  string
-	Name  string
-	Count int
+	Slug string
+	Name string
 }
 
 type NotFoundData struct {
