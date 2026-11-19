@@ -193,6 +193,9 @@ func TestProjectFeedHasOnlyThatProjectsUpdates(t *testing.T) {
 			if entry.Title != project.Name+" update" || entry.Summary != updates[i].Note {
 				t.Errorf("%s entry %d title/summary = %q/%q", project.Slug, i, entry.Title, entry.Summary)
 			}
+			if want := updates[i].Date.Format(time.RFC3339); entry.Updated != want {
+				t.Errorf("%s entry %d updated = %q, want %q", project.Slug, i, entry.Updated, want)
+			}
 			if want := "https://bitofbytes.io/projects/" + project.Slug; entry.Link.Href != want {
 				t.Errorf("%s entry %d link = %q, want %q", project.Slug, i, entry.Link.Href, want)
 			}

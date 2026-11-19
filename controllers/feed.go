@@ -122,8 +122,8 @@ func (p Portfolio) UpdatesIndex(w http.ResponseWriter, r *http.Request) {
 		FeedHref: "/feed.xml",
 	}
 	for _, project := range p.Projects {
-		if updates := project.Updates(); len(updates) > 0 {
-			data.Filters = append(data.Filters, UpdateFilter{Slug: project.Slug, Name: project.Name, Count: len(updates)})
+		if len(project.Updates()) > 0 {
+			data.Filters = append(data.Filters, UpdateFilter{Slug: project.Slug, Name: project.Name})
 		}
 	}
 	if project, ok := p.findProject(r.URL.Query().Get("project")); ok {
