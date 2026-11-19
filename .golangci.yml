@@ -11,3 +11,11 @@ linters:
     - ineffassign
     - unused
     - gosec
+    - govet
+    - bodyclose
+    - errorlint
+
+formatters:
+  enable:
+    - gofmt
+    - goimports

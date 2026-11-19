@@ -43,12 +43,9 @@ build-github: configure-image
 vet:
 	go vet ./...
 
+# Linters and the gofmt/goimports formatters are configured in .golangci.yml;
+# `golangci-lint fmt` applies the formatting fixes.
 lint:
-	@unformatted="$$(gofmt -l .)" || exit $$?; \
-	if [ -n "$$unformatted" ]; then \
-		printf 'Run gofmt on:\n%s\n' "$$unformatted" >&2; \
-		exit 1; \
-	fi
 	golangci-lint run
 
 test:
@@ -71,7 +68,7 @@ js-check:
 	done
 	node scripts/check-classic-script.js static/*.js
 
-# Mirrors the PR checks job (vet, lint/gofmt+golangci-lint, race tests, build).
+# Mirrors the PR checks job (vet, golangci-lint with gofmt/goimports, race tests, build).
 # `make vuln` is a separate PR check step and is not part of this target.
 check: vet lint test
 	go build ./cmd/bob
