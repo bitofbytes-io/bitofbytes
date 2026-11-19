@@ -10,7 +10,7 @@ import (
 	"testing"
 )
 
-var internalRef = regexp.MustCompile(`(?:href|src)="(/[^"]*)"`)
+var internalRef = regexp.MustCompile(`\s(?:href|src)\s*=\s*(?:"(/[^"]*)"|'(/[^']*)')`)
 
 // internalLinks returns the site-internal targets a page's href and src
 // attributes point at. Protocol-relative and external URLs are ignored, and
@@ -18,7 +18,7 @@ var internalRef = regexp.MustCompile(`(?:href|src)="(/[^"]*)"`)
 func internalLinks(body string) []string {
 	var links []string
 	for _, m := range internalRef.FindAllStringSubmatch(body, -1) {
-		ref := html.UnescapeString(m[1])
+		ref := html.UnescapeString(m[1] + m[2])
 		if strings.HasPrefix(ref, "//") {
 			continue
 		}
@@ -41,6 +41,7 @@ func TestEveryInternalLinkAndAssetResolves(t *testing.T) {
 		seen[page] = true
 	}
 	from := map[string]string{}
+	linked := map[string]bool{}
 	checked := 0
 
 	for len(queue) > 0 {
@@ -58,6 +59,7 @@ func TestEveryInternalLinkAndAssetResolves(t *testing.T) {
 			continue
 		}
 		for _, link := range internalLinks(rr.Body.String()) {
+			linked[link] = true
 			if !seen[link] {
 				seen[link] = true
 				from[link] = target
@@ -67,7 +69,7 @@ func TestEveryInternalLinkAndAssetResolves(t *testing.T) {
 	}
 
 	for _, want := range []string{"/static/daniel-waters-resume.pdf", "/feed.xml", "/projects/carma", "/projects/carma/feed.xml"} {
-		if !seen[want] {
+		if !linked[want] {
 			t.Errorf("no page links to %s; the crawl is not reaching it", want)
 		}
 	}
@@ -80,9 +82,10 @@ func TestInternalLinksIgnoresExternalAndFragmentOnlyTargets(t *testing.T) {
 	body := `<a href="/projects?a=1&amp;b=2">x</a><a href="/#contact">c</a>` +
 		`<a href="#top">t</a><a href="//cdn.example/x.js">p</a>` +
 		`<a href="https://example.com/x">e</a><a href="mailto:a@b.c">m</a>` +
-		`<img src="/static/projects/a.webp">`
+		`<img src="/static/projects/a.webp"><a href='/projects'>q</a>` +
+		`<img data-src="/static/lazy.webp"><a data-href="/nope">d</a>`
 	got := strings.Join(internalLinks(body), " ")
-	if want := "/projects?a=1&b=2 / /static/projects/a.webp"; got != want {
+	if want := "/projects?a=1&b=2 / /static/projects/a.webp /projects"; got != want {
 		t.Errorf("internalLinks = %q, want %q", got, want)
 	}
 }
