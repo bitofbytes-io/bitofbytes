@@ -1,4 +1,4 @@
-.PHONY: configure-image ensure-image-tag local build docker-build docker-push build-github vet lint test check vuln
+.PHONY: configure-image ensure-image-tag local build docker-build docker-push build-github vet lint test check vuln js-check
 
 # Keep in sync with .github/workflows/pr-checks.yml (golangci/golangci-lint-action version).
 GOLANGCI_LINT_VERSION ?= v2.15.0
@@ -57,6 +57,15 @@ test:
 # Fails on reachable vulnerabilities. Needs network access for the vulnerability database.
 vuln:
 	go run golang.org/x/vuln/cmd/govulncheck@$(GOVULNCHECK_VERSION) ./...
+
+# Syntax-checks every script under static/ with `node --check` (needs Node on PATH).
+# The static JavaScript ships as-is, so this is its only build-time gate.
+# A separate PR check step, like `make vuln`; not part of `make check`.
+js-check:
+	@set -e; for f in static/*.js; do \
+		echo "node --check $$f"; \
+		node --check "$$f"; \
+	done
 
 # Mirrors the PR checks job (vet, lint/gofmt+golangci-lint, race tests, build).
 # `make vuln` is a separate PR check step and is not part of this target.

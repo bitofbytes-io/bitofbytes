@@ -91,6 +91,8 @@ That runs `go vet`, gofmt + golangci-lint, `go test -race`, and `go build ./cmd/
 
 CI also scans for reachable vulnerabilities with a pinned `govulncheck` (`GOVULNCHECK_VERSION` in the `Makefile`). Run the same check locally with `make vuln` (needs network access to fetch the tool and the vulnerability database).
 
+The scripts under `static/` ship as-is, so CI also syntax-checks them with `node --check`. Run the same check locally with `make js-check` (needs Node on `PATH`; CI uses Node 24). It covers every `static/*.js` file, so new scripts are picked up automatically.
+
 Portfolio content is maintained in `models/project.go`; templates and static assets live under `templates/` and `static/`.
 
 ### SEO metadata
