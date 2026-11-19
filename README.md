@@ -91,7 +91,7 @@ That runs `go vet`, golangci-lint (linters plus gofmt and goimports formatting c
 
 CI also scans for reachable vulnerabilities with a pinned `govulncheck` (`GOVULNCHECK_VERSION` in the `Makefile`). Run the same check locally with `make vuln` (needs network access to fetch the tool and the vulnerability database).
 
-The scripts under `static/` ship as-is, so CI also syntax-checks them with `node --check` and compiles each as a classic browser script (`scripts/check-classic-script.js`, via `vm.Script`, which rejects a top-level `return`, `import`, or `export` that `node --check` accepts as CommonJS). Neither check runs the script. Run the same checks locally with `make js-check` (needs Node on `PATH`; CI uses Node 24). It covers every `static/*.js` file, so new scripts are picked up automatically.
+The scripts under `static/` ship as-is, so CI also syntax-checks them with `node --check` and compiles each as a classic browser script (`scripts/check-classic-script.js`, via `vm.Script`, which rejects a top-level `return`, `import`, or `export`; `node --check` accepts a top-level `return` as CommonJS, and `import`/`export` when it parses the file as an ES module). Neither check runs the script. Run the same checks locally with `make js-check` (needs Node on `PATH`; CI uses Node 24). It covers every `static/*.js` file, so new scripts are picked up automatically.
 
 Portfolio content is maintained in `models/project.go`; templates and static assets live under `templates/` and `static/`.
 

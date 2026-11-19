@@ -57,8 +57,9 @@ vuln:
 
 # Syntax-checks every script under static/ (needs Node on PATH). `node --check`
 # catches syntax errors, and scripts/check-classic-script.js compiles each file as a
-# classic browser script (no top-level `return`, `import`, or `export`), which
-# `node --check` accepts as CommonJS. Neither executes the script.
+# classic browser script (no top-level `return`, `import`, or `export`). `node --check`
+# accepts a top-level `return` as CommonJS, and `import`/`export` when it parses the
+# file as an ES module. Neither executes the script.
 # The static JavaScript ships as-is, so this is its only build-time gate.
 # A separate PR check step, like `make vuln`; not part of `make check`.
 js-check:
