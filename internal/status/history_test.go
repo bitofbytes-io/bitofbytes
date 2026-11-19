@@ -142,15 +142,41 @@ func TestSnapshotUptimeCollectsThenReports(t *testing.T) {
 
 func TestCanceledCheckIsNotRecordedAsSample(t *testing.T) {
 	c := newChecker([]target{{"Example", "https://example.test/health"}})
+	now := time.Date(2026, 10, 20, 12, 0, 0, 0, time.UTC)
+	c.now = func() time.Time { return now }
+	started := make(chan struct{})
 	c.client.Transport = roundTripFunc(func(r *http.Request) (*http.Response, error) {
+		close(started)
+		<-r.Context().Done()
 		return nil, r.Context().Err()
 	})
+	// Enough healthy history to report a percentage, so a recorded failure would move it.
+	for i := range minUptimeSamples {
+		c.history[0].add(now.Add(time.Duration(i-minUptimeSamples)*time.Minute), true)
+	}
+	before := c.Snapshot()[0]
+	if !before.HasUptime || before.Uptime24h != 1000 {
+		t.Fatalf("seeded history: %+v", before)
+	}
+
+	// Cancel while the check is in flight, as on shutdown.
 	ctx, cancel := context.WithCancel(context.Background())
+	defer cancel()
+	done := make(chan struct{})
+	go func() {
+		defer close(done)
+		c.poll(ctx)
+	}()
+	<-started
 	cancel()
-	c.history[0].add(c.now(), true) // keep the ring non-empty to see it unchanged
-	c.poll(ctx)
-	if _, total := c.history[0].count(c.now().Add(time.Second), uptimeWindow); total != 1 {
-		t.Fatalf("total=%d; a shutdown-canceled check must not add a sample", total)
+	<-done
+
+	after := c.Snapshot()[0]
+	if !after.HasUptime || after.Uptime24h != before.Uptime24h {
+		t.Fatalf("uptime %+v became %+v; a shutdown-canceled check must not add a sample", before, after)
+	}
+	if after.HasLastDown {
+		t.Fatalf("a shutdown-canceled check was recorded as an outage: %+v", after)
 	}
 }
 
