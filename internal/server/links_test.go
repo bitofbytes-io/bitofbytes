@@ -10,13 +10,19 @@ import (
 	"testing"
 )
 
-var internalRef = regexp.MustCompile(`\s(?:href|src)\s*=\s*(?:"(/[^"]*)"|'(/[^']*)')`)
+var (
+	internalRef = regexp.MustCompile(`\s(?:href|src)\s*=\s*(?:"(/[^"]*)"|'(/[^']*)')`)
+	// An unterminated comment runs to the end of the document, as in a browser.
+	htmlComment = regexp.MustCompile(`(?s)<!--.*?(?:-->|$)`)
+)
 
 // internalLinks returns the site-internal targets a page's href and src
-// attributes point at. Protocol-relative and external URLs are ignored, and
-// fragments are dropped, as a browser never sends them.
+// attributes point at. Links inside HTML comments are ignored, as are
+// protocol-relative and external URLs; fragments are dropped, as a browser
+// never sends them.
 func internalLinks(body string) []string {
 	var links []string
+	body = htmlComment.ReplaceAllString(body, "")
 	for _, m := range internalRef.FindAllStringSubmatch(body, -1) {
 		ref := html.UnescapeString(m[1] + m[2])
 		if strings.HasPrefix(ref, "//") {
@@ -74,6 +80,19 @@ func TestEveryInternalLinkAndAssetResolves(t *testing.T) {
 		}
 	}
 	t.Logf("checked %d internal targets", checked)
+}
+
+func TestInternalLinksIgnoresHTMLComments(t *testing.T) {
+	t.Parallel()
+
+	body := `<a href="/a">a</a><!-- <a href="/gone">g</a> -->` +
+		`<!--
+		<img src="/also-gone.webp">
+		--><a href="/b">b</a><!-- unterminated <a href="/never">n</a>`
+	got := strings.Join(internalLinks(body), " ")
+	if want := "/a /b"; got != want {
+		t.Errorf("internalLinks = %q, want %q", got, want)
+	}
 }
 
 func TestInternalLinksIgnoresExternalAndFragmentOnlyTargets(t *testing.T) {
