@@ -23,11 +23,15 @@ func pagerProject(slug, name string) models.Project {
 	}
 }
 
-func renderProjectDetail(portfolio Portfolio, slug string) string {
+func renderProjectDetail(t *testing.T, portfolio Portfolio, slug string) string {
+	t.Helper()
 	req := httptest.NewRequest(http.MethodGet, "/projects/"+slug, nil)
 	req.SetPathValue("slug", slug)
 	rr := httptest.NewRecorder()
 	portfolio.ProjectDetail(rr, req)
+	if rr.Code != http.StatusOK {
+		t.Fatalf("GET /projects/%s status = %d, want %d", slug, rr.Code, http.StatusOK)
+	}
 	return rr.Body.String()
 }
 
@@ -62,7 +66,7 @@ func TestProjectDetailLinksToNeighboursAndWraps(t *testing.T) {
 	} {
 		t.Run(tt.name, func(t *testing.T) {
 			t.Parallel()
-			body := renderProjectDetail(portfolio, tt.slug)
+			body := renderProjectDetail(t, portfolio, tt.slug)
 			for _, want := range []string{
 				`<nav class="nc-pager" aria-label="More projects">`,
 				prevLink(tt.prev.Slug, tt.prev.Name),
@@ -85,7 +89,7 @@ func TestProjectDetailOmitsPagerForSingleProject(t *testing.T) {
 		Now:       fixedNow,
 	}
 
-	if body := renderProjectDetail(portfolio, "bare"); strings.Contains(body, "nc-pager") {
+	if body := renderProjectDetail(t, portfolio, "bare"); strings.Contains(body, "nc-pager") {
 		t.Error("unexpected pager for a project with no neighbours")
 	}
 }
@@ -105,7 +109,7 @@ func TestProjectDetailLinksToNeighboursForEveryProject(t *testing.T) {
 	for i, project := range projects {
 		prev := projects[(i+len(projects)-1)%len(projects)]
 		next := projects[(i+1)%len(projects)]
-		body := renderProjectDetail(portfolio, project.Slug)
+		body := renderProjectDetail(t, portfolio, project.Slug)
 		for _, want := range []string{
 			`href="/projects/` + prev.Slug + `" rel="prev"`,
 			`href="/projects/` + next.Slug + `" rel="next"`,
