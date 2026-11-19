@@ -1,5 +1,5 @@
 // Package status polls the fixed public project health endpoints. It exposes
-// only names, availability, response time and the age of the last failure to
+// only names, availability, response time, 24 hour uptime and the age of the last failure to
 // the web layer.
 package status
 
@@ -8,6 +8,7 @@ import (
 	"io"
 	"net/http"
 	"strconv"
+	"strings"
 	"sync"
 	"time"
 
@@ -25,13 +26,39 @@ const (
 // Entry is the complete public status view. Diagnostic details never enter it.
 // Latency is the round trip of the latest check and is set only while the
 // target is up. HasLastDown reports whether any failed check has been seen
-// since start, and LastDownAgo is the age of the most recent one.
+// since start, and LastDownAgo is the age of the most recent one. Uptime24h is
+// the share of polls in the last 24 hours that were up, in tenths of a percent
+// (0 to 1000), and is meaningful only when HasUptime is set; the history is
+// kept in memory, so it starts empty after a restart.
 type Entry struct {
 	Name        string
 	Up          bool
 	Latency     time.Duration
 	HasLastDown bool
 	LastDownAgo time.Duration
+	HasUptime   bool
+	Uptime24h   int
+}
+
+// UptimeText is the 24 hour uptime percentage, or a note that it is still
+// being collected when there are too few samples.
+func (e Entry) UptimeText() string {
+	if !e.HasUptime {
+		return "Uptime collecting"
+	}
+	return "Uptime " + strconv.Itoa(e.Uptime24h/10) + "." + strconv.Itoa(e.Uptime24h%10) + "% (24 h)"
+}
+
+// MetaText joins the response time, uptime and last failure shown under a
+// project's availability.
+func (e Entry) MetaText() string {
+	var parts []string
+	for _, p := range []string{e.LatencyText(), e.UptimeText(), e.LastDownText()} {
+		if p != "" {
+			parts = append(parts, p)
+		}
+	}
+	return strings.Join(parts, " · ")
 }
 
 // LatencyText is the response time in milliseconds, or "" when the target is down.
@@ -78,6 +105,7 @@ type Checker struct {
 	now      func() time.Time
 	mu       sync.RWMutex
 	results  []result
+	history  []ring // per target, rolling poll samples for the uptime percentage
 }
 
 func projectTargets() []target {
@@ -93,9 +121,14 @@ func New() *Checker { return newChecker(projectTargets()) }
 
 func newChecker(targets []target) *Checker {
 	transport := http.DefaultTransport.(*http.Transport).Clone()
+	history := make([]ring, len(targets))
+	for i := range history {
+		history[i] = newRing(historyCapacity)
+	}
 	return &Checker{
 		targets:  targets,
 		results:  make([]result, len(targets)),
+		history:  history,
 		interval: pollInterval,
 		now:      time.Now,
 		client: &http.Client{
@@ -137,9 +170,12 @@ func (c *Checker) poll(ctx context.Context) {
 				checked := c.now()
 				c.mu.Lock()
 				r := result{up: up, checked: checked, latency: checked.Sub(started), lastDown: c.results[i].lastDown}
-				// A check cut short by shutdown is not an outage.
-				if !up && ctx.Err() == nil {
-					r.lastDown = checked
+				// A check cut short by shutdown is not an outage, nor a sample.
+				if ctx.Err() == nil {
+					c.history[i].add(checked, up)
+					if !up {
+						r.lastDown = checked
+					}
 				}
 				c.results[i] = r
 				c.mu.Unlock()
@@ -194,6 +230,7 @@ func (c *Checker) Snapshot() []Entry {
 			entry.HasLastDown = true
 			entry.LastDownAgo = max(now.Sub(result.lastDown), 0)
 		}
+		entry.Uptime24h, entry.HasUptime = uptimePermille(c.history[i].count(now, uptimeWindow))
 		entries[i] = entry
 	}
 	return entries

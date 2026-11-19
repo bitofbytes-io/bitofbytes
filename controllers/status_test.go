@@ -43,9 +43,10 @@ func TestStatusRendersResponseTimeAndLastDown(t *testing.T) {
 	handler := Status{
 		Snapshot: func() []status.Entry {
 			return []status.Entry{
-				{Name: "Fast", Up: true, Latency: 142 * time.Millisecond},
-				{Name: "Flaky", Up: true, Latency: 9 * time.Millisecond, HasLastDown: true, LastDownAgo: 5 * time.Minute},
-				{Name: "Broken", Up: false, HasLastDown: true, LastDownAgo: 30 * time.Second},
+				{Name: "Fast", Up: true, Latency: 142 * time.Millisecond, HasUptime: true, Uptime24h: 1000},
+				{Name: "Flaky", Up: true, Latency: 9 * time.Millisecond, HasLastDown: true, LastDownAgo: 5 * time.Minute, HasUptime: true, Uptime24h: 987},
+				{Name: "Broken", Up: false, HasLastDown: true, LastDownAgo: 30 * time.Second, HasUptime: true, Uptime24h: 0},
+				{Name: "Fresh", Up: true, Latency: 3 * time.Millisecond},
 			}
 		},
 		Page: views.Must(views.ParseFS("testrev", templates.FS, "status/index.gohtml", "base.gohtml")),
@@ -54,15 +55,16 @@ func TestStatusRendersResponseTimeAndLastDown(t *testing.T) {
 	handler.ServeHTTP(rr, httptest.NewRequest(http.MethodGet, "/status", nil))
 	body := rr.Body.String()
 	for _, want := range []string{
-		`<dd class="nc-status__meta">142 ms</dd>`,
-		`<dd class="nc-status__meta">9 ms · Last down 5 min ago</dd>`,
-		`<dd class="nc-status__meta">Last down just now</dd>`,
+		`<dd class="nc-status__meta">142 ms · Uptime 100.0% (24 h)</dd>`,
+		`<dd class="nc-status__meta">9 ms · Uptime 98.7% (24 h) · Last down 5 min ago</dd>`,
+		`<dd class="nc-status__meta">Uptime 0.0% (24 h) · Last down just now</dd>`,
+		`<dd class="nc-status__meta">3 ms · Uptime collecting</dd>`,
 	} {
 		if strings.Count(body, want) != 1 {
 			t.Errorf("missing %s", want)
 		}
 	}
-	if strings.Count(body, "nc-status__meta") != 3 {
-		t.Errorf("meta rows=%d want 3", strings.Count(body, "nc-status__meta"))
+	if strings.Count(body, "nc-status__meta") != 4 {
+		t.Errorf("meta rows=%d want 4", strings.Count(body, "nc-status__meta"))
 	}
 }
