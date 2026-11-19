@@ -145,6 +145,9 @@ func TestCanceledCheckIsNotRecordedAsSample(t *testing.T) {
 	now := time.Date(2026, 10, 20, 12, 0, 0, 0, time.UTC)
 	c.now = func() time.Time { return now }
 	started := make(chan struct{})
+	// The test context alone controls cancellation; a client timeout expiring
+	// during a stall would make both channels ready and blame the transport.
+	c.client.Timeout = 0
 	c.client.Transport = roundTripFunc(func(r *http.Request) (*http.Response, error) {
 		close(started)
 		<-r.Context().Done()
