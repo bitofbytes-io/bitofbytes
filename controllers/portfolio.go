@@ -92,6 +92,10 @@ func (d ProjectsIndexData) TechHref(tech string) string {
 type ProjectDetailData struct {
 	views.Meta
 	Project ProjectView
+	// Prev and Next are the neighbours in catalogue order, wrapping at the
+	// ends; HasNeighbors is false when there is no other project to link to.
+	Prev, Next   models.Project
+	HasNeighbors bool
 }
 
 type UpdatesIndexData struct {
@@ -281,10 +285,28 @@ func (p Portfolio) ProjectDetail(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
+	prev, next, hasNeighbors := p.neighbors(project.Slug)
 	p.Templates.ProjectDetail.Execute(w, r, ProjectDetailData{
-		Meta:    projectMeta(project),
-		Project: p.view(project),
+		Meta:         projectMeta(project),
+		Project:      p.view(project),
+		Prev:         prev,
+		Next:         next,
+		HasNeighbors: hasNeighbors,
 	})
+}
+
+// neighbors returns the projects before and after slug in p.Projects order,
+// wrapping at the ends. ok is false when slug is unknown or the only project.
+func (p Portfolio) neighbors(slug string) (prev, next models.Project, ok bool) {
+	n := len(p.Projects)
+	if n < 2 {
+		return models.Project{}, models.Project{}, false
+	}
+	i := slices.IndexFunc(p.Projects, func(project models.Project) bool { return project.Slug == slug })
+	if i < 0 {
+		return models.Project{}, models.Project{}, false
+	}
+	return p.Projects[(i+n-1)%n], p.Projects[(i+1)%n], true
 }
 
 // NotFound renders the branded 404 page. It is the catch-all for unmatched
