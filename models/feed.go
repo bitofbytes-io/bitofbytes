@@ -29,6 +29,11 @@ func AllUpdates() []FeedEntry {
 	return updatesOf(Projects())
 }
 
+// Updates is the project's latest and previous updates, newest first.
+func (p Project) Updates() []FeedEntry {
+	return updatesOf([]Project{p})
+}
+
 // updatesOf flattens the updates of projects, newest first. Updates on the
 // same day keep the order of projects. An update whose date cannot be parsed
 // is left out, since it has no place on a timeline.

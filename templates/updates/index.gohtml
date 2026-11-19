@@ -2,13 +2,21 @@
 <main class="nc-wrap">
     <section class="nc-page-head">
         <div class="nc-page-head__titles">
-            <p class="nc-eyebrow">Changelog · {{ len .Updates }} updates</p>
-            <h1 class="nc-heading nc-heading--page">All <span class="nc-em">updates</span></h1>
-            <p class="nc-intro">What changed in each side project, newest first. Follow along with the <a class="nc-prose-link" href="/feed.xml" type="application/atom+xml">Atom feed</a>.</p>
+            <p class="nc-eyebrow">Changelog · {{ if .Project }}{{ len .Updates }} of {{ .Total }}{{ else }}{{ len .Updates }}{{ end }} updates</p>
+            <h1 class="nc-heading nc-heading--page">{{ if .Project }}{{ .ProjectName }}{{ else }}All{{ end }} <span class="nc-em">updates</span></h1>
+            <p class="nc-intro">What changed in {{ if .Project }}{{ .ProjectName }}{{ else }}each side project{{ end }}, newest first. Follow along with the <a class="nc-prose-link" href="{{ .FeedHref }}" type="application/atom+xml">Atom feed</a>.</p>
         </div>
     </section>
 
-    <section class="nc-updates" aria-label="All project updates">
+    <nav class="nc-filter" aria-label="Filter updates by project">
+        <ul class="nc-chips">
+            <li><a class="nc-chip" href="/updates"{{ if not .Project }} aria-current="true"{{ end }}>All projects</a></li>
+            {{ range .Filters }}<li><a class="nc-chip" href="/updates?project={{ .Slug }}"{{ if eq $.Project .Slug }} aria-current="true"{{ end }}>{{ .Name }}</a></li>
+            {{ end }}
+        </ul>
+    </nav>
+
+    <section class="nc-updates" aria-label="{{ if .Project }}{{ .ProjectName }} updates{{ else }}All project updates{{ end }}">
         <ol class="nc-timeline nc-timeline--page">
             {{ range $i, $update := .Updates }}
             <li class="nc-timeline__item{{ if eq $i 0 }} nc-timeline__item--latest{{ end }}">

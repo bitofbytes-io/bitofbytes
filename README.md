@@ -103,6 +103,7 @@ Each project's `LastUpdate`/`Notes` and `PreviousUpdates` form a dated changelog
 
 - `/updates` is the HTML changelog, linked from "See all updates" on the home page.
 - `/feed.xml` is the same list as an Atom feed (`application/atom+xml`, cached for an hour). Each entry's ID is `tag:bitofbytes.io,<YYYY-MM-DD>:<slug>`, so keep at most one update per project per day. Every page advertises it with `<link rel="alternate">` and a footer "Subscribe" link.
+- `/projects/{slug}/feed.xml` is the same feed for one project (built with `Project.Updates()`, which reuses `updatesOf`); an unknown slug is the 404 page. `/updates?project=<slug>` filters the HTML changelog the same way and shows a chip per project (an unknown slug is ignored). Each project page links both. All per-project feeds are listed in `/sitemap.xml`.
 
 Adding an update in `models/project.go` updates both on the next deploy; there is no configuration.
 

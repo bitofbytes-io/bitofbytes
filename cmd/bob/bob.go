@@ -145,6 +145,7 @@ func newHandler(cfg models.Config, logger *slog.Logger, m *metrics.Metrics, stat
 	r.HandleFunc("GET /{$}", portfolio.Home)
 	r.HandleFunc("GET /projects", portfolio.ProjectsIndex)
 	r.HandleFunc("GET /projects/{slug}", portfolio.ProjectDetail)
+	r.HandleFunc("GET /projects/{slug}/feed.xml", portfolio.ProjectFeed)
 	r.HandleFunc("GET /updates", portfolio.UpdatesIndex)
 	r.Handle("GET /status", controllers.Status{Snapshot: projectStatus.Snapshot, Page: views.Must(views.ParseFS(assetVersion, templates.FS, "status/index.gohtml", "base.gohtml"))})
 	r.HandleFunc("GET /feed.xml", portfolio.Feed)

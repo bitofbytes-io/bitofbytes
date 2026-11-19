@@ -11,7 +11,7 @@ import (
 
 // pagePaths are every page the site renders.
 func pagePaths() []string {
-	paths := []string{"/", "/projects", "/projects?sort=newest", "/updates", "/status"}
+	paths := []string{"/", "/projects", "/projects?sort=newest", "/updates", "/updates?project=carma", "/status"}
 	for _, project := range models.Projects() {
 		paths = append(paths, "/projects/"+project.Slug)
 	}
