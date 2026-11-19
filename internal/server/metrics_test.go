@@ -1,4 +1,4 @@
-package main
+package server
 
 import (
 	"io"
@@ -19,7 +19,7 @@ func TestPublicRequestsAreRecordedByRoutePattern(t *testing.T) {
 	t.Parallel()
 	var cfg models.Config
 	m := metrics.New()
-	handler := newHandler(cfg, slog.New(slog.NewTextHandler(io.Discard, nil)), m, "../../static", testAssetVersion, status.New())
+	handler := New(cfg, slog.New(slog.NewTextHandler(io.Discard, nil)), m, "../../static", testAssetVersion, status.New())
 
 	for _, path := range []string{"/", "/projects/carma", "/projects/noted", "/static/styles.css", "/does-not-exist", "/health", "/ready"} {
 		handler.ServeHTTP(httptest.NewRecorder(), httptest.NewRequest(http.MethodGet, path, nil))

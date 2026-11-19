@@ -7,17 +7,14 @@ import (
 	"net/http"
 	"os"
 	"os/signal"
-	"path/filepath"
+	"sync"
 	"syscall"
 	"time"
 
-	"github.com/DryWaters/bitofbytes/controllers"
-	"github.com/DryWaters/bitofbytes/controllers/middleware"
 	"github.com/DryWaters/bitofbytes/internal/metrics"
+	"github.com/DryWaters/bitofbytes/internal/server"
 	"github.com/DryWaters/bitofbytes/internal/status"
 	"github.com/DryWaters/bitofbytes/models"
-	"github.com/DryWaters/bitofbytes/templates"
-	"github.com/DryWaters/bitofbytes/views"
 )
 
 var (
@@ -29,16 +26,12 @@ func main() {
 	// load config
 	cfg, err := models.LoadEnvConfig()
 	if err != nil {
-		fallback := slog.New(slog.NewTextHandler(os.Stderr, &slog.HandlerOptions{Level: slog.LevelError}))
-		fallback.Error("load configuration", "error", err)
-		os.Exit(1)
+		fatal("load configuration", err)
 	}
 
 	logger, err := models.NewLogger(cfg.Logging)
 	if err != nil {
-		fallback := slog.New(slog.NewTextHandler(os.Stderr, &slog.HandlerOptions{Level: slog.LevelError}))
-		fallback.Error("initialize logger", "error", err)
-		os.Exit(1)
+		fatal("initialize logger", err)
 	}
 
 	slog.SetDefault(logger)
@@ -47,6 +40,12 @@ func main() {
 		logger.Error("server exited", "error", err)
 		os.Exit(1)
 	}
+}
+
+// fatal reports a startup failure before the configured logger exists.
+func fatal(msg string, err error) {
+	slog.New(slog.NewTextHandler(os.Stderr, &slog.HandlerOptions{Level: slog.LevelError})).Error(msg, "error", err)
+	os.Exit(1)
 }
 
 // shutdownTimeout bounds how long in-flight requests get to finish on
@@ -59,9 +58,9 @@ func run(cfg models.Config, logger *slog.Logger) error {
 
 	m := metrics.New()
 	projectStatus := status.New()
-	server := &http.Server{
+	srv := &http.Server{
 		Addr:              cfg.Server.Address,
-		Handler:           newHandler(cfg, logger, m, "static", assetVersion(), projectStatus),
+		Handler:           server.New(cfg, logger, m, "static", assetVersion(), projectStatus),
 		ReadTimeout:       5 * time.Second,
 		ReadHeaderTimeout: 2 * time.Second,
 		WriteTimeout:      10 * time.Second,
@@ -71,31 +70,22 @@ func run(cfg models.Config, logger *slog.Logger) error {
 
 	// Bind the public listener before the metrics one, so an address clash
 	// always fails the optional metrics listener rather than the site.
-	ln, err := net.Listen("tcp", server.Addr)
+	ln, err := net.Listen("tcp", srv.Addr)
 	if err != nil {
 		return err
 	}
 
-	statusDone := make(chan struct{})
-	go func() {
-		defer close(statusDone)
-		projectStatus.Run(ctx)
-	}()
-
+	var background sync.WaitGroup
+	background.Go(func() { projectStatus.Run(ctx) })
 	// The metrics listener is internal only and never fatal: it follows the
 	// public server's lifecycle and is shut down when serve returns.
-	metricsDone := make(chan struct{})
-	go func() {
-		defer close(metricsDone)
-		m.Serve(ctx, cfg.Metrics.Address, logger)
-	}()
+	background.Go(func() { m.Serve(ctx, cfg.Metrics.Address, logger) })
 
 	logger.Info("Starting the server", "address", cfg.Server.Address, "version", version, "revision", revision)
 
-	err = serve(ctx, server, ln, logger)
+	err = serve(ctx, srv, ln, logger)
 	stop()
-	<-metricsDone
-	<-statusDone
+	background.Wait()
 	return err
 }
 
@@ -125,89 +115,4 @@ func assetVersion() string {
 		return ""
 	}
 	return revision
-}
-
-func newHandler(cfg models.Config, logger *slog.Logger, m *metrics.Metrics, staticDir string, assetVersion string, projectStatus *status.Checker) http.Handler {
-	portfolio := controllers.Portfolio{
-		Projects:   models.Projects(),
-		Activities: models.CurrentActivities(),
-		Updates:    models.AllUpdates(),
-		Templates: controllers.PortfolioTemplates{
-			Home:          views.Must(views.ParseFS(assetVersion, templates.FS, "home/index.gohtml", "base.gohtml")),
-			ProjectsIndex: views.Must(views.ParseFS(assetVersion, templates.FS, "projects/index.gohtml", "base.gohtml")),
-			ProjectDetail: views.Must(views.ParseFS(assetVersion, templates.FS, "projects/detail.gohtml", "base.gohtml")),
-			UpdatesIndex:  views.Must(views.ParseFS(assetVersion, templates.FS, "updates/index.gohtml", "base.gohtml")),
-			NotFound:      views.Must(views.ParseFS(assetVersion, templates.FS, "errors/404.gohtml", "base.gohtml")),
-		},
-	}
-
-	r := http.NewServeMux()
-	r.HandleFunc("GET /{$}", portfolio.Home)
-	r.HandleFunc("GET /projects", portfolio.ProjectsIndex)
-	r.HandleFunc("GET /projects/{slug}", portfolio.ProjectDetail)
-	r.HandleFunc("GET /projects/{slug}/feed.xml", portfolio.ProjectFeed)
-	r.HandleFunc("GET /updates", portfolio.UpdatesIndex)
-	r.Handle("GET /status", controllers.Status{Snapshot: projectStatus.Snapshot, Page: views.Must(views.ParseFS(assetVersion, templates.FS, "status/index.gohtml", "base.gohtml"))})
-	r.HandleFunc("GET /feed.xml", portfolio.Feed)
-	// /health means the process is up and /ready means its dependencies are.
-	// bob has no database or mount, so /ready has nothing to check and always
-	// reports ok. /healthz stays for the image's HEALTHCHECK.
-	r.HandleFunc("GET /health", health)
-	r.HandleFunc("GET /healthz", health)
-	r.HandleFunc("GET /ready", ready)
-	// Support browser default icon discovery paths in addition to the template's
-	// explicit /static/... icon links.
-	r.Handle("GET /favicon.ico", cacheStatic(assetVersion, serveStaticFile(staticDir, "favicon.ico")))
-	r.Handle("GET /robots.txt", cacheStatic(assetVersion, serveStaticFile(staticDir, "robots.txt")))
-	r.HandleFunc("GET /sitemap.xml", portfolio.Sitemap)
-	r.Handle("GET /apple-touch-icon.png", cacheStatic(assetVersion, serveStaticFile(staticDir, "apple-touch-icon.png")))
-	r.Handle("GET /apple-touch-icon-precomposed.png", cacheStatic(assetVersion, serveStaticFile(staticDir, "apple-touch-icon.png")))
-
-	staticHandler := http.FileServer(noDirFS{http.Dir(staticDir)})
-	r.Handle("GET /static/", cacheStatic(assetVersion, http.StripPrefix("/static/", staticHandler)))
-	// Catch-all for paths no route above matches: the branded 404 page.
-	r.HandleFunc("GET /", portfolio.NotFound)
-
-	var handler http.Handler = r
-	handler = middleware.CSRF()(handler)
-	handler = middleware.SecureHeaders(cfg.CSRF.Secure)(handler)
-	handler = middleware.RequestLogger(logger)(handler)
-	// Outermost, so latency covers every middleware and CSRF rejections count.
-	// /metrics is not routed here; it is served only on the metrics listener.
-	handler = m.Middleware(metricsRoute(r))(handler)
-
-	return handler
-}
-
-// metricsRoute labels requests by matched route. The "GET /" 404 catch-all
-// counts as unmatched, as it did before the branded page, so unknown paths
-// stay one label.
-func metricsRoute(mux *http.ServeMux) func(*http.Request) string {
-	route := metrics.ServeMuxRoute(mux)
-	return func(r *http.Request) string {
-		if p := route(r); p != "/" {
-			return p
-		}
-		return ""
-	}
-}
-
-func health(w http.ResponseWriter, r *http.Request) {
-	w.Header().Set("Content-Type", "text/plain; charset=utf-8")
-	w.Header().Set("Cache-Control", "no-store")
-	w.WriteHeader(http.StatusOK)
-	_, _ = w.Write([]byte("ok"))
-}
-
-func ready(w http.ResponseWriter, r *http.Request) {
-	w.Header().Set("Content-Type", "application/json")
-	w.Header().Set("Cache-Control", "no-store")
-	w.WriteHeader(http.StatusOK)
-	_, _ = w.Write([]byte(`{"status":"ok"}`))
-}
-
-func serveStaticFile(staticDir string, name string) http.HandlerFunc {
-	return func(w http.ResponseWriter, r *http.Request) {
-		http.ServeFile(w, r, filepath.Join(staticDir, name))
-	}
 }
