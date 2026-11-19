@@ -83,6 +83,13 @@
             </div>
         </section>
         {{ end }}
+
+        {{ if .HasNeighbors }}
+        <nav class="nc-pager" aria-label="More projects">
+            <a class="nc-pager__link" href="/projects/{{ .Prev.Slug }}" rel="prev"><span class="nc-pager__label">Previous project</span><span class="nc-pager__name">{{ .Prev.Name }}</span></a>
+            <a class="nc-pager__link nc-pager__link--next" href="/projects/{{ .Next.Slug }}" rel="next"><span class="nc-pager__label">Next project</span><span class="nc-pager__name">{{ .Next.Name }}</span></a>
+        </nav>
+        {{ end }}
     </article>
 </main>
 {{ template "footer" }}
