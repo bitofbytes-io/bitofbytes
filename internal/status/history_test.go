@@ -167,7 +167,11 @@ func TestCanceledCheckIsNotRecordedAsSample(t *testing.T) {
 		defer close(done)
 		c.poll(ctx)
 	}()
-	<-started
+	select {
+	case <-started:
+	case <-done:
+		t.Fatal("poll returned without invoking the transport")
+	}
 	cancel()
 	<-done
 
