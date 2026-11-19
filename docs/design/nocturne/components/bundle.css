@@ -110,6 +110,7 @@
 .nc-chip { padding: 4px 10px; border: 1px solid var(--line-strong); border-radius: var(--radius-sm); font-family: var(--font-mono); font-size: 12px; color: var(--ink-muted); }
 a.nc-chip { display: inline-flex; align-items: center; min-height: var(--control-height-sm); box-sizing: border-box; text-decoration: none; }
 a.nc-chip:hover { border-color: var(--accent); color: var(--accent); }
+a.nc-chip[aria-current="true"] { border-color: var(--accent); background: var(--accent); color: var(--on-accent); }
 .nc-filter { display: flex; flex-wrap: wrap; align-items: center; gap: 4px var(--space-4); padding-bottom: var(--space-5); }
 .nc-filter__text { margin: 0; max-width: 100%; overflow-wrap: anywhere; padding: 8px 16px; border: 1px solid var(--line-strong); border-radius: var(--radius-pill); background: var(--surface); font: 400 14px var(--font-sans); color: var(--ink-muted); }
 .nc-filter__text b { font-family: var(--font-mono); font-weight: 500; color: var(--ink); }
@@ -147,6 +148,7 @@ a.nc-chip:hover { border-color: var(--accent); color: var(--accent); }
 .nc-timeline__date { font-family: var(--font-mono); font-size: 13px; color: var(--ink-subtle); }
 .nc-timeline__date b { font-weight: 400; color: var(--accent); }
 .nc-timeline__text { font-size: 16px; line-height: 1.5; color: var(--ink); }
+.nc-timeline__more { margin: 0; font-size: 15px; line-height: 1.5; color: var(--ink-muted); }
 /* the /updates page: a full-width timeline whose items link to their project */
 .nc-timeline--page { max-width: 720px; gap: var(--space-6); }
 .nc-timeline__entry { display: flex; flex-direction: column; gap: 4px; }

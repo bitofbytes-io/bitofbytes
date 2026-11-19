@@ -97,6 +97,23 @@ type ProjectDetailData struct {
 type UpdatesIndexData struct {
 	views.Meta
 	Updates []models.FeedEntry
+	// Total is the number of updates before the project filter.
+	Total int
+	// Project and ProjectName are the active project filter; empty means no
+	// filter.
+	Project     string
+	ProjectName string
+	// FeedHref is the Atom feed matching the filter.
+	FeedHref string
+	// Filters is one chip per project that has updates.
+	Filters []UpdateFilter
+}
+
+// UpdateFilter is one project chip on the updates page.
+type UpdateFilter struct {
+	Slug  string
+	Name  string
+	Count int
 }
 
 type NotFoundData struct {

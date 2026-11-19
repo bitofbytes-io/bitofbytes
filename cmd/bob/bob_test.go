@@ -237,7 +237,7 @@ func TestUnknownRoutesRenderBrandedNotFound(t *testing.T) {
 	t.Parallel()
 
 	handler := newTestHandler()
-	for _, path := range []string{"/projects/nope", "/projects/not-real", "/does-not-exist", "/projects/nope/extra"} {
+	for _, path := range []string{"/projects/nope", "/projects/not-real", "/does-not-exist", "/projects/nope/extra", "/projects/nope/feed.xml"} {
 		t.Run(path, func(t *testing.T) {
 			t.Parallel()
 			rr := httptest.NewRecorder()

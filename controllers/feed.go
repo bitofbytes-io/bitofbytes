@@ -5,6 +5,7 @@ import (
 	"net/http"
 	"time"
 
+	"github.com/DryWaters/bitofbytes/models"
 	"github.com/DryWaters/bitofbytes/views"
 )
 
@@ -44,7 +45,7 @@ type atomEntry struct {
 // Feed serves feed.xml: every project update as an Atom entry, newest first.
 // The updates only change with a deploy, so readers may cache it for an hour.
 func (p Portfolio) Feed(w http.ResponseWriter, r *http.Request) {
-	feed := atomFeed{
+	writeFeed(w, atomFeed{
 		XMLNS:    atomNamespace,
 		ID:       views.SiteURL + "/updates",
 		Title:    "BitOfBytes project updates",
@@ -53,10 +54,40 @@ func (p Portfolio) Feed(w http.ResponseWriter, r *http.Request) {
 			{Rel: "self", Type: "application/atom+xml", Href: views.SiteURL + "/feed.xml"},
 			{Rel: "alternate", Type: "text/html", Href: views.SiteURL + "/updates"},
 		},
-		Author: atomAuthor{Name: "Daniel Waters", URI: views.SiteURL + "/"},
+	}, p.Updates)
+}
+
+// ProjectFeed serves /projects/{slug}/feed.xml: the Atom feed of one project's
+// updates. An unknown slug is the branded 404 page.
+func (p Portfolio) ProjectFeed(w http.ResponseWriter, r *http.Request) {
+	project, ok := p.findProject(r.PathValue("slug"))
+	if !ok {
+		p.NotFound(w, r)
+		return
 	}
+	writeFeed(w, atomFeed{
+		XMLNS:    atomNamespace,
+		ID:       views.SiteURL + "/projects/" + project.Slug,
+		Title:    project.Name + " updates | " + siteName,
+		Subtitle: "Every update to " + project.Name + ", newest first.",
+		Links: []atomLink{
+			{Rel: "self", Type: "application/atom+xml", Href: views.SiteURL + ProjectFeedPath(project.Slug)},
+			{Rel: "alternate", Type: "text/html", Href: views.SiteURL + "/projects/" + project.Slug},
+		},
+	}, project.Updates())
+}
+
+// ProjectFeedPath is the path of a project's Atom feed.
+func ProjectFeedPath(slug string) string {
+	return "/projects/" + slug + "/feed.xml"
+}
+
+// writeFeed fills in the author, entries and updated time of feed and writes
+// it as Atom.
+func writeFeed(w http.ResponseWriter, feed atomFeed, updates []models.FeedEntry) {
+	feed.Author = atomAuthor{Name: "Daniel Waters", URI: views.SiteURL + "/"}
 	var newest time.Time
-	for _, update := range p.Updates {
+	for _, update := range updates {
 		if update.Date.After(newest) {
 			newest = update.Date
 		}
@@ -81,9 +112,25 @@ func (p Portfolio) Feed(w http.ResponseWriter, r *http.Request) {
 	_, _ = w.Write(body)
 }
 
+// UpdatesIndex serves /updates. ?project=<slug> narrows it to one project's
+// updates; an unknown slug is ignored, so a stale link still shows the list.
 func (p Portfolio) UpdatesIndex(w http.ResponseWriter, r *http.Request) {
-	p.Templates.UpdatesIndex.Execute(w, r, UpdatesIndexData{
-		Meta:    updatesMeta(),
-		Updates: p.Updates,
-	})
+	data := UpdatesIndexData{
+		Meta:     updatesMeta(),
+		Updates:  p.Updates,
+		Total:    len(p.Updates),
+		FeedHref: "/feed.xml",
+	}
+	for _, project := range p.Projects {
+		if updates := project.Updates(); len(updates) > 0 {
+			data.Filters = append(data.Filters, UpdateFilter{Slug: project.Slug, Name: project.Name, Count: len(updates)})
+		}
+	}
+	if project, ok := p.findProject(r.URL.Query().Get("project")); ok {
+		data.Project = project.Slug
+		data.ProjectName = project.Name
+		data.Updates = project.Updates()
+		data.FeedHref = ProjectFeedPath(project.Slug)
+	}
+	p.Templates.UpdatesIndex.Execute(w, r, data)
 }

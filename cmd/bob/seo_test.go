@@ -53,7 +53,7 @@ func TestEveryPageHasUniqueTitleAndMetadata(t *testing.T) {
 		if title == "" {
 			t.Errorf("%s has an empty title", page)
 		}
-		if page != "/projects?sort=newest" {
+		if page != "/projects?sort=newest" && page != "/updates?project=carma" {
 			if other, ok := titles[title]; ok {
 				t.Errorf("%s and %s share the title %q", page, other, title)
 			}
@@ -88,11 +88,12 @@ func TestCanonicalURLsUseApexHostWithoutQuery(t *testing.T) {
 	t.Parallel()
 
 	tests := map[string]string{
-		"/":                     "https://bitofbytes.io/",
-		"/projects":             "https://bitofbytes.io/projects",
-		"/projects?sort=newest": "https://bitofbytes.io/projects",
-		"/projects/carma":       "https://bitofbytes.io/projects/carma",
-		"/updates":              "https://bitofbytes.io/updates",
+		"/":                      "https://bitofbytes.io/",
+		"/projects":              "https://bitofbytes.io/projects",
+		"/projects?sort=newest":  "https://bitofbytes.io/projects",
+		"/projects/carma":        "https://bitofbytes.io/projects/carma",
+		"/updates":               "https://bitofbytes.io/updates",
+		"/updates?project=noted": "https://bitofbytes.io/updates",
 	}
 	for page, want := range tests {
 		body := get(t, page).Body.String()
@@ -233,7 +234,7 @@ func TestSitemapListsEveryPage(t *testing.T) {
 	if len(projects) == 0 {
 		t.Fatal("no projects in the catalog")
 	}
-	if want := len(projects) + 4; len(set.URLs) != want {
+	if want := 2*len(projects) + 4; len(set.URLs) != want {
 		t.Errorf("sitemap has %d URLs, want %d", len(set.URLs), want)
 	}
 	for _, loc := range []string{"https://bitofbytes.io/", "https://bitofbytes.io/projects", "https://bitofbytes.io/updates", "https://bitofbytes.io/status"} {
@@ -250,6 +251,12 @@ func TestSitemapListsEveryPage(t *testing.T) {
 		}
 		if want := project.UpdatedOn().Format("2006-01-02"); got != want {
 			t.Errorf("%s lastmod = %q, want %q", loc, got, want)
+		}
+		feed := loc + "/feed.xml"
+		if got, ok := lastMods[feed]; !ok {
+			t.Errorf("sitemap missing %s", feed)
+		} else if want := project.UpdatedOn().Format("2006-01-02"); got != want {
+			t.Errorf("%s lastmod = %q, want %q", feed, got, want)
 		}
 	}
 }

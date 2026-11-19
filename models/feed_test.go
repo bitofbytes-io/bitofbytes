@@ -49,6 +49,22 @@ func TestUpdatesOfFlattensNewestFirst(t *testing.T) {
 	}
 }
 
+func TestProjectUpdatesAreOnlyThatProjects(t *testing.T) {
+	t.Parallel()
+
+	for _, project := range Projects() {
+		updates := project.Updates()
+		if want := 1 + len(project.PreviousUpdates); len(updates) != want {
+			t.Errorf("%s has %d updates, want %d", project.Slug, len(updates), want)
+		}
+		for _, update := range updates {
+			if update.Slug != project.Slug {
+				t.Errorf("%s updates include %s", project.Slug, update.Slug)
+			}
+		}
+	}
+}
+
 // Every update in the catalog must parse, or AllUpdates would drop it, and
 // Atom IDs must be unique.
 func TestAllUpdatesCoversEveryUpdateWithUniqueIDs(t *testing.T) {
