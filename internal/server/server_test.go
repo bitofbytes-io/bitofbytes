@@ -1,4 +1,4 @@
-package main
+package server
 
 import (
 	"html"
@@ -20,7 +20,7 @@ func newTestHandler() http.Handler {
 
 	logger := slog.New(slog.NewTextHandler(io.Discard, nil))
 
-	return newHandler(cfg, logger, metrics.New(), "../../static", testAssetVersion, status.New())
+	return New(cfg, logger, metrics.New(), "../../static", testAssetVersion, status.New())
 }
 
 const testAssetVersion = "testrev"

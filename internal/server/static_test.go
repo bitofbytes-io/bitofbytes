@@ -1,4 +1,4 @@
-package main
+package server
 
 import (
 	"encoding/json"
@@ -247,7 +247,7 @@ func TestPagesDeclareThemeColorPerScheme(t *testing.T) {
 func TestDevelopmentAssetsAreNotVersioned(t *testing.T) {
 	t.Parallel()
 	var cfg models.Config
-	handler := newHandler(cfg, slog.New(slog.NewTextHandler(io.Discard, nil)), metrics.New(), "../../static", "", status.New())
+	handler := New(cfg, slog.New(slog.NewTextHandler(io.Discard, nil)), metrics.New(), "../../static", "", status.New())
 
 	rr := httptest.NewRecorder()
 	handler.ServeHTTP(rr, httptest.NewRequest(http.MethodGet, "/", nil))
