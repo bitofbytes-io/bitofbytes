@@ -92,12 +92,12 @@ func Projects() []Project {
 			RepoURL:         "https://github.com/bitofbytes-io/noted",
 			LiveURL:         "https://noted.bitofbytes.io",
 			HealthURL:       "https://noted.bitofbytes.io/api/health",
-			LastUpdate:      "November 10, 2026",
+			LastUpdate:      "November 23, 2026",
 			FirstCommitDate: "2026-07-13",
-			Notes:           "Most recent work adds a metronome in the reader, with tempo, tap tempo, and beats per bar remembered for each piece. On a wide landscape screen, page mode can show two pages side by side, and that choice stays on the device.",
+			Notes:           "Most recent work adds a Half turn layout in page mode. Each turn moves half a page and the next one finishes it, and that choice stays on the device.",
 			PreviousUpdates: []ProjectUpdate{
+				{Date: "November 10, 2026", Note: "Most recent work adds a metronome in the reader, with tempo, tap tempo, and beats per bar remembered for each piece. On a wide landscape screen, page mode can show two pages side by side, and that choice stays on the device."},
 				{Date: "October 23, 2026", Note: "Most recent work keeps you signed in longer, and coming back from a piece keeps your search, filter, and sort without pulling that piece out of title order. Musical keys and opus numbers match more precisely, and a piece can store its opus and key."},
-				{Date: "October 20, 2026", Note: "Most recent work lets you mark a piece Learning, Playing, or Shelved, and sort by recently played, recently added, or least recently played. The library filters as you type, search understands catalogue numbers and close spellings, you can browse and merge composer names, and saving a score warns you about a duplicate PDF or title."},
 			},
 			Hobby: "piano",
 			Tech: []string{
@@ -141,12 +141,12 @@ func Projects() []Project {
 			RepoURL:         "https://github.com/bitofbytes-io/dined",
 			LiveURL:         "https://dined.bitofbytes.io",
 			HealthURL:       "https://dined.bitofbytes.io/health",
-			LastUpdate:      "November 17, 2026",
+			LastUpdate:      "November 23, 2026",
 			FirstCommitDate: "2026-05-10",
-			Notes:           "Most recent work adds a year in review: dines by month, new and repeat places, the most visited, the highest rated, and each person's top pick. The trophy case links to this year and last year.",
+			Notes:           "Most recent work lets you add a restaurant to Want to Try by pasting a Google Maps link. The save form fills in the place, and a link that does not lead to a place shows an error and keeps what you pasted.",
 			PreviousUpdates: []ProjectUpdate{
+				{Date: "November 17, 2026", Note: "Most recent work adds a year in review: dines by month, new and repeat places, the most visited, the highest rated, and each person's top pick. The trophy case links to this year and last year."},
 				{Date: "November 12, 2026", Note: "Most recent work lists places averaging 7 or higher that you have not visited in over six months, with the last visit and the average rating, on the page where you pick where to eat next."},
-				{Date: "November 11, 2026", Note: "Most recent work lets you mark a restaurant permanently closed. Closed places leave the picker, saved spots, and nearby results, and past visits stay in the history with a Closed badge."},
 			},
 			Tech: []string{
 				"Go",
